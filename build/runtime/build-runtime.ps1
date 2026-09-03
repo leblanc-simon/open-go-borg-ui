@@ -149,6 +149,11 @@ function Invoke-Cygwin([string] $Root, [string] $Script) {
     if (-not (Test-Path $bash)) {
         throw "arbre Cygwin incomplet : $bash est absent"
     }
+    # Ce fichier est en fins de ligne Windows, que bash refuse : il verrait un
+    # retour chariot comme faisant partie de la commande, et se plaindrait
+    # d'options invalides ou de fichiers introuvables dont le nom paraît
+    # pourtant correct.
+    $Script = $Script -replace "`r", ''
     & $bash '-lc' $Script
     if ($LASTEXITCODE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script" }
 }

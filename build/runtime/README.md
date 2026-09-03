@@ -45,6 +45,11 @@ Les constructions suivantes n'ont besoin que de la dernière commande. Si les
 empreintes manquent, le script s'arrête avant de compiler quoi que ce soit et
 rappelle la marche à suivre.
 
+Les commandes envoyées au runtime sont débarrassées de leurs retours chariot
+avant d'être passées à `bash`, qui les prendrait pour une partie de la
+commande : l'échec se présente alors comme une option invalide, ou comme un
+fichier introuvable dont le nom paraît pourtant correct.
+
 Le script est enregistré en **UTF-8 avec marque d'ordre des octets** (BOM), et
 doit le rester : Windows PowerShell lit un fichier qui en est dépourvu comme de
 l'ANSI. Les caractères accentués sont alors mal décodés et certains — le tiret

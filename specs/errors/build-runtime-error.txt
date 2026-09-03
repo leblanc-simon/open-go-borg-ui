@@ -1,15 +1,715 @@
 PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypass -File .\build-runtime.ps1  -UpdateHashes
-Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:142 : 63
-+ ... hrow "paquets inconnus du miroir Cygwin : $names â€” corrigez package ...
-+                                                          ~~~~~~~~
-Jeton inattendu « corrigez » dans l’expression ou l’instruction.
-Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:140 : 19
-+     if ($missing) {
-+                   ~
-Accolade fermante « } » manquante dans le bloc d'instruction ou définition du type manquante.
-Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:127 : 46
-+ function Invoke-Setup([string[]] $Arguments) {
-+                                              ~
-Accolade fermante « } » manquante dans le bloc d'instruction ou définition du type manquante.
-    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : UnexpectedToken
+==> Runtime 1.4.5-cygwin.1 (Python 3.12)
+==> Récupération du programme d'installation Cygwin
+    signé par CN=Jon Turney, O=Jon Turney, S=Hertfordshire, C=GB
+==> Téléchargement des paquets Cygwin
+    Starting cygwin install, version 2.937
+    User has NO backup/restore rights
+    User has NO symlink creation right
+    io_stream_cygfile: fopen(/etc/setup/setup.rc) failed 2 No such file or directory
+    Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+    Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+    net: Preconfig
+    site: https://mirrors.kernel.org/sourceware/cygwin/
+    io_stream_cygfile: fopen(/etc/setup/timestamp) failed 2 No such file or directory
+    io_stream_cygfile: fopen(/etc/setup/installed.db) failed 2 No such file or directory
+    solving: 55 tasks, update: no, use test packages: no
+    solving: 164 tasks, update: no, use test packages: no
+    Augmented Transaction List:
+       0 install cygwin-devel                 3.6.10-1
+       1 install gsettings-desktop-schemas    3.24.1-1
+       2 install libpopt-common               1.19-1
+       3 install libsqlite3_0                 3.49.1-1
+       4 install terminfo                     6.5+20240427-1
+       5 install tzdata                       2026c-1
+       6 install w32api-headers               14.0.0-1
+       7 install windows-default-manifest     6.5-1
+       8 install cygwin                       3.6.10-1
+       9 install libiconv2                    1.19-2
+      10 install libintl8                     0.22.5-1
+      11 install w32api-runtime               14.0.0-1
+      12 install libncursesw10                6.5+20240427-1
+      13 install libreadline7                 8.2-2
+      14 install bash                         5.2.21-1
+      15 install libintl-devel                0.22.5-1
+      16 install libgcc1                      14.4.0-1
+      17 install crypto-policies              20190218-1
+      18 install base-cygwin                  3.8-2
+      19 install libzstd1                     1.5.7-1
+      20 install zlib0                        1.3.2-1
+      21 install which                        2.25-1
+      22 install vim-minimal                  9.1.1825-1
+      23 install tzcode                       2026c-1
+      24 install run                          1.3.4-2
+      25 install ncurses                      6.5+20240427-1
+      26 install login                        1.13-1
+      27 install libxxhash0                   0.8.3-1
+      28 install libwebp7                     1.6.0-1
+      29 install libuuid1                     2.40.2-2
+      30 install libunistring5                1.4.1-1
+      31 install libtasn1_6                   4.21.0-1
+      32 install libstdc++6                   14.4.0-1
+      33 install libsmartcols1                2.40.2-2
+      34 install libreadline8                 8.3-1
+      35 install libquadmath0                 14.4.0-1
+      36 install libpopt0                     1.19-1
+      37 install libpng16                     1.6.47-2
+      38 install libpkgconf8                  3.0.6-1
+      39 install libpipeline1                 1.5.8-1
+      40 install libpcre2_8_0                 10.48-1
+      41 install libpcre1                     8.45-1
+      42 install liblzma5                     5.8.3-1
+      43 install liblz4_1                     1.9.4-1
+      44 install liblcms2_2                   2.16-1
+      45 install liblastlog2                  2.40.2-2
+      46 install libkrb5support0              1.15.2-2
+      47 install libjpeg8                     3.1.4.1-1
+      48 install libjbig2                     2.1-2
+      49 install libgomp1                     14.4.0-1
+      50 install libgmp10                     6.3.0-1
+      51 install libgdbm6                     1.26-1
+      52 install libgc1                       8.2.12-1
+      53 install libfribidi0                  1.0.16-1
+      54 install libffi8                      3.8.0-1
+      55 install libexpat1                    2.8.4-1
+      56 install libedit0                     20251016-1
+      57 install libdeflate0                  1.25-1
+      58 install libcrypt2                    4.5.2-1
+      59 install libcom_err2                  1.44.5-1
+      60 install libcharset1                  1.19-2
+      61 install libbz2_1                     1.0.8-2
+      62 install libbrotlicommon1             1.2.0-1
+      63 install libblkid1                    2.40.2-2
+      64 install libattr1                     2.5.2-2
+      65 install libatomic1                   14.4.0-1
+      66 install libargp                      20250917-2
+      67 install libXdmcp6                    1.1.5-1
+      68 install libXau6                      1.0.12-1
+      69 install ipc-utils                    1.1-1
+      70 install hostname                     3.13-1
+      71 install gzip                         1.14-1
+      72 install editrights                   1.04-1
+      73 install diffutils                    3.12-1
+      74 install dash                         0.5.12-5
+      75 install cygrunsrv                    1.65-1
+      76 install binutils                     2.47-1
+      77 install alternatives                 1.31-1
+      78 install libwebpmux3                  1.6.0-1
+      79 install libwebpdemux2                1.6.0-1
+      80 install libuchardet0                 0.0.8-1
+      81 install libgraphite2_3               1.3.14-1
+      82 install cygutils                     1.4.17-4
+      83 install pkgconf                      3.0.6-1
+      84 install grep                         3.12-1
+      85 install less                         704-1
+      86 install xz                           5.8.3-1
+      87 install libxml2                      2.10.4-3
+      88 install zstd                         1.5.7-1
+      89 install libk5crypto3                 1.15.2-2
+      90 install libimagequant0               2.10.0-1
+      91 install libmpfr6                     4.2.2-1
+      92 install libisl23                     0.28-1
+      93 install libgdbm_compat4              1.26-1
+      94 install libp11-kit0                  0.26.5-1
+      95 install libtiff7                     4.7.1-1
+      96 install libguile3.0_1                3.0.11-1
+      97 install libiconv-devel               1.19-2
+      98 install file                         5.46-1
+      99 install bzip2                        1.0.8-2
+     100 install libbrotlidec1                1.2.0-1
+     101 install libfdisk1                    2.40.2-2
+     102 install sed                          4.10-1
+     103 install coreutils                    9.0-1
+     104 install getent                       2.18.90-5
+     105 install libxcb1                      1.17.0-2
+     106 install rebase                       4.6.6-1
+     107 install mintty                       3.8.3-1
+     108 install info                         7.3-1
+     109 install _autorebase                  001091-1
+     110 install groff                        1.24.1-1
+     111 install pkg-config                   3.0.6-1
+     112 install libkrb5_3                    1.15.2-2
+     113 install libmpc3                      1.4.1-1
+     114 install gawk                         5.4.0-1
+     115 install p11-kit-trust                0.26.5-1
+     116 install p11-kit                      0.26.5-1
+     117 install make                         4.4.1-2
+     118 install tar                          1.35-2
+     119 install libfreetype6                 2.13.3-1
+     120 install util-linux                   2.40.2-2
+     121 install findutils                    4.11.0-1
+     122 install libzstd-devel                1.5.7-1
+     123 install libxxhash-devel              0.8.3-1
+     124 install liblz4-devel                 1.9.4-1
+     125 install libcrypt-devel               4.5.2-1
+     126 install libgssapi_krb5_2             1.15.2-2
+     127 install gcc-core                     14.4.0-1
+     128 install csih                         0.9.14-1
+     129 install ca-certificates              2026.2.90_v9.0.317-1
+     130 install man-db                       2.13.1-1
+     131 install desktop-file-utils           0.28-1
+     132 install libglib2.0_0                 2.88.3-1
+     133 install shared-mime-info             2.4-1
+     134 install base-files                   4.3-3
+     135 install gcc-g++                      14.4.0-1
+     136 install libssl3                      3.5.8-1
+     137 install libharfbuzz0                 11.0.1-2
+     138 install python312                    3.12.12-1
+     139 install openssl                      3.5.8-1
+     140 install libssl-devel                 3.5.8-1
+     141 install libfido2                     1.17.0-1
+     142 install libraqm0                     0.7.0-1
+     143 install python312-zipp               4.1.0-1
+     144 install python312-typing_extension   4.15.0-1
+     145 install python312-toml               0.10.2-3
+     146 install python312-platformdirs       4.11.6-1
+     147 install python312-packaging          26.3-1
+     148 install python312-olefile            0.47-1
+     149 install python312-iniconfig          2.3.0-1
+     150 install python312-importlib-metadata 9.0.1-1
+     151 install python312-filelock           3.32.5-1
+     152 install python312-chardet            7.6.0-1
+     153 install openssh                      10.5p1-1
+     154 install python312-imaging            12.3.0-1
+     155 install python312-pluggy             1.6.0-1
+     156 install python312-pygments           2.21.0-1
+     157 install python312-pytest             9.1.1-1
+     158 install python312-docutils           0.22.4-1
+     159 install python312-setuptools         80.9.0-1
+     160 install python312-wheel              0.48.0-1
+     161 install python312-pip                26.2.1-1
+     162 install python312-devel              3.12.12-1
+     163 install gettext-locale-alias         0.26-1
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-devel/cygwin-devel-3.6.10-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/gsettings-desktop-schemas/gsettings-desktop-schemas-3.24.1-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt-common/libpopt-common-1.19-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sqlite3/libsqlite3_0/libsqlite3_0-3.49.1-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/terminfo/terminfo-6.5+20240427-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026c-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-headers/w32api-headers-14.0.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/windows-default-manifest/windows-default-manifest-6.5-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-3.6.10-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv2/libiconv2-1.19-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl8/libintl8-0.22.5-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-runtime/w32api-runtime-14.0.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/libncursesw10/libncursesw10-6.5+20240427-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline7/libreadline7-8.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bash/bash-5.2.21-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl-devel/libintl-devel-0.22.5-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgcc1/libgcc1-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/crypto-policies/crypto-policies-20190218-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-cygwin/base-cygwin-3.8-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd1/libzstd1-1.5.7-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zlib/zlib0/zlib0-1.3.2-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/which/which-2.25-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/vim/vim-minimal/vim-minimal-9.1.1825-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026c-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/run/run-1.3.4-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/ncurses-6.5+20240427-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/login/login-1.13-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xxhash/libxxhash0/libxxhash0-0.8.3-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebp7/libwebp7-1.6.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libuuid1/libuuid1-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libunistring/libunistring5/libunistring5-1.4.1-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libtasn1/libtasn1_6/libtasn1_6-4.21.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libstdc++6/libstdc++6-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libsmartcols1/libsmartcols1-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline8/libreadline8-8.3-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libquadmath0/libquadmath0-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt0/libpopt0-1.19-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.47-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.6-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpipeline/libpipeline1/libpipeline1-1.5.8-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre2/libpcre2_8_0/libpcre2_8_0-10.48-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre/libpcre1/libpcre1-8.45-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.3-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4_1/liblz4_1-1.9.4-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lcms2/liblcms2_2/liblcms2_2-2.16-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/liblastlog2/liblastlog2-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libkrb5support0/libkrb5support0-1.15.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libjpeg-turbo/libjpeg8/libjpeg8-3.1.4.1-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/jbigkit/libjbig2/libjbig2-2.1-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgomp1/libgomp1-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm6/libgdbm6-1.26-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libgc/libgc1/libgc1-8.2.12-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/fribidi/libfribidi0/libfribidi0-1.0.16-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libffi/libffi8/libffi8-3.8.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/expat/libexpat1/libexpat1-2.8.4-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libedit/libedit0/libedit0-20251016-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libdeflate/libdeflate0/libdeflate0-1.25-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt2/libcrypt2-4.5.2-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/e2fsprogs/libcom_err2/libcom_err2-1.44.5-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libcharset1/libcharset1-1.19-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/libbz2_1/libbz2_1-1.0.8-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlicommon1/libbrotlicommon1-1.2.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libblkid1/libblkid1-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/attr/libattr1/libattr1-2.5.2-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libatomic1/libatomic1-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libargp/libargp-20250917-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXdmcp/libXdmcp6/libXdmcp6-1.1.5-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXau/libXau6/libXau6-1.0.12-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ipc-utils/ipc-utils-1.1-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/hostname/hostname-3.13-1.tar.bz2
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gzip/gzip-1.14-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/editrights/editrights-1.04-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/diffutils/diffutils-3.12-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/dash/dash-0.5.12-5.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygrunsrv/cygrunsrv-1.65-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/binutils/binutils-2.47-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/alternatives/alternatives-1.31-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpmux3/libwebpmux3-1.6.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpdemux2/libwebpdemux2-1.6.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/uchardet/libuchardet0/libuchardet0-0.0.8-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/graphite2/libgraphite2_3/libgraphite2_3-1.3.14-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygutils/cygutils-1.4.17-4-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.6-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/grep/grep-3.12-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/less/less-704-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.3-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.10.4-3-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/zstd-1.5.7-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libk5crypto3/libk5crypto3-1.15.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libimagequant/libimagequant0/libimagequant0-2.10.0-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpfr/libmpfr6/libmpfr6-4.2.2-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/isl/libisl23/libisl23-0.28-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm_compat4/libgdbm_compat4-1.26-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/libp11-kit0/libp11-kit0-0.26.5-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tiff/libtiff7/libtiff7-4.7.1-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/guile3.0/libguile3.0_1/libguile3.0_1-3.0.11-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv-devel/libiconv-devel-1.19-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/file/file-5.46-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/bzip2-1.0.8-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlidec1/libbrotlidec1-1.2.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libfdisk1/libfdisk1-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sed/sed-4.10-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/coreutils/coreutils-9.0-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/getent/getent-2.18.90-5.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcb/libxcb1/libxcb1-1.17.0-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/rebase/rebase-4.6.6-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mintty/mintty-3.8.3-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/texinfo/info/info-7.3-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/_autorebase/_autorebase-001091-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/groff/groff-1.24.1-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.6-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libkrb5_3/libkrb5_3-1.15.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpclib/libmpc3/libmpc3-1.4.1-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gawk/gawk-5.4.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-trust/p11-kit-trust-0.26.5-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-0.26.5-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/make/make-4.4.1-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tar/tar-1.35-2.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/freetype2/libfreetype6/libfreetype6-2.13.3-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/util-linux-2.40.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/findutils/findutils-4.11.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd-devel/libzstd-devel-1.5.7-1.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xxhash/libxxhash-devel/libxxhash-devel-0.8.3-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4-devel/liblz4-devel-1.9.4-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt-devel/libcrypt-devel-4.5.2-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libgssapi_krb5_2/libgssapi_krb5_2-1.15.2-2.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-core/gcc-core-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/csih/csih-0.9.14-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/ca-certificates/ca-certificates-2026.2.90_v9.0.317-1-noarch.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/man-db/man-db-2.13.1-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/desktop-file-utils/desktop-file-utils-0.28-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/glib2.0/libglib2.0_0/libglib2.0_0-2.88.3-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/shared-mime-info/shared-mime-info-2.4-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-files/base-files-4.3-3.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-g++/gcc-g++-14.4.0-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl3/libssl3-3.5.8-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/harfbuzz/libharfbuzz0/libharfbuzz0-11.0.1-2-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-3.12.12-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/openssl-3.5.8-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl-devel/libssl-devel-3.5.8-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libfido2/libfido2-1.17.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/raqm/libraqm0/libraqm0-0.7.0-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-zipp/python312-zipp/python312-zipp-4.1.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.15.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-toml/python312-toml/python312-toml-0.10.2-3.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.6-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-packaging/python312-packaging/python312-packaging-26.3-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-olefile/python312-olefile/python312-olefile-0.47-1.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-iniconfig/python312-iniconfig/python312-iniconfig-2.3.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-importlib-metadata/python312-importlib-metadata/python312-importlib-metadata-9.0.1-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.5-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-chardet/python312-chardet/python312-chardet-7.6.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssh/openssh-10.5p1-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python-imaging/python312-imaging/python312-imaging-12.3.0-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pluggy/python312-pluggy/python312-pluggy-1.6.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pygments/python312-pygments/python312-pygments-2.21.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pytest/python312-pytest/python312-pytest-9.1.1-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.22.4-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-setuptools/python312-setuptools/python312-setuptools-80.9.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-wheel/python312-wheel/python312-wheel-0.48.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pip/python312-pip/python312-pip-26.2.1-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-devel/python312-devel-3.12.12-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/gettext-locale-alias/gettext-locale-alias-0.26-1-x86_64.tar.xz
+    Ending cygwin install
+==> Installation de l'arbre de compilation
+    Starting cygwin install, version 2.937
+    User has NO backup/restore rights
+    User has NO symlink creation right
+    Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+    root: C:\Users\lucie\Downloads\build\runtime\work\build user
+    Changing gid back to original
+    Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+    io_stream_cygfile: fopen(/etc/setup/installed.db) failed 2 No such file or directory
+    solving: 50 tasks, update: no, use test packages: no
+    solving: 153 tasks, update: no, use test packages: no
+    Augmented Transaction List:
+       0 install cygwin-devel                 3.6.10-1
+       1 install gsettings-desktop-schemas    3.24.1-1
+       2 install libpopt-common               1.19-1
+       3 install libsqlite3_0                 3.49.1-1
+       4 install terminfo                     6.5+20240427-1
+       5 install tzdata                       2026c-1
+       6 install w32api-headers               14.0.0-1
+       7 install windows-default-manifest     6.5-1
+       8 install cygwin                       3.6.10-1
+       9 install libiconv2                    1.19-2
+      10 install libintl8                     0.22.5-1
+      11 install w32api-runtime               14.0.0-1
+      12 install libncursesw10                6.5+20240427-1
+      13 install libreadline7                 8.2-2
+      14 install bash                         5.2.21-1
+      15 install libintl-devel                0.22.5-1
+      16 install libgcc1                      14.4.0-1
+      17 install crypto-policies              20190218-1
+      18 install base-cygwin                  3.8-2
+      19 install libzstd1                     1.5.7-1
+      20 install zlib0                        1.3.2-1
+      21 install which                        2.25-1
+      22 install vim-minimal                  9.1.1825-1
+      23 install tzcode                       2026c-1
+      24 install run                          1.3.4-2
+      25 install ncurses                      6.5+20240427-1
+      26 install login                        1.13-1
+      27 install libwebp7                     1.6.0-1
+      28 install libuuid1                     2.40.2-2
+      29 install libunistring5                1.4.1-1
+      30 install libtasn1_6                   4.21.0-1
+      31 install libstdc++6                   14.4.0-1
+      32 install libsmartcols1                2.40.2-2
+      33 install libreadline8                 8.3-1
+      34 install libquadmath0                 14.4.0-1
+      35 install libpopt0                     1.19-1
+      36 install libpng16                     1.6.47-2
+      37 install libpkgconf8                  3.0.6-1
+      38 install libpipeline1                 1.5.8-1
+      39 install libpcre2_8_0                 10.48-1
+      40 install libpcre1                     8.45-1
+      41 install liblzma5                     5.8.3-1
+      42 install liblz4_1                     1.9.4-1
+      43 install liblcms2_2                   2.16-1
+      44 install liblastlog2                  2.40.2-2
+      45 install libjpeg8                     3.1.4.1-1
+      46 install libjbig2                     2.1-2
+      47 install libgomp1                     14.4.0-1
+      48 install libgmp10                     6.3.0-1
+      49 install libgdbm6                     1.26-1
+      50 install libgc1                       8.2.12-1
+      51 install libfribidi0                  1.0.16-1
+      52 install libffi8                      3.8.0-1
+      53 install libexpat1                    2.8.4-1
+      54 install libdeflate0                  1.25-1
+      55 install libcrypt2                    4.5.2-1
+      56 install libcharset1                  1.19-2
+      57 install libbz2_1                     1.0.8-2
+      58 install libbrotlicommon1             1.2.0-1
+      59 install libblkid1                    2.40.2-2
+      60 install libattr1                     2.5.2-2
+      61 install libatomic1                   14.4.0-1
+      62 install libargp                      20250917-2
+      63 install libXdmcp6                    1.1.5-1
+      64 install libXau6                      1.0.12-1
+      65 install ipc-utils                    1.1-1
+      66 install hostname                     3.13-1
+      67 install gzip                         1.14-1
+      68 install editrights                   1.04-1
+      69 install diffutils                    3.12-1
+      70 install dash                         0.5.12-5
+      71 install binutils                     2.47-1
+      72 install alternatives                 1.31-1
+      73 install libwebpmux3                  1.6.0-1
+      74 install libwebpdemux2                1.6.0-1
+      75 install libuchardet0                 0.0.8-1
+      76 install libgraphite2_3               1.3.14-1
+      77 install cygutils                     1.4.17-4
+      78 install pkgconf                      3.0.6-1
+      79 install grep                         3.12-1
+      80 install less                         704-1
+      81 install xz                           5.8.3-1
+      82 install libxml2                      2.10.4-3
+      83 install zstd                         1.5.7-1
+      84 install libimagequant0               2.10.0-1
+      85 install libmpfr6                     4.2.2-1
+      86 install libisl23                     0.28-1
+      87 install libgdbm_compat4              1.26-1
+      88 install libp11-kit0                  0.26.5-1
+      89 install libtiff7                     4.7.1-1
+      90 install libguile3.0_1                3.0.11-1
+      91 install libiconv-devel               1.19-2
+      92 install file                         5.46-1
+      93 install bzip2                        1.0.8-2
+      94 install libbrotlidec1                1.2.0-1
+      95 install libfdisk1                    2.40.2-2
+      96 install sed                          4.10-1
+      97 install coreutils                    9.0-1
+      98 install getent                       2.18.90-5
+      99 install libxcb1                      1.17.0-2
+     100 install rebase                       4.6.6-1
+     101 install mintty                       3.8.3-1
+     102 install info                         7.3-1
+     103 install _autorebase                  001091-1
+     104 install groff                        1.24.1-1
+     105 install pkg-config                   3.0.6-1
+     106 install libmpc3                      1.4.1-1
+     107 install gawk                         5.4.0-1
+     108 install p11-kit-trust                0.26.5-1
+     109 install p11-kit                      0.26.5-1
+     110 install make                         4.4.1-2
+     111 install tar                          1.35-2
+     112 install libfreetype6                 2.13.3-1
+     113 install util-linux                   2.40.2-2
+     114 install findutils                    4.11.0-1
+     115 install libzstd-devel                1.5.7-1
+     116 install libxxhash-devel              0.8.3-1
+     117 install liblz4-devel                 1.9.4-1
+     118 install libcrypt-devel               4.5.2-1
+     119 install gcc-core                     14.4.0-1
+     120 install ca-certificates              2026.2.90_v9.0.317-1
+     121 install man-db                       2.13.1-1
+     122 install desktop-file-utils           0.28-1
+     123 install libglib2.0_0                 2.88.3-1
+     124 install shared-mime-info             2.4-1
+     125 install base-files                   4.3-3
+     126 install gcc-g++                      14.4.0-1
+     127 install libssl3                      3.5.8-1
+     128 install libharfbuzz0                 11.0.1-2
+     129 install python312                    3.12.12-1
+     130 install openssl                      3.5.8-1
+     131 install libssl-devel                 3.5.8-1
+     132 install libraqm0                     0.7.0-1
+     133 install python312-zipp               4.1.0-1
+     134 install python312-typing_extension   4.15.0-1
+     135 install python312-toml               0.10.2-3
+     136 install python312-platformdirs       4.11.6-1
+     137 install python312-packaging          26.3-1
+     138 install python312-olefile            0.47-1
+     139 install python312-iniconfig          2.3.0-1
+     140 install python312-importlib-metadata 9.0.1-1
+     141 install python312-filelock           3.32.5-1
+     142 install python312-chardet            7.6.0-1
+     143 install python312-imaging            12.3.0-1
+     144 install python312-pluggy             1.6.0-1
+     145 install python312-pygments           2.21.0-1
+     146 install python312-pytest             9.1.1-1
+     147 install python312-docutils           0.22.4-1
+     148 install python312-setuptools         80.9.0-1
+     149 install python312-wheel              0.48.0-1
+     150 install python312-pip                26.2.1-1
+     151 install python312-devel              3.12.12-1
+     152 install gettext-locale-alias         0.26-1
+    Registry value set: HKEY_CURRENT_USER\Software\Cygwin\setup\rootdir = "C:\Users\lucie\Downloads\build\runtime\work\build"
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-devel/cygwin-devel-3.6.10-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/gsettings-desktop-schemas/gsettings-desktop-schemas-3.24.1-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt-common/libpopt-common-1.19-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sqlite3/libsqlite3_0/libsqlite3_0-3.49.1-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/terminfo/terminfo-6.5+20240427-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026c-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-headers/w32api-headers-14.0.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/windows-default-manifest/windows-default-manifest-6.5-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-3.6.10-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv2/libiconv2-1.19-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl8/libintl8-0.22.5-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-runtime/w32api-runtime-14.0.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/libncursesw10/libncursesw10-6.5+20240427-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline7/libreadline7-8.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bash/bash-5.2.21-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl-devel/libintl-devel-0.22.5-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgcc1/libgcc1-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/crypto-policies/crypto-policies-20190218-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-cygwin/base-cygwin-3.8-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd1/libzstd1-1.5.7-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zlib/zlib0/zlib0-1.3.2-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/which/which-2.25-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/vim/vim-minimal/vim-minimal-9.1.1825-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026c-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/run/run-1.3.4-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/ncurses-6.5+20240427-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/login/login-1.13-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebp7/libwebp7-1.6.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libuuid1/libuuid1-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libunistring/libunistring5/libunistring5-1.4.1-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libtasn1/libtasn1_6/libtasn1_6-4.21.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libstdc++6/libstdc++6-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libsmartcols1/libsmartcols1-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline8/libreadline8-8.3-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libquadmath0/libquadmath0-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt0/libpopt0-1.19-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.47-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpipeline/libpipeline1/libpipeline1-1.5.8-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre2/libpcre2_8_0/libpcre2_8_0-10.48-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre/libpcre1/libpcre1-8.45-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.3-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4_1/liblz4_1-1.9.4-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lcms2/liblcms2_2/liblcms2_2-2.16-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/liblastlog2/liblastlog2-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libjpeg-turbo/libjpeg8/libjpeg8-3.1.4.1-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/jbigkit/libjbig2/libjbig2-2.1-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgomp1/libgomp1-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm6/libgdbm6-1.26-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libgc/libgc1/libgc1-8.2.12-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/fribidi/libfribidi0/libfribidi0-1.0.16-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libffi/libffi8/libffi8-3.8.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/expat/libexpat1/libexpat1-2.8.4-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libdeflate/libdeflate0/libdeflate0-1.25-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt2/libcrypt2-4.5.2-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libcharset1/libcharset1-1.19-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/libbz2_1/libbz2_1-1.0.8-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlicommon1/libbrotlicommon1-1.2.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libblkid1/libblkid1-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/attr/libattr1/libattr1-2.5.2-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libatomic1/libatomic1-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libargp/libargp-20250917-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXdmcp/libXdmcp6/libXdmcp6-1.1.5-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXau/libXau6/libXau6-1.0.12-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ipc-utils/ipc-utils-1.1-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/hostname/hostname-3.13-1.tar.bz2
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gzip/gzip-1.14-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/editrights/editrights-1.04-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/diffutils/diffutils-3.12-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/dash/dash-0.5.12-5.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/binutils/binutils-2.47-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/alternatives/alternatives-1.31-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpmux3/libwebpmux3-1.6.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpdemux2/libwebpdemux2-1.6.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/uchardet/libuchardet0/libuchardet0-0.0.8-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/graphite2/libgraphite2_3/libgraphite2_3-1.3.14-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygutils/cygutils-1.4.17-4-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/grep/grep-3.12-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/less/less-704-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.3-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.10.4-3-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/zstd-1.5.7-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libimagequant/libimagequant0/libimagequant0-2.10.0-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpfr/libmpfr6/libmpfr6-4.2.2-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/isl/libisl23/libisl23-0.28-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm_compat4/libgdbm_compat4-1.26-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/libp11-kit0/libp11-kit0-0.26.5-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tiff/libtiff7/libtiff7-4.7.1-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/guile3.0/libguile3.0_1/libguile3.0_1-3.0.11-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv-devel/libiconv-devel-1.19-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/file/file-5.46-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/bzip2-1.0.8-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlidec1/libbrotlidec1-1.2.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libfdisk1/libfdisk1-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sed/sed-4.10-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/coreutils/coreutils-9.0-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/getent/getent-2.18.90-5.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcb/libxcb1/libxcb1-1.17.0-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/rebase/rebase-4.6.6-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mintty/mintty-3.8.3-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/texinfo/info/info-7.3-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/_autorebase/_autorebase-001091-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/groff/groff-1.24.1-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpclib/libmpc3/libmpc3-1.4.1-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gawk/gawk-5.4.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-trust/p11-kit-trust-0.26.5-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-0.26.5-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/make/make-4.4.1-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tar/tar-1.35-2.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/freetype2/libfreetype6/libfreetype6-2.13.3-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/util-linux-2.40.2-2.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/findutils/findutils-4.11.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd-devel/libzstd-devel-1.5.7-1.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xxhash/libxxhash-devel/libxxhash-devel-0.8.3-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4-devel/liblz4-devel-1.9.4-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt-devel/libcrypt-devel-4.5.2-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-core/gcc-core-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/ca-certificates/ca-certificates-2026.2.90_v9.0.317-1-noarch.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/man-db/man-db-2.13.1-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/desktop-file-utils/desktop-file-utils-0.28-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/glib2.0/libglib2.0_0/libglib2.0_0-2.88.3-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/shared-mime-info/shared-mime-info-2.4-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-files/base-files-4.3-3.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-g++/gcc-g++-14.4.0-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl3/libssl3-3.5.8-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/harfbuzz/libharfbuzz0/libharfbuzz0-11.0.1-2-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-3.12.12-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/openssl-3.5.8-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl-devel/libssl-devel-3.5.8-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/raqm/libraqm0/libraqm0-0.7.0-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-zipp/python312-zipp/python312-zipp-4.1.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.15.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-toml/python312-toml/python312-toml-0.10.2-3.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.6-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-packaging/python312-packaging/python312-packaging-26.3-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-olefile/python312-olefile/python312-olefile-0.47-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-iniconfig/python312-iniconfig/python312-iniconfig-2.3.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-importlib-metadata/python312-importlib-metadata/python312-importlib-metadata-9.0.1-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.5-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-chardet/python312-chardet/python312-chardet-7.6.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python-imaging/python312-imaging/python312-imaging-12.3.0-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pluggy/python312-pluggy/python312-pluggy-1.6.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pygments/python312-pygments/python312-pygments-2.21.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pytest/python312-pytest/python312-pytest-9.1.1-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.22.4-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-setuptools/python312-setuptools/python312-setuptools-80.9.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-wheel/python312-wheel/python312-wheel-0.48.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pip/python312-pip/python312-pip-26.2.1-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-devel/python312-devel-3.12.12-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/gettext-locale-alias/gettext-locale-alias-0.26-1-x86_64.tar.xz
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_000_autorebase.dash"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_update-info-dir.dash"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/000-cygwin-post-install.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/coreutils.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/base-files-mketc.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/base-files-profile.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/p11-kit.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/ca-certificates.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/crypto-policies.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/libxml2.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/openssl.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/man-db.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/mintty.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/python312.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/python312-devel.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/python312-pip.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_desktop-file-utils.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_glib2.0.sh"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/zp_man-db-update-index.dash"
+    running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_shared-mime-info.sh"
+    Ending cygwin install
+    Copying skeleton files.
+    These files are for the users to personalise their cygwin experience.
+
+    They will never be overwritten nor automatically updated.
+
+    './.bashrc' -> '/home/lucie//.bashrc'
+    './.bash_profile' -> '/home/lucie//.bash_profile'
+    './.inputrc' -> '/home/lucie//.inputrc'
+    './.profile' -> '/home/lucie//.profile'
+    Python 3.12.12
+==> Calcul des empreintes des dépendances
+ : option non valable1 : set: -
+set : utilisation :set [-abefhkmnptuvxBCEHPT] [-o nom-option] [--] [-] [arg ...]
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: '/tmp/plain.txt'
+commande Cygwin en échec (1) : set -e
+rm -rf /tmp/sources && mkdir -p /tmp/sources
+printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
+python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:153 : 32
++ ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (commande Cygwin... /tmp/plain.txt:String) [], RuntimeException
+    + FullyQualifiedErrorId : commande Cygwin en échec (1) : set -e
+rm -rf /tmp/sources && mkdir -p /tmp/sources
+printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
+python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+
+PS C:\Users\lucie\Downloads\build\runtime>
