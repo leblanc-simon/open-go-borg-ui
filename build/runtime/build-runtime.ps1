@@ -259,7 +259,10 @@ if ($UpdateHashes) {
 set -e
 rm -rf /tmp/sources && mkdir -p /tmp/sources
 printf '%s\n' '$($pinned -join "' '")' > /tmp/plain.txt
-$Python -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+# --no-deps : sans lui, pip résout les dépendances, ce qui l'amène à construire
+# les métadonnées des paquets, donc à installer puis compiler leurs outils de
+# construction. Les dépendances d'exécution sont déjà listées ici, une par une.
+$Python -m pip download --no-deps --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
 "@
     $lines = Invoke-Cygwin $BuildRoot @"
 set -e
@@ -316,7 +319,25 @@ Write-Step "Compilation de Borg $BorgVersion"
 $requirements = ConvertTo-CygwinPath $RequirementsFile
 Invoke-Cygwin $BuildRoot @"
 set -e
-$Python -m pip wheel --no-binary :all: --require-hashes \
+# Les outils de construction sont installés à part, en roues universelles : ils
+# sont écrits en Python pur et n'ont rien à compiler.
+$Python -m pip install --no-cache-dir 'setuptools>=78.1.1' 'setuptools_scm>=8' wheel
+
+# Les bibliothèques sont désignées par leur préfixe plutôt que cherchées par
+# pkg-config : sous Cygwin, /usr/include et /usr/lib sont les bons chemins, et
+# c'est une dépendance de moins.
+export BORG_OPENSSL_PREFIX=/usr
+export BORG_LIBLZ4_PREFIX=/usr
+export BORG_LIBZSTD_PREFIX=/usr
+export BORG_LIBXXHASH_PREFIX=/usr
+
+# --no-build-isolation : le paquet source de Borg déclare Cython parmi ses
+# outils de construction, mais il embarque déjà le code C que Cython aurait
+# produit, et son setup.py s'en contente lorsque Cython est absent. Sans cette
+# option, pip installerait Cython depuis les sources — il n'en existe pas de
+# roue pour Cygwin — et sa compilation échoue. Utiliser le code C publié par
+# les mainteneurs de Borg est en outre plus fidèle que de le regénérer.
+$Python -m pip wheel --no-build-isolation --no-binary :all: --require-hashes \
     --requirement '$requirements' --wheel-dir /tmp/wheels
 "@
 

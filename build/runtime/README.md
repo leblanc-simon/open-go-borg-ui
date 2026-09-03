@@ -120,6 +120,26 @@ base laissée par l'exécution précédente est ce qui bloquait les suivantes.
 Il produit dans `dist/` l'archive `borgui-runtime-<version>.zip`, le fichier
 `SHA256SUMS`, et affiche les valeurs à reporter dans `spec.go`.
 
+### Cython n'est pas installé, et c'est voulu
+
+Le paquet source de Borg déclare Cython parmi ses outils de construction, mais
+il embarque déjà les fichiers C que Cython aurait produits — les douze
+extensions du moteur — et son `setup.py` s'en contente lorsque Cython est
+absent.
+
+C'est décisif ici : il n'existe pas de roue Cython pour Cygwin, sa compilation
+depuis les sources y échoue, et pip l'installerait pourtant systématiquement à
+cause de l'isolation de construction. D'où `--no-build-isolation`, les outils de
+construction étant fournis séparément — ils sont écrits en Python pur et
+s'installent en roues universelles.
+
+Utiliser le code C publié par les mainteneurs de Borg est en outre plus fidèle
+que de le regénérer avec une version de Cython choisie par nous.
+
+Les bibliothèques de compression et de chiffrement sont désignées par les
+variables `BORG_*_PREFIX` plutôt que cherchées par `pkg-config` : sous Cygwin,
+`/usr` est le bon préfixe, et c'est une dépendance de moins.
+
 ### Pourquoi deux arbres
 
 Borg n'a pas de roue précompilée pour Cygwin : il est compilé depuis ses

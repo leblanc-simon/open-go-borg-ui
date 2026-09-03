@@ -180,170 +180,6 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
      161 install python312-pip                26.2.1-1
      162 install python312-devel              3.12.12-1
      163 install gettext-locale-alias         0.26-1
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-devel/cygwin-devel-3.6.10-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/gsettings-desktop-schemas/gsettings-desktop-schemas-3.24.1-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt-common/libpopt-common-1.19-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sqlite3/libsqlite3_0/libsqlite3_0-3.49.1-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/terminfo/terminfo-6.5+20240427-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026c-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-headers/w32api-headers-14.0.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/windows-default-manifest/windows-default-manifest-6.5-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-3.6.10-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv2/libiconv2-1.19-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl8/libintl8-0.22.5-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-runtime/w32api-runtime-14.0.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/libncursesw10/libncursesw10-6.5+20240427-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline7/libreadline7-8.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bash/bash-5.2.21-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/libintl-devel/libintl-devel-0.22.5-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgcc1/libgcc1-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/crypto-policies/crypto-policies-20190218-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-cygwin/base-cygwin-3.8-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd1/libzstd1-1.5.7-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zlib/zlib0/zlib0-1.3.2-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/which/which-2.25-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/vim/vim-minimal/vim-minimal-9.1.1825-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026c-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/run/run-1.3.4-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/ncurses-6.5+20240427-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/login/login-1.13-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xxhash/libxxhash0/libxxhash0-0.8.3-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebp7/libwebp7-1.6.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libuuid1/libuuid1-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libunistring/libunistring5/libunistring5-1.4.1-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libtasn1/libtasn1_6/libtasn1_6-4.21.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libstdc++6/libstdc++6-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libsmartcols1/libsmartcols1-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline8/libreadline8-8.3-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libquadmath0/libquadmath0-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt0/libpopt0-1.19-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.47-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.6-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpipeline/libpipeline1/libpipeline1-1.5.8-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre2/libpcre2_8_0/libpcre2_8_0-10.48-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre/libpcre1/libpcre1-8.45-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.3-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4_1/liblz4_1-1.9.4-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lcms2/liblcms2_2/liblcms2_2-2.16-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/liblastlog2/liblastlog2-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libkrb5support0/libkrb5support0-1.15.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libjpeg-turbo/libjpeg8/libjpeg8-3.1.4.1-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/jbigkit/libjbig2/libjbig2-2.1-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libgomp1/libgomp1-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gmp/libgmp10/libgmp10-6.3.0-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm6/libgdbm6-1.26-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libgc/libgc1/libgc1-8.2.12-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/fribidi/libfribidi0/libfribidi0-1.0.16-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libffi/libffi8/libffi8-3.8.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/expat/libexpat1/libexpat1-2.8.4-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libedit/libedit0/libedit0-20251016-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libdeflate/libdeflate0/libdeflate0-1.25-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt2/libcrypt2-4.5.2-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/e2fsprogs/libcom_err2/libcom_err2-1.44.5-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libcharset1/libcharset1-1.19-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/libbz2_1/libbz2_1-1.0.8-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlicommon1/libbrotlicommon1-1.2.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libblkid1/libblkid1-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/attr/libattr1/libattr1-2.5.2-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libatomic1/libatomic1-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libargp/libargp-20250917-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXdmcp/libXdmcp6/libXdmcp6-1.1.5-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libXau/libXau6/libXau6-1.0.12-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ipc-utils/ipc-utils-1.1-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/hostname/hostname-3.13-1.tar.bz2
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gzip/gzip-1.14-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/editrights/editrights-1.04-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/diffutils/diffutils-3.12-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/dash/dash-0.5.12-5.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygrunsrv/cygrunsrv-1.65-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/binutils/binutils-2.47-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/alternatives/alternatives-1.31-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpmux3/libwebpmux3-1.6.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpdemux2/libwebpdemux2-1.6.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/uchardet/libuchardet0/libuchardet0-0.0.8-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/graphite2/libgraphite2_3/libgraphite2_3-1.3.14-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygutils/cygutils-1.4.17-4-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.6-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/grep/grep-3.12-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/less/less-704-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.3-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.10.4-3-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/zstd-1.5.7-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libk5crypto3/libk5crypto3-1.15.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libimagequant/libimagequant0/libimagequant0-2.10.0-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpfr/libmpfr6/libmpfr6-4.2.2-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/isl/libisl23/libisl23-0.28-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gdbm/libgdbm_compat4/libgdbm_compat4-1.26-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/libp11-kit0/libp11-kit0-0.26.5-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tiff/libtiff7/libtiff7-4.7.1-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/guile3.0/libguile3.0_1/libguile3.0_1-3.0.11-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libiconv/libiconv-devel/libiconv-devel-1.19-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/file/file-5.46-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/bzip2/bzip2-1.0.8-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/brotli/libbrotlidec1/libbrotlidec1-1.2.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/libfdisk1/libfdisk1-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sed/sed-4.10-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/coreutils/coreutils-9.0-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/getent/getent-2.18.90-5.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcb/libxcb1/libxcb1-1.17.0-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/rebase/rebase-4.6.6-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mintty/mintty-3.8.3-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/texinfo/info/info-7.3-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/_autorebase/_autorebase-001091-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/groff/groff-1.24.1-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.6-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libkrb5_3/libkrb5_3-1.15.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpclib/libmpc3/libmpc3-1.4.1-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gawk/gawk-5.4.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-trust/p11-kit-trust-0.26.5-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-0.26.5-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/make/make-4.4.1-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tar/tar-1.35-2.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/freetype2/libfreetype6/libfreetype6-2.13.3-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/util-linux-2.40.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/findutils/findutils-4.11.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/libzstd-devel/libzstd-devel-1.5.7-1.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xxhash/libxxhash-devel/libxxhash-devel-0.8.3-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4-devel/liblz4-devel-1.9.4-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxcrypt/libcrypt-devel/libcrypt-devel-4.5.2-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/krb5/libgssapi_krb5_2/libgssapi_krb5_2-1.15.2-2.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-core/gcc-core-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/csih/csih-0.9.14-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/ca-certificates/ca-certificates-2026.2.90_v9.0.317-1-noarch.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/man-db/man-db-2.13.1-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/desktop-file-utils/desktop-file-utils-0.28-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/glib2.0/libglib2.0_0/libglib2.0_0-2.88.3-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/shared-mime-info/shared-mime-info-2.4-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/base-files/base-files-4.3-3.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/gcc-g++/gcc-g++-14.4.0-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl3/libssl3-3.5.8-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/harfbuzz/libharfbuzz0/libharfbuzz0-11.0.1-2-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-3.12.12-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/openssl-3.5.8-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl-devel/libssl-devel-3.5.8-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libfido2/libfido2-1.17.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/raqm/libraqm0/libraqm0-0.7.0-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-zipp/python312-zipp/python312-zipp-4.1.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.15.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-toml/python312-toml/python312-toml-0.10.2-3.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.6-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-packaging/python312-packaging/python312-packaging-26.3-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-olefile/python312-olefile/python312-olefile-0.47-1.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-iniconfig/python312-iniconfig/python312-iniconfig-2.3.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-importlib-metadata/python312-importlib-metadata/python312-importlib-metadata-9.0.1-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.5-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-chardet/python312-chardet/python312-chardet-7.6.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssh/openssh-10.5p1-1-x86_64.tar.zst
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python-imaging/python312-imaging/python312-imaging-12.3.0-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pluggy/python312-pluggy/python312-pluggy-1.6.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pygments/python312-pygments/python312-pygments-2.21.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pytest/python312-pytest/python312-pytest-9.1.1-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.22.4-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-setuptools/python312-setuptools/python312-setuptools-80.9.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-wheel/python312-wheel/python312-wheel-0.48.0-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pip/python312-pip/python312-pip-26.2.1-1-noarch.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python312/python312-devel/python312-devel-3.12.12-1-x86_64.tar.xz
-    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gettext/gettext-locale-alias/gettext-locale-alias-0.26-1-x86_64.tar.xz
     Ending cygwin install
 ==> Installation de l'arbre de compilation
     Starting cygwin install, version 2.937
@@ -696,14 +532,448 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     './.profile' -> '/home/lucie//.profile'
     Python 3.12.12
 ==> Calcul des empreintes des dépendances
- : option non valable1 : set: -
-set : utilisation :set [-abefhkmnptuvxBCEHPT] [-o nom-option] [--] [-] [arg ...]
-ERROR: Could not open requirements file: [Errno 2] No such file or directory: '/tmp/plain.txt'
+Collecting borgbackup==1.4.5 (from -r /tmp/plain.txt (line 1))
+  Downloading borgbackup-1.4.5.tar.gz (4.0 MB)
+     ???????????????????????????????????????? 4.0/4.0 MB 5.6 MB/s  0:00:00
+  Installing build dependencies ... error
+  error: subprocess-exited-with-error
+
+  × installing build dependencies for borgbackup did not run successfully.
+  ¦ exit code: 1
+  ?-> [424 lines of output]
+      Collecting setuptools>=78.1.1
+        Downloading setuptools-84.0.0.tar.gz (1.2 MB)
+           ???????????????????????????????????????? 1.2/1.2 MB 8.8 MB/s  0:00:00
+        Getting requirements to build wheel: started
+        Getting requirements to build wheel: finished with status 'done'
+        Preparing metadata (pyproject.toml): started
+        Preparing metadata (pyproject.toml): finished with status 'done'
+      Collecting setuptools_scm>=8
+        Downloading setuptools_scm-10.2.3.tar.gz (67 kB)
+        Installing build dependencies: started
+        Installing build dependencies: finished with status 'done'
+        Getting requirements to build wheel: started
+        Getting requirements to build wheel: finished with status 'done'
+        Preparing metadata (pyproject.toml): started
+        Preparing metadata (pyproject.toml): finished with status 'done'
+      Collecting wheel
+        Downloading wheel-0.48.0.tar.gz (66 kB)
+        Installing build dependencies: started
+        Installing build dependencies: finished with status 'done'
+        Getting requirements to build wheel: started
+        Getting requirements to build wheel: finished with status 'done'
+        Preparing metadata (pyproject.toml): started
+        Preparing metadata (pyproject.toml): finished with status 'done'
+      Collecting pkgconfig
+        Downloading pkgconfig-1.6.0.tar.gz (5.7 kB)
+        Installing build dependencies: started
+        Installing build dependencies: finished with status 'done'
+        Getting requirements to build wheel: started
+        Getting requirements to build wheel: finished with status 'done'
+        Preparing metadata (pyproject.toml): started
+        Preparing metadata (pyproject.toml): finished with status 'done'
+      Collecting Cython>=3.0.3
+        Downloading cython-3.3.0.tar.gz (3.7 MB)
+           ???????????????????????????????????????? 3.7/3.7 MB 6.2 MB/s  0:00:00
+        Installing build dependencies: started
+        Installing build dependencies: finished with status 'done'
+        Getting requirements to build wheel: started
+        Getting requirements to build wheel: finished with status 'done'
+        Preparing metadata (pyproject.toml): started
+        Preparing metadata (pyproject.toml): finished with status 'done'
+      Collecting vcs-versioning<3,>=2.3.2.dev0 (from setuptools_scm>=8)
+        Using cached vcs_versioning-2.3.4-py3-none-any.whl
+      Collecting packaging>=20 (from setuptools_scm>=8)
+        Using cached packaging-26.3-py3-none-any.whl
+      Building wheels for collected packages: setuptools, setuptools_scm, wheel, pkgconfig, Cython
+        Building wheel for setuptools (pyproject.toml): started
+        Building wheel for setuptools (pyproject.toml): finished with status 'done'
+        Created wheel for setuptools: filename=setuptools-84.0.0-py3-none-any.whl size=818216 sha256=98f42708234d16a43df1e06acd69005719b2eda6c05f68187e8c670199ec614a
+        Stored in directory: /home/lucie/.cache/pip/wheels/09/c4/7e/3f12bd4f3b911f91b5e4cb2611342c6851559d353876d0251c
+        Building wheel for setuptools_scm (pyproject.toml): started
+        Building wheel for setuptools_scm (pyproject.toml): finished with status 'done'
+        Created wheel for setuptools_scm: filename=setuptools_scm-10.2.3-py3-none-any.whl size=29123 sha256=1fdf70aecf9339fe7664531c8f42a3f926757c93c88a2e7e8801e3db7d6c3761
+        Stored in directory: /home/lucie/.cache/pip/wheels/f9/63/9e/4d89073aedfe2e8055397f614eae4945855c2a4bc8e7ab3f87
+        Building wheel for wheel (pyproject.toml): started
+        Building wheel for wheel (pyproject.toml): finished with status 'done'
+        Created wheel for wheel: filename=wheel-0.48.0-py3-none-any.whl size=33320 sha256=5b28a16f7f4218593423e1e4e7729c8fef6b8f6a58fda19ce4519c8fa08e1c8e
+        Stored in directory: /home/lucie/.cache/pip/wheels/72/9d/9d/f49c5e2f6221926d88f2b822584a20e01b5b11c5319466b25c
+        Building wheel for pkgconfig (pyproject.toml): started
+        Building wheel for pkgconfig (pyproject.toml): finished with status 'done'
+        Created wheel for pkgconfig: filename=pkgconfig-1.6.0-py3-none-any.whl size=7087 sha256=9c7a2c3a7a2708e597882852c92c70b6f989178ffee7ebf2c979aca4b208e017
+        Stored in directory: /home/lucie/.cache/pip/wheels/16/f5/16/e95152264603df9170ebabeec29e0a7ec966c52d17fe9c8084
+        Building wheel for Cython (pyproject.toml): started
+        Building wheel for Cython (pyproject.toml): finished with status 'error'
+        error: subprocess-exited-with-error
+
+        × Building wheel for Cython (pyproject.toml) did not run successfully.
+        ¦ exit code: 1
+        ?-> [346 lines of output]
+            Unable to find pgen, not compiling formal grammar.
+            running bdist_wheel
+            running build
+            running build_py
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312
+            copying cython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/CodeWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/Coverage.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/Debugging.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/LZSS.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/Shadow.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/StringIOTree.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/TestUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/Utils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            copying Cython/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/BuildExecutable.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/Cache.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/Cythonize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/Dependencies.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/Distutils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/Inline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/IpythonMagic.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/SharedModule.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            copying Cython/Build/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/AnalysedTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Annotate.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/AutoDocTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Buffer.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Builtin.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/CmdLine.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Code.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/CodeGeneration.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/CythonScope.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Dataclass.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/DebugFlags.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Errors.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/ExprNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/FlowControl.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/FusedNode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Future.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Interpreter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Lexicon.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/LineTable.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Main.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/MatchCaseNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/MemoryView.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/ModuleNode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Naming.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Nodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Optimize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Options.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/ParseTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Parsing.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Pipeline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/PyrexTypes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Pythran.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Scanning.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/StringEncoding.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Symtab.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/TreeFragment.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/TreePath.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/TypeInference.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/TypeSlots.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/UFuncs.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/UtilityCode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/UtilNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Version.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Visitor.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
+            copying Cython/Runtime/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
+            copying Cython/Distutils/build_ext.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
+            copying Cython/Distutils/extension.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
+            copying Cython/Distutils/old_build_ext.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
+            copying Cython/Distutils/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            copying Cython/Debugger/Cygdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            copying Cython/Debugger/DebugWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            copying Cython/Debugger/libcython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            copying Cython/Debugger/libpython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            copying Cython/Debugger/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Debugger/Tests/TestLibCython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Debugger/Tests/test_libcython_in_gdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Debugger/Tests/test_libpython_in_gdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Debugger/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Actions.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/DFA.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Errors.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Lexicons.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Machines.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Regexps.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Scanners.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Transitions.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestCodeWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestCythonUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestJediTyper.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestShadow.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestStringIOTree.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/TestTestUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/xmlrunner.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            copying Cython/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestCyCache.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestCythonizeArgsParser.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestDependencies.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestInline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestIpythonMagic.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestRecythonize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/TestStripLiterals.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            copying Cython/Build/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestBuffer.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestBuiltin.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestCmdLine.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestCode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestFlowControl.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestGrammar.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestMemView.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestParseTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestScanning.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestSignatureMatching.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestStringEncoding.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestTreeFragment.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestTreePath.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestTypes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestUtilityLoad.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/TestVisitor.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/Utils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            copying Cython/Compiler/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
+            copying Cython/Tempita/_looper.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
+            copying Cython/Tempita/_tempita.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
+            copying Cython/Tempita/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
+            copying pyximport/pyxbuild.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
+            copying pyximport/pyximport.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
+            copying pyximport/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
+            copying Cython/py.typed -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes
+            copying Cython/Includes/openmp.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/array.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/bool.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/buffer.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/bytearray.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/bytes.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/cellobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/ceval.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/codecs.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/contextvars.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/conversion.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/datetime.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/descr.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/dict.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/exc.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/fileobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/float.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/frozendict.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/function.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/genobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/getargs.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/instance.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/iterator.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/iterobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/long.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/longintrepr.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/mapping.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/marshal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/mem.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/memoryview.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/method.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/module.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/number.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/object.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/pycapsule.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/pylifecycle.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/pyport.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/pystate.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/pythread.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/ref.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/sentinel.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/sequence.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/slice.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/tuple.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/type.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/unicode.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/version.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/weakref.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            copying Cython/Includes/cpython/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/errno.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/float.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/limits.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/locale.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/math.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/setjmp.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/signal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/stddef.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/stdint.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/stdio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/stdlib.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/string.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/threads.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            copying Cython/Includes/libc/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/algorithm.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/any.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/atomic.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/barrier.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/bit.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/cast.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/cmath.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/condition_variable.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/deque.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/exception.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/execution.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/forward_list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/functional.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/future.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/iterator.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/latch.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/limits.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/map.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/memory.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/mutex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/numbers.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/numeric.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/optional.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/pair.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/queue.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/random.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/semaphore.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/shared_mutex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/span.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/stack.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/stop_token.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/string.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/string_view.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/typeindex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/typeinfo.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/unordered_map.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/unordered_set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/utility.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/vector.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            copying Cython/Includes/libcpp/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/numpy
+            copying Cython/Includes/numpy/math.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/numpy
+            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/dlfcn.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/fcntl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/ioctl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/mman.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/resource.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/select.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/signal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/stat.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/stdio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/stdlib.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/strings.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/types.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/uio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/unistd.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/wait.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Includes/posix/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
+            copying Cython/Compiler/Code.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/FlowControl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/ParseTreeTransforms.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Parsing.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Scanning.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Compiler/Visitor.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
+            copying Cython/Runtime/refnanny.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
+            copying Cython/Debugger/Tests/codefile -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Debugger/Tests/cfuncs.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
+            copying Cython/Plex/Actions.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/DFA.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Machines.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Scanners.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Plex/Transitions.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
+            copying Cython/Utility/CConvert.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CpdefEnums.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CppConvert.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Exceptions_Cy.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/FusedFunction.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/MatchCase_Cy.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/MemoryView.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/TestCythonScope.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/TestCyUtilityLoader.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/UFuncs.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/BufferFormatFromTypeInfo.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/MemoryView.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/AsyncGen.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Buffer.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Builtins.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CMath.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CommonStructures.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Complex.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Coroutine.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CythonFunction.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Dataclasses.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Embed.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Exceptions.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/ExtensionTypes.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/FunctionArguments.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/ImportExport.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/MatchCase.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/MemoryView_C.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/ModuleSetupCode.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/NumpyImportArray.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/ObjectHandling.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Optimize.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Overflow.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Profile.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/StringTools.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/Synchronization.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/TestUtilityLoader.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/TString.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/TypeConversion.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/UFuncs_C.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/arrayarray.h -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            copying Cython/Utility/CppSupport.cpp -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
+            running build_ext
+            Compiling /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.py because it changed.
+            [1/1] Cythonizing /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.py
+            building 'Cython.Compiler.Parsing' extension
+            gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O3 -Wall -DCYTHON_USE_TYPE_SPECS=1 -I/usr/include/python3.12 -c /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.c -o build/temp.cygwin-3.6.10-x86_64-cpython-312/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.o
+            error: Command '['gcc', '-fno-strict-overflow', '-Wsign-compare', '-DNDEBUG', '-g', '-O3', '-Wall', '-DCYTHON_USE_TYPE_SPECS=1', '-I/usr/include/python3.12', '-c', '/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.c', '-o', 'build/temp.cygwin-3.6.10-x86_64-cpython-312/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.o']' returned non-zero exit status 1.
+            [end of output]
+
+        note: This error originates from a subprocess, and is likely not a problem with pip.
+        ERROR: Failed building wheel for Cython
+      Successfully built setuptools setuptools_scm wheel pkgconfig
+      Failed to build Cython
+      error: failed-wheel-build-for-install
+
+      × Failed to build installable wheels for some pyproject.toml based projects
+      ?-> Cython
+      [end of output]
+
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'borgbackup' when installing build dependencies for borgbackup
 commande Cygwin en échec (1) : set -e
 rm -rf /tmp/sources && mkdir -p /tmp/sources
 printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
 python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
-Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:153 : 32
+Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:158 : 32
 + ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script ...
 +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : OperationStopped: (commande Cygwin... /tmp/plain.txt:String) [], RuntimeException

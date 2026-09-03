@@ -10,6 +10,10 @@
 # elles, une reconstruction six mois plus tard ne produit pas le même runtime.
 # Les valeurs ci-dessous sont à renseigner lors de la première construction.
 
+# Dépendances d'exécution de Borg 1.4.5 : msgpack (>=1.0.3, <=1.2.1) et
+# packaging. Les outils de construction n'y figurent pas — ils ne sont pas
+# livrés dans le runtime.
+
 borgbackup==1.4.5 \
     --hash=sha256:0000000000000000000000000000000000000000000000000000000000000000
 msgpack==1.0.8 \
