@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## État du dépôt
 
-Le dépôt ne contient **que des spécifications** — aucun code, pas de `go.mod`, pas de dépôt Git initialisé. Le projet (nom de travail : **BorgUI**) est une application desktop Go/Fyne de configuration et de supervision de sauvegardes BorgBackup vers une Hetzner Storage Box.
+Le projet (nom de travail : **BorgUI**) est une application desktop Go/Fyne de configuration et de supervision de sauvegardes BorgBackup vers une Hetzner Storage Box.
+
+Le jalon en cours est la **v0.1** : la ligne de commande, sans aucune interface. Elle porte le risque principal du projet et doit être validée sur du matériel réel avant qu'une ligne de Fyne ne soit écrite.
 
 Les trois documents de `specs/` font autorité et se lisent dans cet ordre :
 
@@ -68,6 +70,8 @@ Invariants (AR-01 à AR-06) :
 - Sous Windows, exclure par défaut les fichiers en espace réservé cloud (`FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS`) : les inclure déclenche l'hydratation complète de OneDrive/Dropbox.
 - Toute modification de rétention affiche un `borg prune --list --dry-run` avant confirmation.
 - Le cache SQLite des listes d'archives n'est **jamais** invalidé : les archives sont immuables.
+- Les horodatages de `borg list --json` ne sont pas du RFC 3339 (`2026-09-03T22:14:07.000000`, sans fuseau) : ils passent par `borg.Timestamp`, jamais par `time.Time` directement.
+- Sous Cygwin, `borg create` est enveloppé dans le `bash` du runtime : `/cygdrive` n'existe que dans l'espace de noms Cygwin et un processus Windows ne peut pas l'adopter comme répertoire courant.
 
 ## Interface
 
@@ -83,17 +87,35 @@ La **v0.1 est réalisée en premier, sans aucune interface** : ligne de commande
 
 Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors ligne), v0.3 (planification, statuts SFTP multi-postes), v1.0 (restauration guidée, test de restauration mensuel, traduction des erreurs).
 
+## Organisation du code
+
+```
+cmd/borgui/            ligne de commande v0.1 (une commande par fichier cmd_*.go)
+internal/borg/         pilotage de Borg : Runner, environnement, chemins, événements
+internal/borgruntime/  runtime Windows : téléchargement, empreinte, extraction
+internal/config/       configuration TOML et emplacements par plateforme
+internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
+internal/probe/        diagnostic SSH et clé dédiée à l'application
+internal/secret/       passphrase : trousseau du système, repli fichier
+```
+
+Points d'entrée utiles : `internal/borg/cygpath.go` pour la convention de chemins Windows, `internal/borg/env.go` pour les variables passées à Borg, `internal/borg/operations.go` pour les commandes de haut niveau.
+
+Le module est `leblanc.io/open-go-borg-ui`. L'i18n s'appuie sur `leblanc.io/open-go-base/i18n`.
+
 ## Développement
 
-Le module n'est pas encore initialisé. À la création :
-
 ```bash
-go mod init <module>
 go build ./...
 go test ./...
-go test ./chemin/du/paquet -run TestNom -v   # un test isolé
+go test ./internal/borg -run TestScriptSauvegarde -v   # un test isolé
 go vet ./...
+GOOS=windows go build ./...    # la partie Windows se compile depuis Linux
 ```
+
+Les tests substituent à Borg un script shell qui en reproduit le comportement observable (codes de retour, `--log-json`, JSON de sortie) : toute la chaîne se vérifie sans installation de Borg. Ces tests portent `//go:build !windows`.
+
+Ce qu'aucun test local ne couvre et qui conditionne le passage de la v0.1 : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04).
 
 **Fyne dépend de CGO** : pas de compilation croisée. La CI doit avoir deux exécuteurs, `windows-latest` et `ubuntu-latest` (LI-04). Les couches non graphiques (`BorgRunner`, stores, scheduler) doivent rester testables sans Fyne.
 

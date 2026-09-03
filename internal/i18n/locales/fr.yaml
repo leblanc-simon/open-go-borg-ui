@@ -1,0 +1,132 @@
+# Catalogue français. Les clés sont en anglais, structurées « écran.élément ».
+# Les racines transverses — status, duration, error, encryption — ne sont pas
+# dupliquées écran par écran.
+#
+# Le vocabulaire de Borg n'apparaît pas dans les messages : on dit destination,
+# sauvegarde et conservation, jamais dépôt, archive ni rotation (EI-02).
+
+cli.usage: |
+  Utilisation : borgui <commande> [options]
+
+  Commandes :
+    config init      crée la configuration du poste
+    config show      affiche la configuration
+    key show         affiche la clé à déposer sur la destination
+    runtime status   état du moteur de sauvegarde
+    runtime install  installe le moteur de sauvegarde
+    connection test  vérifie l'accès à la destination
+    passphrase set   enregistre le mot de passe de la destination
+    repository init  prépare la destination
+    repository info  état de la destination
+    backup           lance une sauvegarde
+    archives         liste les sauvegardes disponibles
+
+  Options communes :
+    --config <fichier>   fichier de configuration à utiliser
+    --profile <nom>      profil à utiliser
+    --lang <langue>      langue des messages (fr, en)
+cli.error: "Erreur : {{.Message}}"
+cli.details: "   {{.Message}}"
+cli.cancelled: "Interrompu."
+cli.unknown_command: "commande inconnue : {{.Command}}"
+
+status.success: "Terminé"
+status.warning: "Terminé avec des avertissements"
+status.error: "Échec"
+
+duration.seconds: "{{.Seconds}} s"
+duration.minutes_seconds: "{{.Minutes}} min {{.Seconds}} s"
+duration.hours_minutes: "{{.Hours}} h {{.Minutes}} min"
+
+encryption.encrypted: "chiffrée"
+encryption.none: "non chiffrée"
+
+error.unknown: "La commande a échoué."
+error.repository_locked: "La destination est verrouillée par une sauvegarde interrompue. Elle peut être débloquée sans risque."
+error.repository_missing: "Aucune sauvegarde n'a encore été créée sur cette destination."
+error.repository_exists: "Cette destination contient déjà des sauvegardes."
+error.passphrase_wrong: "Le mot de passe de la destination est refusé."
+error.connection: "La destination n'a pas pu être jointe."
+
+config.usage: "Utilisation : borgui config init | show"
+config.missing_destination: "indiquez le sous-compte (--user) et le nom de la destination (--repo)"
+config.already_exists: "une configuration existe déjà : {{.Path}}"
+config.written: "Configuration écrite dans {{.Path}}"
+config.location: "Configuration : {{.Path}}"
+config.next_step_sources: "Ajoutez les dossiers à sauvegarder dans « sources », puis lancez : borgui key show"
+
+key.usage: "Utilisation : borgui key show"
+key.intro: "Clé publique de l'application, à déposer sur la destination :"
+key.hetzner_steps: |
+  Sur une Storage Box Hetzner, dans la console :
+    1. activez « SSH support » et « External reachability » ;
+    2. collez la clé ci-dessus dans les clés autorisées du sous-compte ;
+    3. lancez ensuite : borgui connection test --pin
+key.location: "Clé enregistrée dans {{.Path}}"
+
+runtime.usage: "Utilisation : borgui runtime status | install [--archive <fichier>]"
+runtime.pinned: "Moteur attendu par cette version : {{.Version}}"
+runtime.installed: "Moteur installé : {{.Version}} ({{.Path}})"
+runtime.version_differs: "Le moteur installé ({{.Found}}) n'est pas celui attendu ({{.Expected}})."
+runtime.version_unexpected: "le moteur installé rapporte {{.Found}} au lieu de {{.Expected}} : installation interrompue"
+runtime.missing_windows: "aucun moteur de sauvegarde installé. Lancez : borgui runtime install"
+runtime.missing_linux: "le moteur de sauvegarde est absent. Installez-le avec : {{.Command}}"
+runtime.install_linux: "sous Linux, le moteur vient de la distribution. Installez-le avec : {{.Command}}"
+runtime.installing_offline: "Installation depuis {{.Archive}}"
+runtime.downloading: "Téléchargement du moteur : {{.Downloaded}} sur {{.Total}} ({{.Percent}} %)"
+runtime.downloading_unknown: "Téléchargement du moteur : {{.Downloaded}}"
+runtime.checksum_mismatch: "l'empreinte du fichier téléchargé ne correspond pas à celle attendue : installation interrompue"
+runtime.not_published: "aucune adresse de téléchargement n'est fournie par cette version. Téléchargez l'archive du moteur, puis lancez : borgui runtime install --archive <fichier>"
+
+connection.usage: "Utilisation : borgui connection test [--pin]"
+connection.testing: "Vérification de la destination {{.Host}}, port {{.Port}}"
+connection.step_ok: "  ✓ {{.Step}}"
+connection.step_ok_detail: "  ✓ {{.Step}} — {{.Detail}}"
+connection.step_failed: "  ✗ {{.Step}}"
+connection.step_resolve: "Nom de la destination"
+connection.step_reach: "Accès au port"
+connection.step_authenticate: "Acceptation de la clé"
+connection.step_engine: "Moteur de sauvegarde sur la destination"
+connection.step_repository_ok: "  ✓ Sauvegardes lisibles — {{.Size}} occupés, destination {{.Mode}}"
+connection.step_repository_missing: "  ✓ Destination accessible, aucune sauvegarde pour l'instant"
+connection.fix_resolve: "le nom de la destination est introuvable. Vérifiez le sous-compte et votre connexion à Internet."
+connection.fix_reach: "le port de la destination ne répond pas. Sur une Storage Box, vérifiez que « SSH support » et « External reachability » sont activés."
+connection.fix_authenticate: "la clé de l'application est refusée. Déposez la clé affichée par « borgui key show » dans les clés autorisées du sous-compte."
+connection.fix_engine: "le moteur de sauvegarde demandé est absent de la destination. Vérifiez le champ remote_path de la configuration."
+connection.pin_hint: "Cette destination est inconnue. Si l'empreinte ci-dessus est bien la sienne, relancez avec --pin pour l'enregistrer."
+
+passphrase.usage: "Utilisation : borgui passphrase set | check"
+passphrase.prompt: "Mot de passe de la destination :"
+passphrase.stored: "Mot de passe enregistré."
+passphrase.fallback_warning: "Le trousseau du système n'est pas disponible : le mot de passe a été enregistré dans un fichier protégé de {{.Dir}}."
+passphrase.empty: "aucun mot de passe saisi"
+passphrase.missing: "aucun mot de passe enregistré pour ce profil. Lancez : borgui passphrase set"
+passphrase.available: "Mot de passe disponible."
+passphrase.not_needed: "Cette destination n'est pas chiffrée : aucun mot de passe n'est nécessaire."
+passphrase.not_encrypted: "cette destination n'est pas chiffrée : elle n'utilise pas de mot de passe"
+
+repository.usage: "Utilisation : borgui repository init | info | export-key"
+repository.creating: "Préparation de la destination {{.Repository}} ({{.Mode}})"
+repository.created: "Destination prête."
+repository.already_exists: "cette destination contient déjà des sauvegardes"
+repository.passphrase_required: "enregistrez d'abord le mot de passe de la destination : borgui passphrase set"
+repository.export_key_required: "Avant la première sauvegarde, mettez à l'abri la clé de secours : borgui repository export-key"
+repository.location: "Destination : {{.Repository}}"
+repository.mode: "Confidentialité : {{.Mode}}"
+repository.size: "Espace occupé : {{.Size}} pour {{.Original}} de données"
+repository.mode_differs: "La configuration annonce une destination {{.Configured}}, mais elle est {{.Actual}}. C'est la destination qui fait foi."
+repository.no_key: "Cette destination n'est pas chiffrée : il n'y a pas de clé de secours."
+repository.key_intro: "Clé de secours. Imprimez-la ou recopiez-la, et rangez-la hors de ce poste :"
+repository.key_warning: "Sans cette clé ni le mot de passe, les sauvegardes sont définitivement illisibles."
+
+backup.no_sources: "aucun dossier à sauvegarder n'est indiqué dans la configuration"
+backup.starting: "Sauvegarde de {{.Count}} dossier(s)…"
+backup.progress: "{{.Files}} fichiers, {{.Size}} — {{.Path}}"
+backup.finished: "Sauvegarde terminée : {{.Files}} fichiers, {{.Original}} parcourus, {{.Stored}} ajoutés, en {{.Duration}}"
+backup.finished_rate: "Sauvegarde terminée : {{.Files}} fichiers, {{.Original}} parcourus, {{.Stored}} ajoutés, en {{.Duration}} ({{.Rate}})"
+backup.archive_name: "Sauvegarde enregistrée sous {{.Name}}"
+backup.warnings: "{{.Count}} fichier(s) n'ont pas pu être lus. La sauvegarde reste utilisable."
+
+archives.empty: "Aucune sauvegarde sur cette destination."
+archives.entry: "  {{.Date}}  {{.Name}}"
+archives.count: "{{.Count}} sauvegarde(s)."

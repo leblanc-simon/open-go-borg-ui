@@ -1,0 +1,129 @@
+# English catalogue. Borg vocabulary is deliberately absent from user-facing
+# strings: destination, backup and retention, never repository, archive or
+# prune.
+
+cli.usage: |
+  Usage: borgui <command> [options]
+
+  Commands:
+    config init      create this computer's configuration
+    config show      show the configuration
+    key show         show the key to register on the destination
+    runtime status   backup engine status
+    runtime install  install the backup engine
+    connection test  check access to the destination
+    passphrase set   store the destination password
+    repository init  prepare the destination
+    repository info  destination status
+    backup           run a backup
+    archives         list available backups
+
+  Common options:
+    --config <file>    configuration file to use
+    --profile <name>   profile to use
+    --lang <language>  message language (fr, en)
+cli.error: "Error: {{.Message}}"
+cli.details: "   {{.Message}}"
+cli.cancelled: "Interrupted."
+cli.unknown_command: "unknown command: {{.Command}}"
+
+status.success: "Completed"
+status.warning: "Completed with warnings"
+status.error: "Failed"
+
+duration.seconds: "{{.Seconds}}s"
+duration.minutes_seconds: "{{.Minutes}}m {{.Seconds}}s"
+duration.hours_minutes: "{{.Hours}}h {{.Minutes}}m"
+
+encryption.encrypted: "encrypted"
+encryption.none: "not encrypted"
+
+error.unknown: "The command failed."
+error.repository_locked: "The destination is locked by an interrupted backup. It can be safely unlocked."
+error.repository_missing: "No backup has been created on this destination yet."
+error.repository_exists: "This destination already holds backups."
+error.passphrase_wrong: "The destination password was refused."
+error.connection: "The destination could not be reached."
+
+config.usage: "Usage: borgui config init | show"
+config.missing_destination: "provide the sub-account (--user) and the destination name (--repo)"
+config.already_exists: "a configuration already exists: {{.Path}}"
+config.written: "Configuration written to {{.Path}}"
+config.location: "Configuration: {{.Path}}"
+config.next_step_sources: "Add the folders to back up under \"sources\", then run: borgui key show"
+
+key.usage: "Usage: borgui key show"
+key.intro: "Application public key, to register on the destination:"
+key.hetzner_steps: |
+  On a Hetzner Storage Box, in the console:
+    1. enable "SSH support" and "External reachability";
+    2. paste the key above into the sub-account's authorised keys;
+    3. then run: borgui connection test --pin
+key.location: "Key stored in {{.Path}}"
+
+runtime.usage: "Usage: borgui runtime status | install [--archive <file>]"
+runtime.pinned: "Engine expected by this version: {{.Version}}"
+runtime.installed: "Installed engine: {{.Version}} ({{.Path}})"
+runtime.version_differs: "The installed engine ({{.Found}}) is not the expected one ({{.Expected}})."
+runtime.version_unexpected: "the installed engine reports {{.Found}} instead of {{.Expected}}: installation aborted"
+runtime.missing_windows: "no backup engine installed. Run: borgui runtime install"
+runtime.missing_linux: "the backup engine is missing. Install it with: {{.Command}}"
+runtime.install_linux: "on Linux the engine comes from the distribution. Install it with: {{.Command}}"
+runtime.installing_offline: "Installing from {{.Archive}}"
+runtime.downloading: "Downloading the engine: {{.Downloaded}} of {{.Total}} ({{.Percent}}%)"
+runtime.downloading_unknown: "Downloading the engine: {{.Downloaded}}"
+runtime.checksum_mismatch: "the downloaded file's checksum does not match the expected one: installation aborted"
+runtime.not_published: "this version provides no download address. Download the engine archive, then run: borgui runtime install --archive <file>"
+
+connection.usage: "Usage: borgui connection test [--pin]"
+connection.testing: "Checking destination {{.Host}}, port {{.Port}}"
+connection.step_ok: "  ✓ {{.Step}}"
+connection.step_ok_detail: "  ✓ {{.Step}} — {{.Detail}}"
+connection.step_failed: "  ✗ {{.Step}}"
+connection.step_resolve: "Destination name"
+connection.step_reach: "Port access"
+connection.step_authenticate: "Key acceptance"
+connection.step_engine: "Backup engine on the destination"
+connection.step_repository_ok: "  ✓ Backups readable — {{.Size}} used, destination {{.Mode}}"
+connection.step_repository_missing: "  ✓ Destination reachable, no backup yet"
+connection.fix_resolve: "the destination name cannot be resolved. Check the sub-account and your Internet connection."
+connection.fix_reach: "the destination port does not answer. On a Storage Box, check that \"SSH support\" and \"External reachability\" are enabled."
+connection.fix_authenticate: "the application key was refused. Register the key shown by \"borgui key show\" in the sub-account's authorised keys."
+connection.fix_engine: "the requested backup engine is missing from the destination. Check the remote_path setting."
+connection.pin_hint: "This destination is unknown. If the fingerprint above is really its own, run again with --pin to record it."
+
+passphrase.usage: "Usage: borgui passphrase set | check"
+passphrase.prompt: "Destination password:"
+passphrase.stored: "Password stored."
+passphrase.fallback_warning: "The system keychain is unavailable: the password was stored in a protected file under {{.Dir}}."
+passphrase.empty: "no password entered"
+passphrase.missing: "no password stored for this profile. Run: borgui passphrase set"
+passphrase.available: "Password available."
+passphrase.not_needed: "This destination is not encrypted: no password is needed."
+passphrase.not_encrypted: "this destination is not encrypted: it uses no password"
+
+repository.usage: "Usage: borgui repository init | info | export-key"
+repository.creating: "Preparing destination {{.Repository}} ({{.Mode}})"
+repository.created: "Destination ready."
+repository.already_exists: "this destination already holds backups"
+repository.passphrase_required: "store the destination password first: borgui passphrase set"
+repository.export_key_required: "Before the first backup, put the recovery key somewhere safe: borgui repository export-key"
+repository.location: "Destination: {{.Repository}}"
+repository.mode: "Confidentiality: {{.Mode}}"
+repository.size: "Space used: {{.Size}} for {{.Original}} of data"
+repository.mode_differs: "The configuration says the destination is {{.Configured}}, but it is {{.Actual}}. The destination prevails."
+repository.no_key: "This destination is not encrypted: there is no recovery key."
+repository.key_intro: "Recovery key. Print it or copy it out, and keep it away from this computer:"
+repository.key_warning: "Without this key and the password, the backups are permanently unreadable."
+
+backup.no_sources: "no folder to back up is listed in the configuration"
+backup.starting: "Backing up {{.Count}} folder(s)…"
+backup.progress: "{{.Files}} files, {{.Size}} — {{.Path}}"
+backup.finished: "Backup completed: {{.Files}} files, {{.Original}} scanned, {{.Stored}} added, in {{.Duration}}"
+backup.finished_rate: "Backup completed: {{.Files}} files, {{.Original}} scanned, {{.Stored}} added, in {{.Duration}} ({{.Rate}})"
+backup.archive_name: "Backup stored as {{.Name}}"
+backup.warnings: "{{.Count}} file(s) could not be read. The backup is still usable."
+
+archives.empty: "No backup on this destination."
+archives.entry: "  {{.Date}}  {{.Name}}"
+archives.count: "{{.Count}} backup(s)."
