@@ -34,6 +34,33 @@ cd build\runtime
 .\build-runtime.ps1 -BorgVersion 1.4.5 -Revision 1
 ```
 
+### Si Windows refuse d'exécuter le script
+
+`L'exécution de scripts est désactivée sur ce système` est le refus par défaut
+de Windows, pas un défaut du script. Le plus direct, sans rien changer au
+poste :
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File .\build-runtime.ps1 -BorgVersion 1.4.5 -Revision 1
+```
+
+Pour ne pas le répéter à chaque construction, la politique se change pour le
+seul utilisateur courant, sans droits administrateur :
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+Si l'une comme l'autre échouent, la restriction vient d'une stratégie de
+groupe. `Get-ExecutionPolicy -List` indique laquelle : une valeur portée par
+`MachinePolicy` ou `UserPolicy` prime sur tout le reste et relève de
+l'administration du parc, pas d'un contournement. Construisez alors le runtime
+sur une machine hors domaine — c'est une opération ponctuelle, faite une fois
+par version de moteur, dont le résultat est une archive publiée.
+
+Si le fichier a été téléchargé plutôt que cloné, Windows le marque en outre
+comme venant d'Internet : `Unblock-File .\build-runtime.ps1` lève ce marquage.
+
 Le script enchaîne huit étapes : récupération du programme d'installation
 Cygwin et vérification de sa signature, téléchargement des paquets, arbre de
 compilation, compilation de Borg depuis ses sources, composition de l'arbre
