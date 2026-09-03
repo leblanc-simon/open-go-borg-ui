@@ -89,6 +89,21 @@ construction enchaînerait sur un arbre encore en cours d'installation — l'éc
 se manifeste alors bien plus loin, par un « command not found » sur
 l'interpréteur.
 
+Deux de ses comportements demandent la même vigilance :
+
+- **un paquet inconnu ne le fait pas échouer** : il l'annonce et poursuit,
+  laissant un arbre incomplet. La sortie est donc relue et un
+  `Package '...' not found` arrête la construction ;
+- **il tient sa propre base de ce qu'il a installé dans un arbre**, et s'y fie
+  jusqu'à décider de ce qu'il a besoin de télécharger. Sur un arbre laissé à
+  moitié fait par une exécution interrompue, il conclut que tout est en place
+  et n'installe plus rien, indéfiniment. L'arbre de compilation est donc effacé
+  à chaque construction ; le dossier des paquets, lui, est conservé.
+
+Si une construction a été interrompue avant cette correction, effacez
+`work\build` et `work\stage` à la main : le script le fait désormais, mais la
+base laissée par l'exécution précédente est ce qui bloquait les suivantes.
+
 Il produit dans `dist/` l'archive `borgui-runtime-<version>.zip`, le fichier
 `SHA256SUMS`, et affiche les valeurs à reporter dans `spec.go`.
 

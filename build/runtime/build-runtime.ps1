@@ -125,9 +125,21 @@ function Read-PackageList([string] $Section) {
 # moyen fiable d'attendre, et son code de sortie le seul moyen de savoir que
 # l'installation a réussi.
 function Invoke-Setup([string[]] $Arguments) {
-    $process = Start-Process -FilePath $SetupExe -ArgumentList $Arguments -Wait -PassThru -NoNewWindow
+    $log = Join-Path $Workspace 'setup.log'
+    $process = Start-Process -FilePath $SetupExe -ArgumentList $Arguments -Wait -PassThru `
+        -NoNewWindow -RedirectStandardOutput $log
+    if (Test-Path $log) { Get-Content $log | ForEach-Object { Write-Host "    $_" } }
+
     if ($process.ExitCode -ne 0) {
         throw "installation Cygwin en échec (code $($process.ExitCode)) : $($Arguments -join ' ')"
+    }
+    # Un paquet inconnu ne fait pas échouer le programme d'installation : il le
+    # mentionne et poursuit. L'arbre est alors incomplet et ne le dira qu'à
+    # l'usage, plusieurs étapes plus loin.
+    $missing = Select-String -Path $log -Pattern "Package '(.+)' not found" -AllMatches
+    if ($missing) {
+        $names = ($missing.Matches | ForEach-Object { $_.Groups[1].Value }) -join ', '
+        throw "paquets inconnus du miroir Cygwin : $names — corrigez packages.txt"
     }
 }
 
@@ -141,13 +153,20 @@ function Invoke-Cygwin([string] $Root, [string] $Script) {
     if ($LASTEXITCODE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script" }
 }
 
-# Assert-Interpreter vérifie que l'interpréteur attendu est présent dans un
-# arbre. Sans ce contrôle, son absence ne se manifeste que par un « command not
-# found » au milieu d'un script shell, qui ne désigne pas sa cause.
+# Assert-Interpreter éprouve l'interpréteur d'un arbre.
+#
+# Le fichier peut exister sans être exécutable — bibliothèque manquante, arbre
+# installé à moitié. C'est donc l'exécution qui fait foi, et non la présence,
+# faute de quoi le défaut ne se manifeste que par un « command not found » au
+# milieu d'un script shell, qui ne désigne pas sa cause.
 function Assert-Interpreter([string] $Root) {
-    $found = Get-ChildItem -Path (Join-Path $Root 'bin') -Filter "$Python*" -ErrorAction SilentlyContinue
-    if (-not $found) {
-        throw "$Python est absent de $Root : le paquet $PythonPackage n'a pas été installé"
+    $bash = Join-Path $Root 'bin\bash.exe'
+    if (-not (Test-Path $bash)) {
+        throw "arbre Cygwin incomplet dans $Root : bin\bash.exe est absent"
+    }
+    & $bash '-lc' "$Python --version" | ForEach-Object { Write-Host "    $_" }
+    if ($LASTEXITCODE -ne 0) {
+        throw "$Python ne s'exécute pas dans $Root : le paquet $PythonPackage manque ou l'arbre est incomplet"
     }
 }
 
@@ -191,6 +210,14 @@ Write-Host "    signé par $($signature.SignerCertificate.Subject)"
 # Le dossier obtenu est l'artefact qui rend la construction reproductible :
 # conservé et republié avec l'archive, il permet de reconstruire à l'identique
 # des années plus tard, quel que soit l'état des miroirs.
+#
+# L'arbre de compilation est d'abord effacé. Le programme d'installation tient
+# sa propre base de ce qu'il a installé dans un arbre, et s'y fie même pour
+# décider de ce qu'il a besoin de télécharger : sur un arbre laissé à moitié
+# fait par une exécution interrompue, il conclut que tout est en place, ne
+# télécharge ni n'installe plus rien, et l'arbre reste incomplet
+# indéfiniment. Le dossier des paquets, lui, est conservé : il évite de tout
+# retélécharger et c'est l'artefact à publier.
 Write-Step 'Téléchargement des paquets Cygwin'
 $buildPackages   = Read-PackageList 'build'
 $releasePackages = Read-PackageList 'release'
@@ -201,6 +228,7 @@ foreach ($list in @($buildPackages, $releasePackages)) {
         throw "packages.txt ne contient pas $PythonPackage : la série de Python demandée n'y figure pas"
     }
 }
+if (Test-Path $BuildRoot) { Remove-Item -Recurse -Force $BuildRoot }
 Invoke-Setup @(
     '--quiet-mode', '--no-admin', '--no-shortcuts', '--no-desktop', '--download',
     '--site', $Mirror, '--local-package-dir', $PackageDir, '--root', $BuildRoot,

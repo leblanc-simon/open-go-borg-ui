@@ -1,28 +1,112 @@
+PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypass -File .\build-runtime.ps1  -UpdateHashes
+==> Runtime 1.4.5-cygwin.1 (Python 3.12)
+==> Récupération du programme d'installation Cygwin
+    signé par CN=Jon Turney, O=Jon Turney, S=Hertfordshire, C=GB
+==> Téléchargement des paquets Cygwin
+Starting cygwin install, version 2.937
+User has NO backup/restore rights
+User has NO symlink creation right
+Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+net: Preconfig
+site: https://mirrors.kernel.org/sourceware/cygwin/
+Package 'libacl-devel' not found.
+Package 'libacl1' not found.
+solving: 20 tasks, update: no, use test packages: no
+solving: 0 tasks, update: no, use test packages: no
+Augmented Transaction List: is empty
+Ending cygwin install
+==> Installation de l'arbre de compilation
+Starting cygwin install, version 2.937
+User has NO backup/restore rights
+User has NO symlink creation right
+Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+root: C:\Users\lucie\Downloads\build\runtime\work\build user
+Changing gid back to original
+Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+Package 'libacl-devel' not found.
+solving: 13 tasks, update: no, use test packages: no
+solving: 0 tasks, update: no, use test packages: no
+Augmented Transaction List: is empty
+Registry value set: HKEY_CURRENT_USER\Software\Cygwin\setup\rootdir = "C:\Users\lucie\Downloads\build\runtime\work\build"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_000_autorebase.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_update-info-dir.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/ca-certificates.sh"
+abnormal exit: exit code=127
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_desktop-file-utils.sh"
+abnormal exit: exit code=1
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_glib2.0.sh"
+abnormal exit: exit code=1
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/zp_man-db-update-index.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_shared-mime-info.sh"
+abnormal exit: exit code=127
+Ending cygwin install
+==> Calcul des empreintes des dépendances
+commande Cygwin en échec (127) : set -e
+rm -rf /tmp/sources && mkdir -p /tmp/sources
+printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
+python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+Au caract�re C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:141 : 32
++ ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (commande Cygwin... /tmp/plain.txt:String) [], RuntimeException
+    + FullyQualifiedErrorId : commande Cygwin en échec (127) : set -e
+rm -rf /tmp/sources && mkdir -p /tmp/sources
+printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
+python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+
 PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypass -File .\build-runtime.ps1  -BorgVersion 1.4.5 -Revision 1
 ==> Runtime 1.4.5-cygwin.1 (Python 3.12)
 ==> Récupération du programme d'installation Cygwin
     signé par CN=Jon Turney, O=Jon Turney, S=Hertfordshire, C=GB
 ==> Téléchargement des paquets Cygwin
+Starting cygwin install, version 2.937
+User has NO backup/restore rights
+User has NO symlink creation right
+Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+net: Preconfig
+site: https://mirrors.kernel.org/sourceware/cygwin/
+Package 'libacl-devel' not found.
+Package 'libacl1' not found.
+solving: 20 tasks, update: no, use test packages: no
+solving: 0 tasks, update: no, use test packages: no
+Augmented Transaction List: is empty
+Ending cygwin install
 ==> Installation de l'arbre de compilation
-==> Compilation de Borg 1.4.5
-Copying skeleton files.
-These files are for the users to personalise their cygwin experience.
+Starting cygwin install, version 2.937
+User has NO backup/restore rights
+User has NO symlink creation right
+Current Directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+root: C:\Users\lucie\Downloads\build\runtime\work\build user
+Changing gid back to original
+Selected local directory: C:\Users\lucie\Downloads\build\runtime\work\packages
+Package 'libacl-devel' not found.
+solving: 13 tasks, update: no, use test packages: no
+solving: 0 tasks, update: no, use test packages: no
+Augmented Transaction List: is empty
+Registry value set: HKEY_CURRENT_USER\Software\Cygwin\setup\rootdir = "C:\Users\lucie\Downloads\build\runtime\work\build"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_000_autorebase.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/0p_update-info-dir.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/ca-certificates.sh"
+abnormal exit: exit code=127
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_desktop-file-utils.sh"
+abnormal exit: exit code=1
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_glib2.0.sh"
+abnormal exit: exit code=1
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/zp_man-db-update-index.dash"
+running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_shared-mime-info.sh"
+abnormal exit: exit code=127
+Ending cygwin install
+les empreintes de requirements.txt ne sont pas renseignées.
+Calculez-les une fois, puis relisez le fichier avant de le valider :
+    .\build-runtime.ps1 -UpdateHashes
+Au caract�re C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:267 : 5
++     throw @"
++     ~~~~~~~~
+    + CategoryInfo          : OperationStopped: (les empreintes ...1 -UpdateHashes:String) [], RuntimeException
+    + FullyQualifiedErrorId : les empreintes de requirements.txt ne sont pas renseignées.
+Calculez-les une fois, puis relisez le fichier avant de le valider :
+    .\build-runtime.ps1 -UpdateHashes
 
-They will never be overwritten nor automatically updated.
-
-'./.bashrc' -> '/home/lucie//.bashrc'
-'./.bash_profile' -> '/home/lucie//.bash_profile'
-'./.inputrc' -> '/home/lucie//.inputrc'
-'./.profile' -> '/home/lucie//.profile'
-commande Cygwin en échec (127) : set -e
-python3.12 -m pip install --no-cache-dir --upgrade pip wheel
-python3.12 -m pip wheel --no-binary :all: --require-hashes \
-    --requirement '/cygdrive/C/Users/lucie/Downloads/build/runtime/requirements.txt' --wheel-dir /tmp/wheels
-Au caract�re C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:100 : 32
-+ ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Scrip ...
-+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : OperationStopped: (commande Cygwin...dir /tmp/wheels:String) [], RuntimeException
-    + FullyQualifiedErrorId : commande Cygwin en échec (127) : set -e
-python3.12 -m pip install --no-cache-dir --upgrade pip wheel
-python3.12 -m pip wheel --no-binary :all: --require-hashes \
-    --requirement '/cygdrive/C/Users/lucie/Downloads/build/runtime/requirements.txt' --wheel-dir /tmp/wheels
+PS C:\Users\lucie\Downloads\build\runtime>

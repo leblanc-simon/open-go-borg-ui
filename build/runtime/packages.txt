@@ -16,7 +16,6 @@
 gcc-g++
 binutils
 make
-git
 python312
 python312-devel
 python312-pip
@@ -26,9 +25,12 @@ libssl-devel
 liblz4-devel
 libzstd-devel
 libxxhash-devel
-libacl-devel
 
 [release]
+# Les ACL POSIX ne demandent aucun paquet : Cygwin les fournit dans sa propre
+# bibliothèque C. Il n'existe pas de libacl à installer, contrairement à une
+# distribution Linux.
+#
 # Le strict nécessaire à l'exécution : l'interpréteur, les bibliothèques de
 # compression et de chiffrement, le client SSH et le shell par lequel
 # l'application lance ses commandes.
@@ -40,4 +42,3 @@ libssl3
 liblz4_1
 libzstd1
 libxxhash0
-libacl1
