@@ -1,0 +1,26 @@
+# Binaires
+/borgui
+/borgui.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Tests et couverture
+*.test
+*.out
+coverage.*
+
+# Répertoires de construction
+/dist/
+/build/
+
+# Environnement local
+.env
+*.local.toml
+
+# Éditeurs et système
+.idea/
+.vscode/
+*.swp
+.DS_Store
