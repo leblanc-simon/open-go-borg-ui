@@ -29,10 +29,21 @@ reconstruire l'application, et un binaire de 130 Mo qui extrait puis exécute
 Sur une machine Windows x86-64, sans droits administrateur, 2 Go d'espace
 libre :
 
+La première construction d'une version de Borg se fait en deux temps. Les
+empreintes des dépendances Python ne peuvent être calculées que sur une machine
+capable de télécharger et de lire leurs sources : elles ne figurent donc pas
+dans le dépôt tant qu'une construction ne les a pas produites.
+
 ```powershell
 cd build\runtime
+.\build-runtime.ps1 -UpdateHashes          # renseigne requirements.txt
+git diff requirements.txt                  # à relire avant de valider
 .\build-runtime.ps1 -BorgVersion 1.4.5 -Revision 1
 ```
+
+Les constructions suivantes n'ont besoin que de la dernière commande. Si les
+empreintes manquent, le script s'arrête avant de compiler quoi que ce soit et
+rappelle la marche à suivre.
 
 ### Si Windows refuse d'exécuter le script
 
@@ -67,8 +78,16 @@ compilation, compilation de Borg depuis ses sources, composition de l'arbre
 livré, élagage, vérification fonctionnelle, archive et empreinte.
 
 La série de Python demandée est confrontée à `packages.txt` avant toute
-installation : une divergence entre les deux produirait un runtime dont
-l'interpréteur ne connaît pas Borg.
+installation, et la présence de l'interpréteur est vérifiée après chaque
+installation Cygwin : une divergence entre les deux fichiers, ou une
+installation incomplète, produirait un runtime dont l'interpréteur ne connaît
+pas Borg.
+
+Le programme d'installation de Cygwin est une application graphique même en
+mode silencieux : il est lancé par `Start-Process -Wait`, faute de quoi la
+construction enchaînerait sur un arbre encore en cours d'installation — l'échec
+se manifeste alors bien plus loin, par un « command not found » sur
+l'interpréteur.
 
 Il produit dans `dist/` l'archive `borgui-runtime-<version>.zip`, le fichier
 `SHA256SUMS`, et affiche les valeurs à reporter dans `spec.go`.

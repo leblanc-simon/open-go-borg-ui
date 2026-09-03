@@ -1,0 +1,28 @@
+PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypass -File .\build-runtime.ps1  -BorgVersion 1.4.5 -Revision 1
+==> Runtime 1.4.5-cygwin.1 (Python 3.12)
+==> Récupération du programme d'installation Cygwin
+    signé par CN=Jon Turney, O=Jon Turney, S=Hertfordshire, C=GB
+==> Téléchargement des paquets Cygwin
+==> Installation de l'arbre de compilation
+==> Compilation de Borg 1.4.5
+Copying skeleton files.
+These files are for the users to personalise their cygwin experience.
+
+They will never be overwritten nor automatically updated.
+
+'./.bashrc' -> '/home/lucie//.bashrc'
+'./.bash_profile' -> '/home/lucie//.bash_profile'
+'./.inputrc' -> '/home/lucie//.inputrc'
+'./.profile' -> '/home/lucie//.profile'
+commande Cygwin en échec (127) : set -e
+python3.12 -m pip install --no-cache-dir --upgrade pip wheel
+python3.12 -m pip wheel --no-binary :all: --require-hashes \
+    --requirement '/cygdrive/C/Users/lucie/Downloads/build/runtime/requirements.txt' --wheel-dir /tmp/wheels
+Au caract�re C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:100 : 32
++ ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (commande Cygwin...dir /tmp/wheels:String) [], RuntimeException
+    + FullyQualifiedErrorId : commande Cygwin en échec (127) : set -e
+python3.12 -m pip install --no-cache-dir --upgrade pip wheel
+python3.12 -m pip wheel --no-binary :all: --require-hashes \
+    --requirement '/cygdrive/C/Users/lucie/Downloads/build/runtime/requirements.txt' --wheel-dir /tmp/wheels

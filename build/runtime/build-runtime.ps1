@@ -19,6 +19,11 @@
 .EXAMPLE
     .\build-runtime.ps1 -BorgVersion 1.4.5 -Revision 1
 
+.EXAMPLE
+    .\build-runtime.ps1 -UpdateHashes
+    Renseigne les empreintes de requirements.txt, à faire une fois par version
+    de Borg, puis relire le fichier avant de construire.
+
 .NOTES
     À exécuter sur une machine Windows x86-64. Prévoir 2 Go d'espace libre.
 #>
@@ -45,7 +50,12 @@ param(
 
     # Espace de travail. Il est entièrement jetable. Vide, il est placé dans
     # le dossier de la recette, une fois celui-ci résolu.
-    [string] $Workspace = ''
+    [string] $Workspace = '',
+
+    # Calcule les empreintes des dépendances Python et réécrit
+    # requirements.txt, au lieu de construire. À faire une fois par version de
+    # Borg, sur une machine de confiance.
+    [switch] $UpdateHashes
 )
 
 $ErrorActionPreference = 'Stop'
@@ -60,7 +70,9 @@ $ScriptRoot =
     elseif ($MyInvocation.MyCommand.Path) { Split-Path -Parent $MyInvocation.MyCommand.Path }
     else { (Get-Location).Path }
 
-if (-not (Test-Path (Join-Path $ScriptRoot 'packages.txt'))) {
+$RequirementsFile = Join-Path $ScriptRoot 'requirements.txt'
+$PackagesFile     = Join-Path $ScriptRoot 'packages.txt'
+if (-not (Test-Path $PackagesFile)) {
     throw "packages.txt est introuvable dans $ScriptRoot : lancez le script depuis build\runtime, ou avec -File"
 }
 if (-not $Workspace) { $Workspace = Join-Path $ScriptRoot 'work' }
@@ -69,6 +81,7 @@ $RuntimeVersion = "$BorgVersion-cygwin.$Revision"
 $Python         = "python$PythonSeries"                        # binaire : python3.12
 $PythonPackage  = 'python' + ($PythonSeries -replace '\.', '') # paquet  : python312
 $PythonLibDir   = "/usr/lib/python$PythonSeries"
+
 $SetupExe   = Join-Path $Workspace 'setup-x86_64.exe'
 $PackageDir = Join-Path $Workspace 'packages'   # artefact à conserver
 $BuildRoot  = Join-Path $Workspace 'build'      # arbre de compilation, jetable
@@ -79,11 +92,21 @@ function Write-Step([string] $Message) {
     Write-Host "==> $Message" -ForegroundColor Cyan
 }
 
+# ConvertTo-CygwinPath traduit un chemin Windows dans la forme comprise par le
+# runtime. La lettre de lecteur est mise en minuscule, comme le sont les points
+# de montage de /cygdrive et comme l'application écrit ses archives.
+function ConvertTo-CygwinPath([string] $Path) {
+    $normalized = $Path -replace '\\', '/'
+    if ($normalized -match '^([A-Za-z]):(.*)$') {
+        return '/cygdrive/' + $Matches[1].ToLower() + $Matches[2]
+    }
+    return $normalized
+}
+
 function Read-PackageList([string] $Section) {
-    $path = Join-Path $ScriptRoot 'packages.txt'
     $inSection = $false
     $packages = @()
-    foreach ($line in Get-Content $path) {
+    foreach ($line in Get-Content $PackagesFile) {
         $trimmed = $line.Trim()
         if ($trimmed -match '^\[(.+)\]$') { $inSection = ($Matches[1] -eq $Section); continue }
         if (-not $inSection -or $trimmed -eq '' -or $trimmed.StartsWith('#')) { continue }
@@ -93,11 +116,56 @@ function Read-PackageList([string] $Section) {
     return ($packages -join ',')
 }
 
+# Invoke-Setup lance le programme d'installation Cygwin et attend qu'il ait
+# terminé.
+#
+# C'est une application graphique, même en mode silencieux : lancée avec
+# l'opérateur d'appel, elle rend la main immédiatement et l'étape suivante
+# travaille sur un arbre encore incomplet. Start-Process -Wait est le seul
+# moyen fiable d'attendre, et son code de sortie le seul moyen de savoir que
+# l'installation a réussi.
+function Invoke-Setup([string[]] $Arguments) {
+    $process = Start-Process -FilePath $SetupExe -ArgumentList $Arguments -Wait -PassThru -NoNewWindow
+    if ($process.ExitCode -ne 0) {
+        throw "installation Cygwin en échec (code $($process.ExitCode)) : $($Arguments -join ' ')"
+    }
+}
+
 # Invoke-Cygwin exécute une commande dans un arbre Cygwin donné.
 function Invoke-Cygwin([string] $Root, [string] $Script) {
     $bash = Join-Path $Root 'bin\bash.exe'
+    if (-not (Test-Path $bash)) {
+        throw "arbre Cygwin incomplet : $bash est absent"
+    }
     & $bash '-lc' $Script
     if ($LASTEXITCODE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script" }
+}
+
+# Assert-Interpreter vérifie que l'interpréteur attendu est présent dans un
+# arbre. Sans ce contrôle, son absence ne se manifeste que par un « command not
+# found » au milieu d'un script shell, qui ne désigne pas sa cause.
+function Assert-Interpreter([string] $Root) {
+    $found = Get-ChildItem -Path (Join-Path $Root 'bin') -Filter "$Python*" -ErrorAction SilentlyContinue
+    if (-not $found) {
+        throw "$Python est absent de $Root : le paquet $PythonPackage n'a pas été installé"
+    }
+}
+
+# Get-PinnedRequirements lit les dépendances épinglées, sans leurs empreintes.
+function Get-PinnedRequirements {
+    $requirements = @()
+    foreach ($line in Get-Content $RequirementsFile) {
+        if ($line -match '^\s*([A-Za-z0-9_.\-]+==[^\s\\]+)') { $requirements += $Matches[1] }
+    }
+    if ($requirements.Count -eq 0) { throw "aucune dépendance épinglée dans requirements.txt" }
+    return $requirements
+}
+
+# Test-HashesPinned indique si les empreintes ont été renseignées. Les valeurs
+# du dépôt sont des zéros : elles ne peuvent être calculées que sur une machine
+# capable de compiler, donc pas au moment où le fichier a été écrit.
+function Test-HashesPinned {
+    return -not (Select-String -Path $RequirementsFile -Pattern '--hash=sha256:0{64}' -Quiet)
 }
 
 Write-Step "Runtime $RuntimeVersion (Python $PythonSeries)"
@@ -133,14 +201,77 @@ foreach ($list in @($buildPackages, $releasePackages)) {
         throw "packages.txt ne contient pas $PythonPackage : la série de Python demandée n'y figure pas"
     }
 }
-& $SetupExe --quiet-mode --no-admin --no-shortcuts --no-desktop --download `
-    --site $Mirror --local-package-dir $PackageDir --root $BuildRoot `
-    --packages "$buildPackages,$releasePackages" | Out-Null
+Invoke-Setup @(
+    '--quiet-mode', '--no-admin', '--no-shortcuts', '--no-desktop', '--download',
+    '--site', $Mirror, '--local-package-dir', $PackageDir, '--root', $BuildRoot,
+    '--packages', "$buildPackages,$releasePackages"
+)
 
 # 3. Arbre de compilation.
 Write-Step 'Installation de l''arbre de compilation'
-& $SetupExe --quiet-mode --no-admin --no-shortcuts --no-desktop --local-install `
-    --local-package-dir $PackageDir --root $BuildRoot --packages $buildPackages | Out-Null
+Invoke-Setup @(
+    '--quiet-mode', '--no-admin', '--no-shortcuts', '--no-desktop', '--local-install',
+    '--local-package-dir', $PackageDir, '--root', $BuildRoot, '--packages', $buildPackages
+)
+Assert-Interpreter $BuildRoot
+
+# 3 bis. Empreintes des dépendances Python.
+#
+# Elles ne peuvent être calculées que sur une machine capable de télécharger et
+# de lire les sources : c'est ici, une fois l'arbre de compilation en place.
+if ($UpdateHashes) {
+    Write-Step 'Calcul des empreintes des dépendances'
+    $pinned = Get-PinnedRequirements
+    Invoke-Cygwin $BuildRoot @"
+set -e
+rm -rf /tmp/sources && mkdir -p /tmp/sources
+printf '%s\n' '$($pinned -join "' '")' > /tmp/plain.txt
+$Python -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+"@
+    $lines = Invoke-Cygwin $BuildRoot @"
+set -e
+for source in /tmp/sources/*; do
+    name=`$(basename "`$source")
+    digest=`$($Python -m pip hash "`$source" | tail -n 1)
+    echo "`$name `$digest"
+done
+"@
+
+    $entries = @()
+    foreach ($line in $lines) {
+        if ($line -notmatch '^(\S+)\s+(--hash=sha256:[0-9a-f]{64})$') { continue }
+        $archive, $hash = $Matches[1], $Matches[2]
+        # borgbackup-1.4.5.tar.gz -> borgbackup==1.4.5
+        $stem = $archive -replace '\.(tar\.gz|zip|tar\.bz2)$', ''
+        $split = $stem.LastIndexOf('-')
+        if ($split -lt 1) { continue }
+        $entries += "{0}=={1} \`n    {2}" -f $stem.Substring(0, $split), $stem.Substring($split + 1), $hash
+    }
+    if ($entries.Count -eq 0) { throw "aucune empreinte calculée : la sortie de pip hash est inattendue" }
+
+    $header = @'
+# Dépendances Python du moteur, épinglées à la version près.
+#
+# Fichier produit par « build-runtime.ps1 -UpdateHashes », à relire avant de
+# le valider : les empreintes sont exigées à l'installation
+# (pip --require-hashes), faute de quoi une reconstruction six mois plus tard
+# ne produirait pas le même runtime.
+'@
+    Set-Content -Path $RequirementsFile -Value ($header + "`n`n" + ($entries -join "`n")) -Encoding utf8
+    Write-Step "Empreintes écrites dans $RequirementsFile"
+    Write-Host '    Relisez le fichier, validez-le, puis relancez la construction.'
+    return
+}
+
+if (-not (Test-HashesPinned)) {
+    throw @"
+les empreintes de requirements.txt ne sont pas renseignées.
+
+Calculez-les une fois, puis relisez le fichier avant de le valider :
+
+    .\build-runtime.ps1 -UpdateHashes
+"@
+}
 
 # 4. Compilation de Borg depuis ses sources.
 #
@@ -148,10 +279,9 @@ Write-Step 'Installation de l''arbre de compilation'
 # bibliothèques de l'arbre. Les empreintes sont exigées, faute de quoi une
 # dépendance republiée changerait silencieusement le runtime.
 Write-Step "Compilation de Borg $BorgVersion"
-$requirements = (Join-Path $ScriptRoot 'requirements.txt') -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1'
+$requirements = ConvertTo-CygwinPath $RequirementsFile
 Invoke-Cygwin $BuildRoot @"
 set -e
-$Python -m pip install --no-cache-dir --upgrade pip wheel
 $Python -m pip wheel --no-binary :all: --require-hashes \
     --requirement '$requirements' --wheel-dir /tmp/wheels
 "@
@@ -159,12 +289,15 @@ $Python -m pip wheel --no-binary :all: --require-hashes \
 # 5. Arbre livré : uniquement l'exécution.
 Write-Step 'Composition de l''arbre livré'
 if (Test-Path $StageRoot) { Remove-Item -Recurse -Force $StageRoot }
-& $SetupExe --quiet-mode --no-admin --no-shortcuts --no-desktop --local-install `
-    --local-package-dir $PackageDir --root $StageRoot --packages $releasePackages | Out-Null
+Invoke-Setup @(
+    '--quiet-mode', '--no-admin', '--no-shortcuts', '--no-desktop', '--local-install',
+    '--local-package-dir', $PackageDir, '--root', $StageRoot, '--packages', $releasePackages
+)
+Assert-Interpreter $StageRoot
 
 Invoke-Cygwin $BuildRoot @"
 set -e
-cp /tmp/wheels/*.whl '$($StageRoot -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1')/tmp/'
+cp /tmp/wheels/*.whl '$(ConvertTo-CygwinPath $StageRoot)/tmp/'
 "@
 Invoke-Cygwin $StageRoot @"
 set -e
@@ -209,7 +342,7 @@ rm -rf /tmp/recette && mkdir -p /tmp/recette/source
 echo "contenu de recette" > /tmp/recette/source/fichier.txt
 borg init --encryption=none /tmp/recette/depot
 cd /cygdrive
-borg create /tmp/recette/depot::essai "$(cygpath -u "$(cygpath -w /tmp/recette/source)" | sed 's|^/cygdrive/||')"
+borg create /tmp/recette/depot::essai "$(cygpath -w /tmp/recette/source | sed 's|^\([A-Za-z]\):\\|\L\1/|; s|\\|/|g')"
 borg list /tmp/recette/depot::essai
 rm -rf /tmp/recette
 '@
