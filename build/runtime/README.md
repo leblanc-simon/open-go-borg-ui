@@ -45,6 +45,14 @@ Les constructions suivantes n'ont besoin que de la dernière commande. Si les
 empreintes manquent, le script s'arrête avant de compiler quoi que ce soit et
 rappelle la marche à suivre.
 
+Le script est enregistré en **UTF-8 avec marque d'ordre des octets** (BOM), et
+doit le rester : Windows PowerShell lit un fichier qui en est dépourvu comme de
+l'ANSI. Les caractères accentués sont alors mal décodés et certains — le tiret
+cadratin notamment — deviennent des guillemets typographiques, que PowerShell
+accepte comme délimiteurs de chaîne. Une chaîne se referme au milieu d'une
+ligne et l'analyse du fichier échoue, très loin de sa cause. Le `.gitattributes`
+du dépôt fixe cet encodage.
+
 ### Si Windows refuse d'exécuter le script
 
 `L'exécution de scripts est désactivée sur ce système` est le refus par défaut

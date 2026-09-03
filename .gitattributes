@@ -1,0 +1,9 @@
+# Windows PowerShell lit un script dépourvu de marque d'ordre des octets comme
+# de l'ANSI : les accents y sont mal décodés et certains caractères deviennent
+# des guillemets, qui referment une chaîne au milieu du code. Les scripts sont
+# donc conservés en UTF-8 avec BOM, et en fins de ligne Windows.
+*.ps1 text eol=crlf working-tree-encoding=UTF-8
+
+# Les catalogues de traduction et les sources Go restent en UTF-8 sans BOM.
+*.go text eol=lf
+*.yaml text eol=lf

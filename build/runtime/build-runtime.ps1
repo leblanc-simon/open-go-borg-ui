@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Construit le runtime Borg livré aux postes Windows (LI-05).
 
@@ -139,7 +139,7 @@ function Invoke-Setup([string[]] $Arguments) {
     $missing = Select-String -Path $log -Pattern "Package '(.+)' not found" -AllMatches
     if ($missing) {
         $names = ($missing.Matches | ForEach-Object { $_.Groups[1].Value }) -join ', '
-        throw "paquets inconnus du miroir Cygwin : $names — corrigez packages.txt"
+        throw "paquets inconnus du miroir Cygwin : $names. Corrigez packages.txt."
     }
 }
 
@@ -285,7 +285,8 @@ done
 # (pip --require-hashes), faute de quoi une reconstruction six mois plus tard
 # ne produirait pas le même runtime.
 '@
-    Set-Content -Path $RequirementsFile -Value ($header + "`n`n" + ($entries -join "`n")) -Encoding utf8
+    $content = $header + "`n`n" + ($entries -join "`n") + "`n"
+    [System.IO.File]::WriteAllText($RequirementsFile, $content, (New-Object System.Text.UTF8Encoding $false))
     Write-Step "Empreintes écrites dans $RequirementsFile"
     Write-Host '    Relisez le fichier, validez-le, puis relancez la construction.'
     return
@@ -361,7 +362,7 @@ Write-Step 'Vérification du moteur'
 $reported = Invoke-Cygwin $StageRoot 'borg --version'
 Write-Host "    $reported"
 if ($reported -notmatch [regex]::Escape($BorgVersion)) {
-    throw "le moteur rapporte « $reported » au lieu de $BorgVersion"
+    throw "le moteur rapporte '$reported' au lieu de $BorgVersion"
 }
 Invoke-Cygwin $StageRoot @'
 set -e
