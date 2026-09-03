@@ -43,12 +43,27 @@ param(
     # le dossier de paquets produit ci-dessous en est une garantie plus sûre.
     [string] $Mirror = 'https://mirrors.kernel.org/sourceware/cygwin/',
 
-    # Espace de travail. Il est entièrement jetable.
-    [string] $Workspace = (Join-Path $PSScriptRoot 'work')
+    # Espace de travail. Il est entièrement jetable. Vide, il est placé dans
+    # le dossier de la recette, une fois celui-ci résolu.
+    [string] $Workspace = ''
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+
+# Dossier de la recette. $PSScriptRoot est vide selon la manière dont le script
+# a été lancé — contenu passé sur l'entrée standard, appel par -Command,
+# copier-coller dans la console — et le bloc param() est évalué avant lui de
+# toute façon. Les trois formes sont essayées, de la plus fiable à la dernière.
+$ScriptRoot =
+    if ($PSScriptRoot) { $PSScriptRoot }
+    elseif ($MyInvocation.MyCommand.Path) { Split-Path -Parent $MyInvocation.MyCommand.Path }
+    else { (Get-Location).Path }
+
+if (-not (Test-Path (Join-Path $ScriptRoot 'packages.txt'))) {
+    throw "packages.txt est introuvable dans $ScriptRoot : lancez le script depuis build\runtime, ou avec -File"
+}
+if (-not $Workspace) { $Workspace = Join-Path $ScriptRoot 'work' }
 
 $RuntimeVersion = "$BorgVersion-cygwin.$Revision"
 $Python         = "python$PythonSeries"                        # binaire : python3.12
@@ -58,14 +73,14 @@ $SetupExe   = Join-Path $Workspace 'setup-x86_64.exe'
 $PackageDir = Join-Path $Workspace 'packages'   # artefact à conserver
 $BuildRoot  = Join-Path $Workspace 'build'      # arbre de compilation, jetable
 $StageRoot  = Join-Path $Workspace 'stage'      # arbre livré
-$Output     = Join-Path $PSScriptRoot 'dist'
+$Output     = Join-Path $ScriptRoot 'dist'
 
 function Write-Step([string] $Message) {
     Write-Host "==> $Message" -ForegroundColor Cyan
 }
 
 function Read-PackageList([string] $Section) {
-    $path = Join-Path $PSScriptRoot 'packages.txt'
+    $path = Join-Path $ScriptRoot 'packages.txt'
     $inSection = $false
     $packages = @()
     foreach ($line in Get-Content $path) {
@@ -133,7 +148,7 @@ Write-Step 'Installation de l''arbre de compilation'
 # bibliothèques de l'arbre. Les empreintes sont exigées, faute de quoi une
 # dépendance republiée changerait silencieusement le runtime.
 Write-Step "Compilation de Borg $BorgVersion"
-$requirements = (Join-Path $PSScriptRoot 'requirements.txt') -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1'
+$requirements = (Join-Path $ScriptRoot 'requirements.txt') -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1'
 Invoke-Cygwin $BuildRoot @"
 set -e
 $Python -m pip install --no-cache-dir --upgrade pip wheel
