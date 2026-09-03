@@ -8,15 +8,20 @@
 [build]
 # Chaîne de compilation et en-têtes : Borg n'a pas de roue précompilée pour
 # Cygwin, il est compilé depuis les sources.
+#
+# La série de Python est celle que Cygwin distribue (méta-paquet python3 =
+# python312 à ce jour) et doit rester dans les versions acceptées par Borg :
+# 1.4.5 exige Python 3.10 ou plus récent. La liste python39 que donne la
+# documentation d'installation de Borg n'est plus valide.
 gcc-g++
 binutils
 make
 git
-python39
-python39-devel
-python39-pip
-python39-setuptools
-python39-wheel
+python312
+python312-devel
+python312-pip
+python312-setuptools
+python312-wheel
 libssl-devel
 liblz4-devel
 libzstd-devel
@@ -27,7 +32,7 @@ libacl-devel
 # Le strict nécessaire à l'exécution : l'interpréteur, les bibliothèques de
 # compression et de chiffrement, le client SSH et le shell par lequel
 # l'application lance ses commandes.
-python39
+python312
 openssh
 bash
 coreutils

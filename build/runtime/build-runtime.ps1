@@ -33,6 +33,12 @@ param(
     # Borg change (correction d'une dépendance, élagage revu).
     [string] $Revision = '1',
 
+    # Série de Python empaquetée. Elle doit exister dans Cygwin — le
+    # méta-paquet python3 pointe sur python312 à ce jour — et figurer parmi
+    # les versions acceptées par Borg, qui exige 3.10 ou plus récent depuis
+    # la 1.4.5.
+    [string] $PythonSeries = '3.12',
+
     # Miroir Cygwin. Un miroir daté rend la reconstruction reproductible, mais
     # le dossier de paquets produit ci-dessous en est une garantie plus sûre.
     [string] $Mirror = 'https://mirrors.kernel.org/sourceware/cygwin/',
@@ -45,6 +51,9 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $RuntimeVersion = "$BorgVersion-cygwin.$Revision"
+$Python         = "python$PythonSeries"                        # binaire : python3.12
+$PythonPackage  = 'python' + ($PythonSeries -replace '\.', '') # paquet  : python312
+$PythonLibDir   = "/usr/lib/python$PythonSeries"
 $SetupExe   = Join-Path $Workspace 'setup-x86_64.exe'
 $PackageDir = Join-Path $Workspace 'packages'   # artefact à conserver
 $BuildRoot  = Join-Path $Workspace 'build'      # arbre de compilation, jetable
@@ -76,7 +85,7 @@ function Invoke-Cygwin([string] $Root, [string] $Script) {
     if ($LASTEXITCODE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script" }
 }
 
-Write-Step "Runtime $RuntimeVersion"
+Write-Step "Runtime $RuntimeVersion (Python $PythonSeries)"
 New-Item -ItemType Directory -Force -Path $Workspace, $PackageDir, $Output | Out-Null
 
 # 1. Programme d'installation Cygwin.
@@ -102,6 +111,13 @@ Write-Host "    signé par $($signature.SignerCertificate.Subject)"
 Write-Step 'Téléchargement des paquets Cygwin'
 $buildPackages   = Read-PackageList 'build'
 $releasePackages = Read-PackageList 'release'
+# Les deux fichiers doivent parler de la même série de Python : une divergence
+# produirait un runtime dont l'interpréteur ne connaît pas Borg.
+foreach ($list in @($buildPackages, $releasePackages)) {
+    if ($list -notmatch "(^|,)$PythonPackage(,|$)") {
+        throw "packages.txt ne contient pas $PythonPackage : la série de Python demandée n'y figure pas"
+    }
+}
 & $SetupExe --quiet-mode --no-admin --no-shortcuts --no-desktop --download `
     --site $Mirror --local-package-dir $PackageDir --root $BuildRoot `
     --packages "$buildPackages,$releasePackages" | Out-Null
@@ -120,8 +136,8 @@ Write-Step "Compilation de Borg $BorgVersion"
 $requirements = (Join-Path $PSScriptRoot 'requirements.txt') -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1'
 Invoke-Cygwin $BuildRoot @"
 set -e
-python3.9 -m pip install --no-cache-dir --upgrade pip wheel
-python3.9 -m pip wheel --no-binary :all: --require-hashes \
+$Python -m pip install --no-cache-dir --upgrade pip wheel
+$Python -m pip wheel --no-binary :all: --require-hashes \
     --requirement '$requirements' --wheel-dir /tmp/wheels
 "@
 
@@ -135,11 +151,11 @@ Invoke-Cygwin $BuildRoot @"
 set -e
 cp /tmp/wheels/*.whl '$($StageRoot -replace '\\', '/' -replace '^([A-Za-z]):', '/cygdrive/$1')/tmp/'
 "@
-Invoke-Cygwin $StageRoot @'
+Invoke-Cygwin $StageRoot @"
 set -e
-python3.9 -m pip install --no-cache-dir --no-index --no-deps /tmp/*.whl
+$Python -m pip install --no-cache-dir --no-index --no-deps /tmp/*.whl
 rm -f /tmp/*.whl
-'@
+"@
 
 # 6. Élagage.
 #
@@ -147,18 +163,18 @@ rm -f /tmp/*.whl
 # documentation, les traductions, les en-têtes de développement et les fichiers
 # produits par la machine de construction, qui n'ont aucun sens ailleurs.
 Write-Step 'Élagage'
-Invoke-Cygwin $StageRoot @'
+Invoke-Cygwin $StageRoot @"
 set -e
 rm -rf /usr/share/doc /usr/share/man /usr/share/info /usr/share/locale
 rm -rf /usr/include /usr/lib/pkgconfig /usr/share/terminfo
-find /usr/lib/python3.9 -type d -name test -prune -exec rm -rf {} + 2>/dev/null || true
-find /usr/lib/python3.9 -type d -name tests -prune -exec rm -rf {} + 2>/dev/null || true
+find $PythonLibDir -type d -name test -prune -exec rm -rf {} + 2>/dev/null || true
+find $PythonLibDir -type d -name tests -prune -exec rm -rf {} + 2>/dev/null || true
 find / -name '*.a' -delete 2>/dev/null || true
 # Traces de la machine de construction : comptes, journaux, fichiers
 # temporaires. Les laisser exposerait le poste de construction et n'aurait
 # aucun sens sur celui de l'utilisateur.
 rm -rf /var/log/* /tmp/* /home/* /etc/passwd /etc/group
-'@
+"@
 
 # 7. Vérification fonctionnelle.
 #

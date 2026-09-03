@@ -11,6 +11,14 @@ modifié : l'interpréteur Python, les bibliothèques de compression et de
 chiffrement, le client OpenSSH et le shell par lequel l'application lance ses
 commandes. Rien de plus.
 
+La série de Python empaquetée est **3.12**, celle que Cygwin distribue par
+défaut (le méta-paquet `python3` pointe sur `python312`). Elle se change par
+le paramètre `-PythonSeries`, sous deux conditions : que Cygwin la propose, et
+que Borg l'accepte — la 1.4.5 exige Python 3.10 ou plus récent. La liste de
+paquets `python39` donnée par la documentation d'installation de Borg n'est
+donc plus utilisable ; c'est une erreur qui se manifeste tard, à l'installation
+de Borg par pip.
+
 Il n'est pas embarqué dans l'exécutable, pour trois raisons : l'exécutable doit
 rester sous 30 Mo (ENF-01), le moteur doit pouvoir être remplacé sans
 reconstruire l'application, et un binaire de 130 Mo qui extrait puis exécute
@@ -30,6 +38,10 @@ Le script enchaîne huit étapes : récupération du programme d'installation
 Cygwin et vérification de sa signature, téléchargement des paquets, arbre de
 compilation, compilation de Borg depuis ses sources, composition de l'arbre
 livré, élagage, vérification fonctionnelle, archive et empreinte.
+
+La série de Python demandée est confrontée à `packages.txt` avant toute
+installation : une divergence entre les deux produirait un runtime dont
+l'interpréteur ne connaît pas Borg.
 
 Il produit dans `dist/` l'archive `borgui-runtime-<version>.zip`, le fichier
 `SHA256SUMS`, et affiche les valeurs à reporter dans `spec.go`.
