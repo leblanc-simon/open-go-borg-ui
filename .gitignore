@@ -13,7 +13,11 @@ coverage.*
 
 # Répertoires de construction
 /dist/
-/build/
+
+# Artefacts de construction du runtime : la recette est suivie, ses produits
+# non — l'archive et les paquets Cygwin sont publiés en release.
+build/runtime/work/
+build/runtime/dist/
 
 # Environnement local
 .env

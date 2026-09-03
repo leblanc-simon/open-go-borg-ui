@@ -90,6 +90,7 @@ Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors lign
 ## Organisation du code
 
 ```
+build/runtime/         recette de construction du runtime Cygwin livré aux postes Windows
 cmd/borgui/            ligne de commande v0.1 (une commande par fichier cmd_*.go)
 internal/borg/         pilotage de Borg : Runner, environnement, chemins, événements
 internal/borgruntime/  runtime Windows : téléchargement, empreinte, extraction
@@ -114,6 +115,8 @@ GOOS=windows go build ./...    # la partie Windows se compile depuis Linux
 ```
 
 Les tests substituent à Borg un script shell qui en reproduit le comportement observable (codes de retour, `--log-json`, JSON de sortie) : toute la chaîne se vérifie sans installation de Borg. Ces tests portent `//go:build !windows`.
+
+Le runtime Windows se construit avec `build/runtime/build-runtime.ps1`, sur une machine Windows ; `build/runtime/README.md` décrit la recette, la publication et les valeurs à reporter dans `internal/borgruntime/spec.go`. Tant que `Pinned.URL` et `Pinned.SHA256` sont vides, seule la voie hors ligne fonctionne.
 
 Ce qu'aucun test local ne couvre et qui conditionne le passage de la v0.1 : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04).
 

@@ -1,0 +1,38 @@
+# Paquets Cygwin du runtime de sauvegarde, un par ligne, commentaires ignorés.
+#
+# Deux listes distinctes, parce que les outils de compilation pèsent plus lourd
+# que tout le reste : la première sert à construire Borg, la seconde compose le
+# runtime réellement livré. Une entrée ajoutée à « release » sans nécessité
+# démontrée est une entrée à retirer.
+
+[build]
+# Chaîne de compilation et en-têtes : Borg n'a pas de roue précompilée pour
+# Cygwin, il est compilé depuis les sources.
+gcc-g++
+binutils
+make
+git
+python39
+python39-devel
+python39-pip
+python39-setuptools
+python39-wheel
+libssl-devel
+liblz4-devel
+libzstd-devel
+libxxhash-devel
+libacl-devel
+
+[release]
+# Le strict nécessaire à l'exécution : l'interpréteur, les bibliothèques de
+# compression et de chiffrement, le client SSH et le shell par lequel
+# l'application lance ses commandes.
+python39
+openssh
+bash
+coreutils
+libssl3
+liblz4_1
+libzstd1
+libxxhash0
+libacl1
