@@ -21,6 +21,7 @@ cli.usage: |
     backup           lance une sauvegarde
     archives         liste les sauvegardes disponibles
     restore          restaure une sauvegarde dans un dossier neuf
+    history          historique des sauvegardes de ce poste
 
   Options communes :
     --config <fichier>   fichier de configuration à utiliser
@@ -34,6 +35,8 @@ cli.unknown_command: "commande inconnue : {{.Command}}"
 status.success: "Terminé"
 status.warning: "Terminé avec des avertissements"
 status.error: "Échec"
+status.running: "En cours, ou interrompue"
+status.cancelled: "Annulée"
 
 duration.seconds: "{{.Seconds}} s"
 duration.minutes_seconds: "{{.Minutes}} min {{.Seconds}} s"
@@ -127,10 +130,18 @@ backup.finished: "Sauvegarde terminée : {{.Files}} fichiers, {{.Original}} parc
 backup.finished_rate: "Sauvegarde terminée : {{.Files}} fichiers, {{.Original}} parcourus, {{.Stored}} ajoutés, en {{.Duration}} ({{.Rate}})"
 backup.archive_name: "Sauvegarde enregistrée sous {{.Name}}"
 backup.warnings: "{{.Count}} fichier(s) n'ont pas pu être lus. La sauvegarde reste utilisable."
+backup.cloud_scan: "Recherche des fichiers disponibles uniquement en ligne…"
+backup.cloud_skipped: "{{.Count}} fichier(s) disponibles uniquement en ligne n'ont pas été sauvegardés, pour ne pas les télécharger."
 
 archives.empty: "Aucune sauvegarde sur cette destination."
 archives.entry: "  {{.Date}}  {{.Name}}"
 archives.count: "{{.Count}} sauvegarde(s)."
+
+history.unavailable: "L'historique n'a pas pu être tenu : {{.Message}}"
+history.empty: "Aucune sauvegarde n'a encore été lancée depuis ce poste."
+history.entry_done: "  {{.Date}}  {{.Status}} — {{.Files}} fichiers, {{.Original}} parcourus, {{.Stored}} ajoutés, en {{.Duration}}"
+history.entry_failed: "  {{.Date}}  {{.Status}} après {{.Duration}}"
+history.entry_running: "  {{.Date}}  {{.Status}}"
 
 restore.not_empty: "le dossier {{.Path}} n'est pas vide : la restauration se fait toujours dans un dossier neuf"
 restore.starting: "Restauration de {{.Name}} dans {{.Path}}…"

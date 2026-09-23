@@ -18,6 +18,7 @@ cli.usage: |
     backup           run a backup
     archives         list available backups
     restore          restore a backup into a new folder
+    history          backup history of this computer
 
   Common options:
     --config <file>    configuration file to use
@@ -31,6 +32,8 @@ cli.unknown_command: "unknown command: {{.Command}}"
 status.success: "Completed"
 status.warning: "Completed with warnings"
 status.error: "Failed"
+status.running: "Running, or interrupted"
+status.cancelled: "Cancelled"
 
 duration.seconds: "{{.Seconds}}s"
 duration.minutes_seconds: "{{.Minutes}}m {{.Seconds}}s"
@@ -124,10 +127,18 @@ backup.finished: "Backup completed: {{.Files}} files, {{.Original}} scanned, {{.
 backup.finished_rate: "Backup completed: {{.Files}} files, {{.Original}} scanned, {{.Stored}} added, in {{.Duration}} ({{.Rate}})"
 backup.archive_name: "Backup stored as {{.Name}}"
 backup.warnings: "{{.Count}} file(s) could not be read. The backup is still usable."
+backup.cloud_scan: "Looking for online-only files…"
+backup.cloud_skipped: "{{.Count}} online-only file(s) were not backed up, so as not to download them."
 
 archives.empty: "No backup on this destination."
 archives.entry: "  {{.Date}}  {{.Name}}"
 archives.count: "{{.Count}} backup(s)."
+
+history.unavailable: "The history could not be kept: {{.Message}}"
+history.empty: "No backup has been run from this computer yet."
+history.entry_done: "  {{.Date}}  {{.Status}} — {{.Files}} files, {{.Original}} scanned, {{.Stored}} added, in {{.Duration}}"
+history.entry_failed: "  {{.Date}}  {{.Status}} after {{.Duration}}"
+history.entry_running: "  {{.Date}}  {{.Status}}"
 
 restore.not_empty: "the folder {{.Path}} is not empty: a restore always goes into a new folder"
 restore.starting: "Restoring {{.Name}} into {{.Path}}…"

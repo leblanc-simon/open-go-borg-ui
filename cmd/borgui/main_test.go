@@ -8,10 +8,14 @@
 package main
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"leblanc.io/open-go-borg-ui/internal/config"
+	"leblanc.io/open-go-borg-ui/internal/history"
 )
 
 // poste prépare un poste de test : dossier personnel isolé, faux moteur dans
@@ -22,6 +26,10 @@ func poste(t *testing.T, script string, options ...string) string {
 
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	// Les variables XDG l'emportent sur HOME : laissées telles quelles, elles
+	// feraient écrire les tests dans les dossiers réels du développeur.
+	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
+	t.Setenv("XDG_DATA_HOME", filepath.Join(home, ".local", "share"))
 
 	journal := filepath.Join(home, "appels.txt")
 	binDir := filepath.Join(home, "bin")
@@ -209,5 +217,39 @@ func TestRestaurationDossierOccupe(t *testing.T) {
 	}
 	if strings.Contains(lireJournal(t, journal), "extract") {
 		t.Error("le moteur ne devrait pas être appelé sur un dossier occupé")
+	}
+}
+
+// TestHistoriqueConsigne vérifie qu'une sauvegarde laisse une trace que la
+// commande history relit, et qu'une simulation n'en laisse aucune.
+func TestHistoriqueConsigne(t *testing.T) {
+	poste(t, `echo '{"archive":{"name":"poste-2026-09-23T22:00:00","stats":{"nfiles":3}}}'`, "--clear")
+	ajouterSource(t, filepath.Join(t.TempDir(), "Documents"))
+
+	if code := run([]string{"backup", "--dry-run"}); code != exitSuccess {
+		t.Fatalf("backup --dry-run a retourné %d", code)
+	}
+	if code := run([]string{"backup"}); code != exitSuccess {
+		t.Fatalf("backup a retourné %d", code)
+	}
+	if code := run([]string{"history"}); code != exitSuccess {
+		t.Fatalf("history a retourné %d", code)
+	}
+
+	path, err := config.HistoryPath()
+	if err != nil {
+		t.Fatal(err)
+	}
+	store, err := history.Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	runs, err := store.Recent(context.Background(), "poste", 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(runs) != 1 || runs[0].Status != history.StatusSuccess || runs[0].Files != 3 {
+		t.Errorf("historique: %+v", runs)
 	}
 }

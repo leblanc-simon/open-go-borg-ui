@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
+	"leblanc.io/open-go-borg-ui/internal/core"
 )
 
 // commandBackup exécute une sauvegarde.
@@ -38,26 +39,45 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		return exitError, err
 	}
 
+	store, err := a.historyStore()
+	if err != nil {
+		// Sans historique, la sauvegarde reste possible : c'est un témoin,
+		// pas une condition.
+		notice(a.T("history.unavailable", map[string]any{"Message": err.Error()}))
+	} else {
+		defer store.Close()
+	}
+
 	fmt.Println(a.T("backup.starting", map[string]any{"Count": len(profile.Sources)}))
 
-	started := time.Now()
-	stats, result, err := borg.Create(ctx, runner, borg.CreateOptions{
-		Env:           env,
-		Sources:       profile.Sources,
-		Excludes:      profile.Excludes,
-		ExcludeCaches: profile.ExcludeCaches,
-		OneFileSystem: profile.OneFileSystem,
-		Compression:   profile.Compression,
-		DryRun:        dryRun,
-		OnEvent:       a.backupProgress(),
+	service := core.Backup{Runner: runner, History: store}
+	report, err := service.Run(ctx, core.BackupRequest{
+		Profile: profile,
+		Env:     env,
+		DryRun:  dryRun,
+		OnPhase: func(phase core.Phase) {
+			if phase == core.PhaseCloudScan {
+				progressLine(a.T("backup.cloud_scan"))
+			}
+		},
+		OnEvent: a.backupProgress(),
 	})
 	progressDone()
 
+	if report.HistoryErr != nil {
+		notice(a.T("history.unavailable", map[string]any{"Message": report.HistoryErr.Error()}))
+	}
+	if len(report.CloudSkipped) > 0 {
+		// Signalé même en cas d'échec : c'est une information sur ce que la
+		// sauvegarde couvre, indépendante de son issue.
+		fmt.Println(a.T("backup.cloud_skipped", map[string]any{"Count": len(report.CloudSkipped)}))
+	}
 	if err != nil {
 		return exitError, err
 	}
 
-	elapsed := time.Since(started)
+	stats := report.Stats
+	elapsed := report.Run.Duration()
 	summary := map[string]any{
 		"Files":    stats.Archive.Stats.NFiles,
 		"Original": formatSize(stats.Archive.Stats.OriginalSize),
@@ -78,8 +98,8 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 
 	// Un code de retour 1 signale des fichiers illisibles : la sauvegarde
 	// existe et reste exploitable, elle est simplement incomplète (EF-56).
-	if result.Status == borg.StatusWarning {
-		warnings := result.Warnings()
+	if report.Result.Status == borg.StatusWarning {
+		warnings := report.Result.Warnings()
 		fmt.Println(a.T("backup.warnings", map[string]any{"Count": len(warnings)}))
 		for _, warning := range warnings {
 			fmt.Println(a.T("cli.details", map[string]any{"Message": warning.Text}))

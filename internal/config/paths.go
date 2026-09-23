@@ -50,3 +50,12 @@ func KnownHostsPath() (string, error) {
 	}
 	return filepath.Join(dir, "known_hosts"), nil
 }
+
+// HistoryPath retourne la base SQLite de l'historique des exécutions.
+func HistoryPath() (string, error) {
+	dir, err := StateDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "history.db"), nil
+}

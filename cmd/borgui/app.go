@@ -11,6 +11,7 @@ import (
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/borgruntime"
 	"leblanc.io/open-go-borg-ui/internal/config"
+	"leblanc.io/open-go-borg-ui/internal/history"
 	"leblanc.io/open-go-borg-ui/internal/i18n"
 	"leblanc.io/open-go-borg-ui/internal/secret"
 )
@@ -50,6 +51,15 @@ func (a *app) profile() (*config.Profile, error) {
 // runtimeManager construit le gestionnaire du moteur de sauvegarde.
 func (a *app) runtimeManager() *borgruntime.Manager {
 	return borgruntime.NewManager(filepath.Join(a.stateDir, "runtime"), borgruntime.Pinned)
+}
+
+// historyStore ouvre l'historique des exécutions du poste.
+func (a *app) historyStore() (*history.Store, error) {
+	path, err := config.HistoryPath()
+	if err != nil {
+		return nil, err
+	}
+	return history.Open(path)
 }
 
 // secrets construit le magasin de passphrases.

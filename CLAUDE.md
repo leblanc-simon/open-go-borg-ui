@@ -96,11 +96,16 @@ cmd/borgui-recette/    outil de recette : jeu de données piégé, manifeste d'e
 docs/recette-v0.1.md   procédure de recette TR-01 à TR-04, Windows puis Linux
 internal/borg/         pilotage de Borg : Runner, environnement, chemins, événements
 internal/borgruntime/  runtime Windows : téléchargement, empreinte, extraction
+internal/cloudfiles/   repérage des fichiers « à la demande » (OneDrive…), écartés par défaut
 internal/config/       configuration TOML et emplacements par plateforme
+internal/core/         cœur applicatif : enchaînements partagés par la CLI et l'interface
+internal/history/      historique des exécutions (HistoryStore), SQLite pur Go
 internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
 internal/probe/        diagnostic SSH et clé dédiée à l'application
 internal/secret/       passphrase : trousseau du système, repli fichier
 ```
+
+Les chemins calculés à l'exécution (fichiers à la demande) passent au Runner par `Command.ExcludePaths`, en forme native : c'est lui qui les traduit en motifs `pp:` dans un fichier `--exclude-from`.
 
 Points d'entrée utiles : `internal/borg/cygpath.go` pour la convention de chemins Windows, `internal/borg/env.go` pour les variables passées à Borg, `internal/borg/operations.go` pour les commandes de haut niveau.
 
