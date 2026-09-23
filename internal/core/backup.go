@@ -80,6 +80,9 @@ type BackupReport struct {
 	Result *borg.Result
 	// CloudSkipped liste les fichiers à la demande écartés.
 	CloudSkipped []string
+	// Encryption est le mode de chiffrement que la destination a rapporté,
+	// vide s'il n'a pas pu être relevé.
+	Encryption string
 	// MaintenanceErr signale l'échec de la conservation ou de la
 	// récupération d'espace, après une sauvegarde réussie.
 	MaintenanceErr error
@@ -140,6 +143,13 @@ func (b *Backup) Run(ctx context.Context, req BackupRequest) (*BackupReport, err
 	}
 	if err == nil && !req.DryRun {
 		report.MaintenanceErr = b.maintain(ctx, req, phase)
+		// La destination vient de répondre : l'interroger sur l'espace
+		// occupé ne coûte qu'un aller-retour (EF-81). Un échec laisse la
+		// taille inconnue, sans plus.
+		if info, _, infoErr := borg.Info(ctx, b.Runner, req.Env); infoErr == nil {
+			report.Run.RepositorySize = info.Cache.Stats.UniqueCSize
+			report.Encryption = info.Encryption.Mode
+		}
 	}
 
 	report.Run.Finished = now()
@@ -180,18 +190,13 @@ func (b *Backup) status(ctx context.Context, req BackupRequest, report *BackupRe
 		status.NextRun = b.NextRun()
 	}
 
+	status.RepositorySize = run.RepositorySize
+	if report.Encryption != "" {
+		status.Encryption = report.Encryption
+	}
 	switch run.Status {
 	case history.StatusSuccess, history.StatusWarning:
 		status.LastSuccess = run.Finished
-		// La destination vient de répondre : l'interroger sur l'espace
-		// occupé ne coûte qu'un aller-retour. Un échec laisse la taille
-		// inconnue, sans plus.
-		if info, _, err := borg.Info(ctx, b.Runner, req.Env); err == nil {
-			status.RepositorySize = info.Cache.Stats.UniqueCSize
-			if info.Encryption.Mode != "" {
-				status.Encryption = info.Encryption.Mode
-			}
-		}
 	default:
 		if b.History != nil {
 			status.LastSuccess, _ = b.History.LastSuccess(ctx, run.Profile)

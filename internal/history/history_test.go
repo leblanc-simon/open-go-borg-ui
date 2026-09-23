@@ -34,7 +34,7 @@ func TestCycleExecution(t *testing.T) {
 		ID: id, Profile: "poste", Started: started,
 		Finished: started.Add(3*time.Minute + 250*time.Millisecond),
 		Status:   StatusWarning, Archive: "poste-2026-09-23T22:00:00",
-		Files: 1234, OriginalSize: 5 << 30, DeduplicatedSize: 12 << 20,
+		Files: 1234, OriginalSize: 5 << 30, DeduplicatedSize: 12 << 20, RepositorySize: 40 << 30,
 		Warnings: 2, CloudSkipped: 17,
 	}
 	if err := store.Finish(ctx, want); err != nil {
@@ -142,5 +142,60 @@ func TestBasePlusRecente(t *testing.T) {
 
 	if _, err := Open(path); err == nil {
 		t.Error("une base plus récente que l'application doit être refusée")
+	}
+}
+
+// TestMigrationDepuisVersion1 vérifie qu'une base créée par la première
+// version du schéma gagne la nouvelle colonne sans perdre ses exécutions.
+func TestMigrationDepuisVersion1(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "historique.db")
+	store, err := Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Ramène la base à la version 1, comme l'aurait laissée l'application
+	// précédente.
+	if _, err := store.db.Exec("ALTER TABLE runs DROP COLUMN repository_size"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.db.Exec("PRAGMA user_version = 1"); err != nil {
+		t.Fatal(err)
+	}
+	// Une exécution inscrite par l'ancienne version.
+	if _, err := store.Begin(context.Background(), "poste", time.Now()); err != nil {
+		t.Fatal(err)
+	}
+	store.Close()
+
+	migrated, err := Open(path)
+	if err != nil {
+		t.Fatalf("migration: %v", err)
+	}
+	defer migrated.Close()
+	runs, err := migrated.Recent(context.Background(), "poste", 10)
+	if err != nil || len(runs) != 1 || runs[0].RepositorySize != 0 {
+		t.Errorf("après migration: %+v, erreur %v", runs, err)
+	}
+}
+
+// TestOuverturesSimultanees vérifie que plusieurs processus ouvrant une base
+// neuve au même instant — l'interface et une sauvegarde planifiée — ne
+// migrent pas chacun de leur côté.
+func TestOuverturesSimultanees(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "historique.db")
+	errs := make(chan error, 8)
+	for range 8 {
+		go func() {
+			store, err := Open(path)
+			if err == nil {
+				store.Close()
+			}
+			errs <- err
+		}()
+	}
+	for range 8 {
+		if err := <-errs; err != nil {
+			t.Errorf("ouverture concurrente: %v", err)
+		}
 	}
 }

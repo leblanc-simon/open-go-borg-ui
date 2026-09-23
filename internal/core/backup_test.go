@@ -208,7 +208,7 @@ func TestMaintenanceApresSauvegarde(t *testing.T) {
 	if _, err := service.Run(context.Background(), BackupRequest{Profile: profile()}); err != nil {
 		t.Fatal(err)
 	}
-	if got := strings.Join(runner.names, " "); got != "create prune compact" {
+	if got := strings.Join(runner.names, " "); got != "create prune compact info" {
 		t.Errorf("commandes: %s", got)
 	}
 }
@@ -229,7 +229,7 @@ func TestMaintenanceEnEchec(t *testing.T) {
 	if report.MaintenanceErr == nil {
 		t.Error("l'échec de la conservation doit être rapporté")
 	}
-	if got := strings.Join(runner.names, " "); got != "create prune" {
+	if got := strings.Join(runner.names, " "); got != "create prune info" {
 		t.Errorf("commandes: %s — rien ne doit être compacté après un échec", got)
 	}
 	run := lastRun(t, store)
@@ -249,7 +249,7 @@ func TestSansConservation(t *testing.T) {
 	if _, err := service.Run(context.Background(), BackupRequest{Profile: p}); err != nil {
 		t.Fatal(err)
 	}
-	if got := strings.Join(runner.names, " "); got != "create" {
+	if got := strings.Join(runner.names, " "); got != "create info" {
 		t.Errorf("commandes: %s", got)
 	}
 }
@@ -325,6 +325,9 @@ func TestPublicationReussie(t *testing.T) {
 	}
 	if len(p.published) != 1 {
 		t.Fatalf("%d publications", len(p.published))
+	}
+	if report.Run.RepositorySize != 7340032 {
+		t.Errorf("espace occupé consigné: %d", report.Run.RepositorySize)
 	}
 	s := p.published[0]
 	if s.Hostname != "poste-marc" || s.Result != statusfile.ResultSuccess || s.Files != 42 ||

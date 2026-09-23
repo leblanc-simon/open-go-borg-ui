@@ -58,6 +58,9 @@ type Run struct {
 	Files            int64
 	OriginalSize     int64
 	DeduplicatedSize int64
+	// RepositorySize est l'espace occupé sur la destination après
+	// l'exécution, 0 s'il n'a pas pu être relevé (EF-81).
+	RepositorySize int64
 	// Warnings compte les fichiers que Borg n'a pas pu lire.
 	Warnings int
 	// CloudSkipped compte les fichiers à la demande écartés.
@@ -128,12 +131,33 @@ var migrations = []string{
 		detail            TEXT    NOT NULL DEFAULT ''
 	);
 	CREATE INDEX runs_profile_started ON runs (profile, started DESC);`,
+	`ALTER TABLE runs ADD COLUMN repository_size INTEGER NOT NULL DEFAULT 0;`,
 }
 
 // migrate met la base au schéma courant.
 func (s *Store) migrate(ctx context.Context) error {
+	// La version est relue et les migrations appliquées dans une seule
+	// transaction exclusive : l'interface et une sauvegarde planifiée qui
+	// ouvrent une base neuve au même instant ne migrent pas chacune de leur
+	// côté. La seconde attend la première (busy_timeout), puis trouve la base
+	// à jour.
+	conn, err := s.db.Conn(ctx)
+	if err != nil {
+		return fmt.Errorf("historique: %w", err)
+	}
+	defer conn.Close()
+	if _, err := conn.ExecContext(ctx, "BEGIN IMMEDIATE"); err != nil {
+		return fmt.Errorf("historique: verrouillage pour migration: %w", err)
+	}
+	committed := false
+	defer func() {
+		if !committed {
+			conn.ExecContext(context.WithoutCancel(ctx), "ROLLBACK")
+		}
+	}()
+
 	var version int
-	if err := s.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&version); err != nil {
+	if err := conn.QueryRowContext(ctx, "PRAGMA user_version").Scan(&version); err != nil {
 		return fmt.Errorf("historique: lecture de la version: %w", err)
 	}
 	if version > len(migrations) {
@@ -142,24 +166,21 @@ func (s *Store) migrate(ctx context.Context) error {
 		return fmt.Errorf("historique: base de version %d, plus récente que l'application (%d)", version, len(migrations))
 	}
 	for i := version; i < len(migrations); i++ {
-		tx, err := s.db.BeginTx(ctx, nil)
-		if err != nil {
-			return fmt.Errorf("historique: migration %d: %w", i+1, err)
-		}
-		if _, err := tx.ExecContext(ctx, migrations[i]); err != nil {
-			tx.Rollback()
-			return fmt.Errorf("historique: migration %d: %w", i+1, err)
-		}
-		// PRAGMA n'accepte pas de paramètre lié ; la valeur est un entier
-		// calculé ici, jamais une donnée extérieure.
-		if _, err := tx.ExecContext(ctx, fmt.Sprintf("PRAGMA user_version = %d", i+1)); err != nil {
-			tx.Rollback()
-			return fmt.Errorf("historique: migration %d: %w", i+1, err)
-		}
-		if err := tx.Commit(); err != nil {
+		if _, err := conn.ExecContext(ctx, migrations[i]); err != nil {
 			return fmt.Errorf("historique: migration %d: %w", i+1, err)
 		}
 	}
+	if version < len(migrations) {
+		// PRAGMA n'accepte pas de paramètre lié ; la valeur est un entier
+		// calculé ici, jamais une donnée extérieure.
+		if _, err := conn.ExecContext(ctx, fmt.Sprintf("PRAGMA user_version = %d", len(migrations))); err != nil {
+			return fmt.Errorf("historique: migration: %w", err)
+		}
+	}
+	if _, err := conn.ExecContext(ctx, "COMMIT"); err != nil {
+		return fmt.Errorf("historique: migration: %w", err)
+	}
+	committed = true
 	return nil
 }
 
@@ -185,12 +206,12 @@ func (s *Store) Finish(ctx context.Context, run Run) error {
 	}
 	_, err := s.db.ExecContext(ctx,
 		`UPDATE runs SET finished = ?, status = ?, archive = ?, files = ?,
-			original_size = ?, deduplicated_size = ?, warnings = ?,
-			cloud_skipped = ?, error_key = ?, detail = ?
+			original_size = ?, deduplicated_size = ?, repository_size = ?,
+			warnings = ?, cloud_skipped = ?, error_key = ?, detail = ?
 		 WHERE id = ?`,
 		run.Finished.UnixMilli(), run.Status, run.Archive, run.Files,
-		run.OriginalSize, run.DeduplicatedSize, run.Warnings,
-		run.CloudSkipped, run.ErrorKey, run.Detail, run.ID)
+		run.OriginalSize, run.DeduplicatedSize, run.RepositorySize,
+		run.Warnings, run.CloudSkipped, run.ErrorKey, run.Detail, run.ID)
 	if err != nil {
 		return fmt.Errorf("historique: %w", err)
 	}
@@ -202,8 +223,8 @@ func (s *Store) Finish(ctx context.Context, run Run) error {
 func (s *Store) Recent(ctx context.Context, profile string, limit int) ([]Run, error) {
 	rows, err := s.db.QueryContext(ctx,
 		`SELECT id, profile, started, finished, status, archive, files,
-			original_size, deduplicated_size, warnings, cloud_skipped,
-			error_key, detail
+			original_size, deduplicated_size, repository_size, warnings,
+			cloud_skipped, error_key, detail
 		 FROM runs WHERE profile = ? ORDER BY started DESC, id DESC LIMIT ?`,
 		profile, limit)
 	if err != nil {
@@ -220,7 +241,7 @@ func (s *Store) Recent(ctx context.Context, profile string, limit int) ([]Run, e
 		)
 		if err := rows.Scan(&run.ID, &run.Profile, &started, &finished, &run.Status,
 			&run.Archive, &run.Files, &run.OriginalSize, &run.DeduplicatedSize,
-			&run.Warnings, &run.CloudSkipped, &run.ErrorKey, &run.Detail); err != nil {
+			&run.RepositorySize, &run.Warnings, &run.CloudSkipped, &run.ErrorKey, &run.Detail); err != nil {
 			return nil, fmt.Errorf("historique: %w", err)
 		}
 		run.Started = time.UnixMilli(started)
