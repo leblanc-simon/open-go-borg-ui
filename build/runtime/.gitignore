@@ -1,0 +1,17 @@
+# Produits de la construction du runtime. Rien ici n'est du code source : tout
+# se régénère avec build-runtime.ps1, et tout pèse trop lourd pour un dépôt.
+
+# L'archive publiée et son empreinte, une soixantaine de mégaoctets. Elle se
+# publie en asset de release, à une adresse versionnée et stable, jamais dans
+# l'historique du dépôt — voir « Publier » dans README.md.
+dist/
+
+# Espace de travail par défaut : arbre de compilation, arbre livré, programme
+# d'installation Cygwin et son journal. Entièrement jetable, plusieurs centaines
+# de mégaoctets.
+#
+# Il contient pourtant une chose à conserver : work/packages/, les .tar.xz
+# Cygwin exacts qui ont servi, seule garantie de pouvoir reconstruire à
+# l'identique quand les miroirs auront tourné. Ce dossier s'archive et se
+# publie avec l'archive du runtime ; il n'a pas sa place dans le dépôt non plus.
+work/

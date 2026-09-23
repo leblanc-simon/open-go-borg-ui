@@ -85,16 +85,77 @@ par version de moteur, dont le résultat est une archive publiée.
 Si le fichier a été téléchargé plutôt que cloné, Windows le marque en outre
 comme venant d'Internet : `Unblock-File .\build-runtime.ps1` lève ce marquage.
 
-Le script enchaîne huit étapes : récupération du programme d'installation
+### Si Windows bloque les binaires du runtime
+
+Celui-là ne se présente jamais comme ce qu'il est. Une protection du poste
+refuse le chargement d'un binaire Cygwin, Windows répond `ACCESS_DENIED`,
+Cygwin le traduit en `EACCES`, et ce qui remonte ressemble à un arbre
+incomplet :
+
+```
+    running: ...\bin\bash.exe --norc --noprofile "/etc/postinstall/ca-certificates.sh"
+    abnormal exit: exit code=126
+...
+  File "/usr/lib/python3.12/subprocess.py", line 104, in <module>
+    from _posixsubprocess import fork_exec as _fork_exec
+ImportError: Permission denied
+```
+
+L'extension est pourtant bien là, et `python --version` répond. Un arbre Cygwin
+est fait de centaines de binaires non signés, écrits puis exécutés dans la
+foulée : c'est le profil exact de ce que Windows arrête. Trois mécanismes
+distincts, du plus courant au plus radical :
+
+- **l'accès contrôlé aux dossiers** protège d'office Téléchargements, Bureau,
+  Documents et OneDrive, et refuse les écritures des programmes qu'il ne
+  connaît pas — PowerShell en est ;
+- **la marque « venu d'Internet »** (MOTW) suit tout ce qui est extrait d'une
+  archive téléchargée, et SmartScreen s'en sert ;
+- **le contrôle d'application intelligent** (Smart App Control, Windows 11)
+  refuse tout binaire non signé, sans exception configurable. Il ne se
+  désactive qu'une fois pour toutes : le réactiver demande une réinstallation
+  de Windows.
+
+Le script écarte les deux premiers d'emblée — il refuse de construire depuis un
+dossier protégé — et arrête la construction si le troisième est actif. Si le
+refus survient malgré tout :
+
+```powershell
+.\build-runtime.ps1 -Workspace C:\borgui-build  # hors des dossiers protégés
+Get-ChildItem -Recurse -File | Unblock-File       # lever le marquage MOTW
+Add-MpPreference -ExclusionPath C:\borgui-build  # administrateur
+```
+
+Ce que Defender a bloqué se lit dans son journal, qui le nomme mieux que
+Cygwin :
+
+```powershell
+Get-WinEvent -LogName 'Microsoft-Windows-Windows Defender/Operational' |
+    Where-Object Id -in 1116,1117,1121,1126 |
+    Select-Object -First 10 TimeCreated, Message
+```
+
+L'interpréteur de chaque arbre est éprouvé par l'import de ses extensions
+compilées, et non par `--version` qui n'en charge aucune : un arbre bloqué se
+signale à l'étape qui l'installe, et non trois étapes plus loin.
+
+Le script enchaîne neuf étapes : récupération du programme d'installation
 Cygwin et vérification de sa signature, téléchargement des paquets, arbre de
 compilation, compilation de Borg depuis ses sources, composition de l'arbre
-livré, élagage, vérification fonctionnelle, archive et empreinte.
+livré, élagage, vérification fonctionnelle, archive, puis vérification de
+l'archive elle-même.
+
+Les deux vérifications ne font pas double emploi. La première éprouve l'arbre,
+la seconde éprouve l'archive extraite dans un dossier neuf, comme le fera le
+poste de l'utilisateur — et c'est là seulement que se voit ce qu'un format
+d'archive perd en route. L'empreinte n'est calculée qu'après : une archive qui
+échoue est effacée, et rien de publiable ne reste dans `dist/`.
 
 La série de Python demandée est confrontée à `packages.txt` avant toute
-installation, et la présence de l'interpréteur est vérifiée après chaque
-installation Cygwin : une divergence entre les deux fichiers, ou une
-installation incomplète, produirait un runtime dont l'interpréteur ne connaît
-pas Borg.
+installation, et l'interpréteur est éprouvé après chaque installation Cygwin —
+par l'import de ses extensions compilées, pas par `--version` : une divergence
+entre les deux fichiers, une installation incomplète ou un binaire refusé par
+le poste produirait un runtime dont l'interpréteur ne connaît pas Borg.
 
 Le programme d'installation de Cygwin est une application graphique même en
 mode silencieux : il est lancé par `Start-Process -Wait`, faute de quoi la
@@ -117,8 +178,42 @@ Si une construction a été interrompue avant cette correction, effacez
 `work\build` et `work\stage` à la main : le script le fait désormais, mais la
 base laissée par l'exécution précédente est ce qui bloquait les suivantes.
 
-Il produit dans `dist/` l'archive `borgui-runtime-<version>.zip`, le fichier
+Il produit dans `dist/` l'archive `borgui-runtime-<version>.tar.gz`, le fichier
 `SHA256SUMS`, et affiche les valeurs à reporter dans `spec.go`.
+
+### Pourquoi un tar et non un ZIP
+
+Un arbre livré compte environ 570 liens symboliques. Cygwin les représente par
+un fichier ordinaire marqué de l'attribut Windows « système », que ZIP ne
+transporte pas : à l'extraction ils redeviennent des fichiers inertes de
+quelques octets, et `/bin/python3`, `/bin/awk` et toute la ferme
+`/etc/alternatives` cessent d'exister. ZIP ne transporte pas davantage les
+droits POSIX, et les outils de la plateforme n'écrivent pas ses entrées de
+dossier — les dossiers vides, `/tmp` en tête, disparaissaient aussi, et bash
+accueillait chaque commande par un `warning: could not find /tmp`.
+
+Borg survivait à tout cela, parce que son script d'entrée vise un vrai
+exécutable ; c'est ce qui rendait le défaut invisible à une vérification
+fonctionnelle. tar transporte les trois.
+
+**Conséquence pour le téléchargeur** (`internal/borgruntime`) : il extrait
+désormais un `.tar.gz`, et doit écrire les liens symboliques **à la manière de
+Cygwin**. Créer de vrais liens NTFS demanderait le privilège correspondant,
+donc des droits d'administrateur ou le mode développeur, alors que le runtime
+s'installe sans aucun des deux.
+
+Un lien Cygwin est un fichier portant l'attribut `FILE_ATTRIBUTE_SYSTEM` — sans
+lui, rien n'est interprété — et commençant par la signature `!<symlink>`. Deux
+encodages de la cible coexistent dans l'arbre, tous deux relus par Cygwin :
+
+| Forme | Contenu après la signature | Exemple mesuré |
+|---|---|---|
+| Historique | la cible en octets bruts, terminée par `00` | `/bin/awk` → `!<symlink>gawk.exe\0`, 19 octets |
+| Courante | BOM `FF FE`, la cible en UTF-16LE, terminée par `00 00` | `/bin/python3` → 64 octets pour `/etc/alternatives/python3` |
+
+Écrire la forme courante : c'est celle que produit l'appel `symlink()` de
+Cygwin, et la seule qui accepte une cible non ASCII. La forme historique vient
+des archives de paquets et n'a pas à être reproduite.
 
 ### Cython n'est pas installé, et c'est voulu
 
@@ -181,7 +276,7 @@ route.
 
 ```bash
 gh release create runtime-1.4.5-cygwin.1 \
-    build/runtime/dist/borgui-runtime-1.4.5-cygwin.1.zip \
+    build/runtime/dist/borgui-runtime-1.4.5-cygwin.1.tar.gz \
     build/runtime/dist/SHA256SUMS \
     --title "Runtime Borg 1.4.5 (Cygwin, révision 1)" \
     --notes "Moteur de sauvegarde pour les postes Windows. Empreinte dans SHA256SUMS."
@@ -223,6 +318,21 @@ par un exécutable non signé, sera signalée par Defender et bloquée par
 SmartScreen. Deux mesures, à prévoir avant le déploiement et non pendant :
 signer l'exécutable de l'application (SEC-02), et documenter l'exclusion
 antivirus du dossier `%LOCALAPPDATA%\borgui\runtime`.
+
+Ce n'est pas une hypothèse : le refus se rencontre dès la construction, où il
+se déguise en arbre Cygwin incomplet (voir plus haut). Le poste de
+l'utilisateur subira le même traitement, à ceci près qu'il n'aura personne pour
+le diagnostiquer. Deux conséquences pour l'application :
+
+- l'installation du runtime doit **vérifier que le moteur s'exécute** — pas
+  seulement que les fichiers sont là — et traduire un refus en message qui
+  nomme l'antivirus, l'emplacement à exclure et la marche à suivre (EF-05) ;
+- `%LOCALAPPDATA%` est retenu justement parce qu'il n'est pas protégé par
+  l'accès contrôlé aux dossiers, contrairement à Documents ou au Bureau.
+
+Un poste sous contrôle d'application intelligent ne pourra pas exécuter le
+runtime, quoi que fasse l'application : c'est une limite à documenter, pas un
+défaut à corriger.
 
 ## Mettre à jour le moteur
 

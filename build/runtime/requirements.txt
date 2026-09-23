@@ -1,22 +1,13 @@
 # Dépendances Python du moteur, épinglées à la version près.
 #
-# Regénérer après tout changement de version de Borg, sur la machine de
-# construction :
-#
-#   pip download borgbackup==<version> --no-binary :all: -d wheels
-#   pip hash wheels/*
-#
-# Les empreintes sont exigées à l'installation (pip --require-hashes) : sans
-# elles, une reconstruction six mois plus tard ne produit pas le même runtime.
-# Les valeurs ci-dessous sont à renseigner lors de la première construction.
-
-# Dépendances d'exécution de Borg 1.4.5 : msgpack (>=1.0.3, <=1.2.1) et
-# packaging. Les outils de construction n'y figurent pas — ils ne sont pas
-# livrés dans le runtime.
+# Fichier produit par « build-runtime.ps1 -UpdateHashes », à relire avant de
+# le valider : les empreintes sont exigées à l'installation
+# (pip --require-hashes), faute de quoi une reconstruction six mois plus tard
+# ne produirait pas le même runtime.
 
 borgbackup==1.4.5 \
-    --hash=sha256:0000000000000000000000000000000000000000000000000000000000000000
+    --hash=sha256:4f9a5fe584c504b15485841236750dea16aa7cd2ddbc4a594e9d2ce5c49c4508
 msgpack==1.0.8 \
-    --hash=sha256:0000000000000000000000000000000000000000000000000000000000000000
+    --hash=sha256:95c02b0e27e706e48d0e5426d1710ca78e0f0628d6e89d5b5a5b91a5f12274f3
 packaging==24.1 \
-    --hash=sha256:0000000000000000000000000000000000000000000000000000000000000000
+    --hash=sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002

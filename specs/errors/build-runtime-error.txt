@@ -21,7 +21,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
        2 install libpopt-common               1.19-1
        3 install libsqlite3_0                 3.49.1-1
        4 install terminfo                     6.5+20240427-1
-       5 install tzdata                       2026c-1
+       5 install tzdata                       2026d-1
        6 install w32api-headers               14.0.0-1
        7 install windows-default-manifest     6.5-1
        8 install cygwin                       3.6.10-1
@@ -39,7 +39,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       20 install zlib0                        1.3.2-1
       21 install which                        2.25-1
       22 install vim-minimal                  9.1.1825-1
-      23 install tzcode                       2026c-1
+      23 install tzcode                       2026d-1
       24 install run                          1.3.4-2
       25 install ncurses                      6.5+20240427-1
       26 install login                        1.13-1
@@ -53,12 +53,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       34 install libreadline8                 8.3-1
       35 install libquadmath0                 14.4.0-1
       36 install libpopt0                     1.19-1
-      37 install libpng16                     1.6.47-2
-      38 install libpkgconf8                  3.0.6-1
+      37 install libpng16                     1.6.58-1
+      38 install libpkgconf8                  3.0.7-1
       39 install libpipeline1                 1.5.8-1
       40 install libpcre2_8_0                 10.48-1
       41 install libpcre1                     8.45-1
-      42 install liblzma5                     5.8.3-1
+      42 install liblzma5                     5.8.4-1
       43 install liblz4_1                     1.9.4-1
       44 install liblcms2_2                   2.16-1
       45 install liblastlog2                  2.40.2-2
@@ -98,12 +98,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       79 install libwebpdemux2                1.6.0-1
       80 install libuchardet0                 0.0.8-1
       81 install libgraphite2_3               1.3.14-1
-      82 install cygutils                     1.4.17-4
-      83 install pkgconf                      3.0.6-1
-      84 install grep                         3.12-1
-      85 install less                         704-1
-      86 install xz                           5.8.3-1
-      87 install libxml2                      2.10.4-3
+      82 install libxml2                      2.13.9-1
+      83 install cygutils                     1.4.17-4
+      84 install pkgconf                      3.0.7-1
+      85 install grep                         3.12-1
+      86 install less                         704-1
+      87 install xz                           5.8.4-1
       88 install zstd                         1.5.7-1
       89 install libk5crypto3                 1.15.2-2
       90 install libimagequant0               2.10.0-1
@@ -127,7 +127,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
      108 install info                         7.3-1
      109 install _autorebase                  001091-1
      110 install groff                        1.24.1-1
-     111 install pkg-config                   3.0.6-1
+     111 install pkg-config                   3.0.7-1
      112 install libkrb5_3                    1.15.2-2
      113 install libmpc3                      1.4.1-1
      114 install gawk                         5.4.0-1
@@ -160,26 +160,39 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
      141 install libfido2                     1.17.0-1
      142 install libraqm0                     0.7.0-1
      143 install python312-zipp               4.1.0-1
-     144 install python312-typing_extension   4.15.0-1
+     144 install python312-typing_extension   4.16.0-1
      145 install python312-toml               0.10.2-3
-     146 install python312-platformdirs       4.11.6-1
+     146 install python312-platformdirs       4.11.8-1
      147 install python312-packaging          26.3-1
      148 install python312-olefile            0.47-1
      149 install python312-iniconfig          2.3.0-1
      150 install python312-importlib-metadata 9.0.1-1
-     151 install python312-filelock           3.32.5-1
+     151 install python312-filelock           3.32.6-1
      152 install python312-chardet            7.6.0-1
      153 install openssh                      10.5p1-1
      154 install python312-imaging            12.3.0-1
      155 install python312-pluggy             1.6.0-1
      156 install python312-pygments           2.21.0-1
      157 install python312-pytest             9.1.1-1
-     158 install python312-docutils           0.22.4-1
+     158 install python312-docutils           0.23-1
      159 install python312-setuptools         80.9.0-1
      160 install python312-wheel              0.48.0-1
      161 install python312-pip                26.2.1-1
      162 install python312-devel              3.12.12-1
      163 install gettext-locale-alias         0.26-1
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026d-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026d-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.58-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.7-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.4-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.13.9-1-x86_64.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.7-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.4-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.7-1-x86_64.tar.zst
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.16.0-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.8-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.6-1-noarch.tar.xz
+    Downloaded C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.23-1-noarch.tar.xz
     Ending cygwin install
 ==> Installation de l'arbre de compilation
     Starting cygwin install, version 2.937
@@ -198,7 +211,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
        2 install libpopt-common               1.19-1
        3 install libsqlite3_0                 3.49.1-1
        4 install terminfo                     6.5+20240427-1
-       5 install tzdata                       2026c-1
+       5 install tzdata                       2026d-1
        6 install w32api-headers               14.0.0-1
        7 install windows-default-manifest     6.5-1
        8 install cygwin                       3.6.10-1
@@ -216,7 +229,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       20 install zlib0                        1.3.2-1
       21 install which                        2.25-1
       22 install vim-minimal                  9.1.1825-1
-      23 install tzcode                       2026c-1
+      23 install tzcode                       2026d-1
       24 install run                          1.3.4-2
       25 install ncurses                      6.5+20240427-1
       26 install login                        1.13-1
@@ -229,12 +242,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       33 install libreadline8                 8.3-1
       34 install libquadmath0                 14.4.0-1
       35 install libpopt0                     1.19-1
-      36 install libpng16                     1.6.47-2
-      37 install libpkgconf8                  3.0.6-1
+      36 install libpng16                     1.6.58-1
+      37 install libpkgconf8                  3.0.7-1
       38 install libpipeline1                 1.5.8-1
       39 install libpcre2_8_0                 10.48-1
       40 install libpcre1                     8.45-1
-      41 install liblzma5                     5.8.3-1
+      41 install liblzma5                     5.8.4-1
       42 install liblz4_1                     1.9.4-1
       43 install liblcms2_2                   2.16-1
       44 install liblastlog2                  2.40.2-2
@@ -270,12 +283,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
       74 install libwebpdemux2                1.6.0-1
       75 install libuchardet0                 0.0.8-1
       76 install libgraphite2_3               1.3.14-1
-      77 install cygutils                     1.4.17-4
-      78 install pkgconf                      3.0.6-1
-      79 install grep                         3.12-1
-      80 install less                         704-1
-      81 install xz                           5.8.3-1
-      82 install libxml2                      2.10.4-3
+      77 install libxml2                      2.13.9-1
+      78 install cygutils                     1.4.17-4
+      79 install pkgconf                      3.0.7-1
+      80 install grep                         3.12-1
+      81 install less                         704-1
+      82 install xz                           5.8.4-1
       83 install zstd                         1.5.7-1
       84 install libimagequant0               2.10.0-1
       85 install libmpfr6                     4.2.2-1
@@ -298,7 +311,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
      102 install info                         7.3-1
      103 install _autorebase                  001091-1
      104 install groff                        1.24.1-1
-     105 install pkg-config                   3.0.6-1
+     105 install pkg-config                   3.0.7-1
      106 install libmpc3                      1.4.1-1
      107 install gawk                         5.4.0-1
      108 install p11-kit-trust                0.26.5-1
@@ -327,20 +340,20 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
      131 install libssl-devel                 3.5.8-1
      132 install libraqm0                     0.7.0-1
      133 install python312-zipp               4.1.0-1
-     134 install python312-typing_extension   4.15.0-1
+     134 install python312-typing_extension   4.16.0-1
      135 install python312-toml               0.10.2-3
-     136 install python312-platformdirs       4.11.6-1
+     136 install python312-platformdirs       4.11.8-1
      137 install python312-packaging          26.3-1
      138 install python312-olefile            0.47-1
      139 install python312-iniconfig          2.3.0-1
      140 install python312-importlib-metadata 9.0.1-1
-     141 install python312-filelock           3.32.5-1
+     141 install python312-filelock           3.32.6-1
      142 install python312-chardet            7.6.0-1
      143 install python312-imaging            12.3.0-1
      144 install python312-pluggy             1.6.0-1
      145 install python312-pygments           2.21.0-1
      146 install python312-pytest             9.1.1-1
-     147 install python312-docutils           0.22.4-1
+     147 install python312-docutils           0.23-1
      148 install python312-setuptools         80.9.0-1
      149 install python312-wheel              0.48.0-1
      150 install python312-pip                26.2.1-1
@@ -352,7 +365,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt-common/libpopt-common-1.19-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/sqlite3/libsqlite3_0/libsqlite3_0-3.49.1-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/terminfo/terminfo-6.5+20240427-1.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026c-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/tzdata/tzdata-2026d-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/w32api-headers/w32api-headers-14.0.0-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/windows-default-manifest/windows-default-manifest-6.5-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygwin/cygwin-3.6.10-1-x86_64.tar.xz
@@ -370,7 +383,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zlib/zlib0/zlib0-1.3.2-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/which/which-2.25-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/vim/vim-minimal/vim-minimal-9.1.1825-1-x86_64.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026c-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/tzcode/tzcode-2026d-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/run/run-1.3.4-2.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/ncurses/ncurses-6.5+20240427-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/login/login-1.13-1.tar.xz
@@ -383,12 +396,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/readline/libreadline8/libreadline8-8.3-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gcc/libquadmath0/libquadmath0-14.4.0-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/popt/libpopt0/libpopt0-1.19-1.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.47-2-x86_64.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpng/libpng16/libpng16-1.6.58-1-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/libpkgconf8/libpkgconf8-3.0.7-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libpipeline/libpipeline1/libpipeline1-1.5.8-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre2/libpcre2_8_0/libpcre2_8_0-10.48-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pcre/libpcre1/libpcre1-8.45-1.tar.zst
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.3-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/liblzma5/liblzma5-5.8.4-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lz4/liblz4_1/liblz4_1-1.9.4-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/lcms2/liblcms2_2/liblcms2_2-2.16-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/util-linux/liblastlog2/liblastlog2-2.40.2-2.tar.xz
@@ -424,12 +437,12 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libwebp/libwebpdemux2/libwebpdemux2-1.6.0-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/uchardet/libuchardet0/libuchardet0-0.0.8-1.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/graphite2/libgraphite2_3/libgraphite2_3-1.3.14-1.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.13.9-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/cygutils/cygutils-1.4.17-4-x86_64.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkgconf-3.0.7-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/grep/grep-3.12-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/less/less-704-1-x86_64.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.3-1-x86_64.tar.zst
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libxml2/libxml2-2.10.4-3-x86_64.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/xz/xz-5.8.4-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/zstd/zstd-1.5.7-1.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/libimagequant/libimagequant0/libimagequant0-2.10.0-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpfr/libmpfr6/libmpfr6-4.2.2-1.tar.zst
@@ -452,7 +465,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/texinfo/info/info-7.3-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/_autorebase/_autorebase-001091-1.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/groff/groff-1.24.1-1-x86_64.tar.zst
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.6-1-x86_64.tar.zst
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/pkgconf/pkg-config/pkg-config-3.0.7-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/mpclib/libmpc3/libmpc3-1.4.1-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/gawk/gawk-5.4.0-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/p11-kit/p11-kit-trust/p11-kit-trust-0.26.5-1-x86_64.tar.xz
@@ -481,20 +494,20 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/openssl/libssl-devel/libssl-devel-3.5.8-1-x86_64.tar.zst
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/raqm/libraqm0/libraqm0-0.7.0-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-zipp/python312-zipp/python312-zipp-4.1.0-1-noarch.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.15.0-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-typing_extension/python312-typing_extension/python312-typing_extension-4.16.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-toml/python312-toml/python312-toml-0.10.2-3.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.6-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-platformdirs/python312-platformdirs/python312-platformdirs-4.11.8-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-packaging/python312-packaging/python312-packaging-26.3-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-olefile/python312-olefile/python312-olefile-0.47-1.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-iniconfig/python312-iniconfig/python312-iniconfig-2.3.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-importlib-metadata/python312-importlib-metadata/python312-importlib-metadata-9.0.1-1-noarch.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.5-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-filelock/python312-filelock/python312-filelock-3.32.6-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-chardet/python312-chardet/python312-chardet-7.6.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/x86_64/release/python-imaging/python312-imaging/python312-imaging-12.3.0-1-x86_64.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pluggy/python312-pluggy/python312-pluggy-1.6.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pygments/python312-pygments/python312-pygments-2.21.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pytest/python312-pytest/python312-pytest-9.1.1-1-noarch.tar.xz
-    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.22.4-1-noarch.tar.xz
+    Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-docutils/python312-docutils/python312-docutils-0.23-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-setuptools/python312-setuptools/python312-setuptools-80.9.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-wheel/python312-wheel/python312-wheel-0.48.0-1-noarch.tar.xz
     Extracting from file://C:\Users\lucie\Downloads\build\runtime\work\packages/https%3a%2f%2fmirrors.kernel.org%2fsourceware%2fcygwin%2f/noarch/release/python-pip/python312-pip/python312-pip-26.2.1-1-noarch.tar.xz
@@ -508,6 +521,7 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/base-files-profile.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/p11-kit.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/ca-certificates.sh"
+    abnormal exit: exit code=126
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/crypto-policies.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/libxml2.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/openssl.sh"
@@ -518,8 +532,10 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/python312-pip.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_desktop-file-utils.sh"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_glib2.0.sh"
+    abnormal exit: exit code=1
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\dash.exe "/etc/postinstall/zp_man-db-update-index.dash"
     running: C:\Users\lucie\Downloads\build\runtime\work\build\bin\bash.exe --norc --noprofile "/etc/postinstall/zp_shared-mime-info.sh"
+    abnormal exit: exit code=1
     Ending cygwin install
     Copying skeleton files.
     These files are for the users to personalise their cygwin experience.
@@ -532,447 +548,28 @@ PS C:\Users\lucie\Downloads\build\runtime> powershell.exe -ExecutionPolicy Bypas
     './.profile' -> '/home/lucie//.profile'
     Python 3.12.12
 ==> Calcul des empreintes des dépendances
-Collecting borgbackup==1.4.5 (from -r /tmp/plain.txt (line 1))
-  Downloading borgbackup-1.4.5.tar.gz (4.0 MB)
-     ???????????????????????????????????????? 4.0/4.0 MB 5.6 MB/s  0:00:00
-  Installing build dependencies ... error
-  error: subprocess-exited-with-error
-
-  × installing build dependencies for borgbackup did not run successfully.
-  ¦ exit code: 1
-  ?-> [424 lines of output]
-      Collecting setuptools>=78.1.1
-        Downloading setuptools-84.0.0.tar.gz (1.2 MB)
-           ???????????????????????????????????????? 1.2/1.2 MB 8.8 MB/s  0:00:00
-        Getting requirements to build wheel: started
-        Getting requirements to build wheel: finished with status 'done'
-        Preparing metadata (pyproject.toml): started
-        Preparing metadata (pyproject.toml): finished with status 'done'
-      Collecting setuptools_scm>=8
-        Downloading setuptools_scm-10.2.3.tar.gz (67 kB)
-        Installing build dependencies: started
-        Installing build dependencies: finished with status 'done'
-        Getting requirements to build wheel: started
-        Getting requirements to build wheel: finished with status 'done'
-        Preparing metadata (pyproject.toml): started
-        Preparing metadata (pyproject.toml): finished with status 'done'
-      Collecting wheel
-        Downloading wheel-0.48.0.tar.gz (66 kB)
-        Installing build dependencies: started
-        Installing build dependencies: finished with status 'done'
-        Getting requirements to build wheel: started
-        Getting requirements to build wheel: finished with status 'done'
-        Preparing metadata (pyproject.toml): started
-        Preparing metadata (pyproject.toml): finished with status 'done'
-      Collecting pkgconfig
-        Downloading pkgconfig-1.6.0.tar.gz (5.7 kB)
-        Installing build dependencies: started
-        Installing build dependencies: finished with status 'done'
-        Getting requirements to build wheel: started
-        Getting requirements to build wheel: finished with status 'done'
-        Preparing metadata (pyproject.toml): started
-        Preparing metadata (pyproject.toml): finished with status 'done'
-      Collecting Cython>=3.0.3
-        Downloading cython-3.3.0.tar.gz (3.7 MB)
-           ???????????????????????????????????????? 3.7/3.7 MB 6.2 MB/s  0:00:00
-        Installing build dependencies: started
-        Installing build dependencies: finished with status 'done'
-        Getting requirements to build wheel: started
-        Getting requirements to build wheel: finished with status 'done'
-        Preparing metadata (pyproject.toml): started
-        Preparing metadata (pyproject.toml): finished with status 'done'
-      Collecting vcs-versioning<3,>=2.3.2.dev0 (from setuptools_scm>=8)
-        Using cached vcs_versioning-2.3.4-py3-none-any.whl
-      Collecting packaging>=20 (from setuptools_scm>=8)
-        Using cached packaging-26.3-py3-none-any.whl
-      Building wheels for collected packages: setuptools, setuptools_scm, wheel, pkgconfig, Cython
-        Building wheel for setuptools (pyproject.toml): started
-        Building wheel for setuptools (pyproject.toml): finished with status 'done'
-        Created wheel for setuptools: filename=setuptools-84.0.0-py3-none-any.whl size=818216 sha256=98f42708234d16a43df1e06acd69005719b2eda6c05f68187e8c670199ec614a
-        Stored in directory: /home/lucie/.cache/pip/wheels/09/c4/7e/3f12bd4f3b911f91b5e4cb2611342c6851559d353876d0251c
-        Building wheel for setuptools_scm (pyproject.toml): started
-        Building wheel for setuptools_scm (pyproject.toml): finished with status 'done'
-        Created wheel for setuptools_scm: filename=setuptools_scm-10.2.3-py3-none-any.whl size=29123 sha256=1fdf70aecf9339fe7664531c8f42a3f926757c93c88a2e7e8801e3db7d6c3761
-        Stored in directory: /home/lucie/.cache/pip/wheels/f9/63/9e/4d89073aedfe2e8055397f614eae4945855c2a4bc8e7ab3f87
-        Building wheel for wheel (pyproject.toml): started
-        Building wheel for wheel (pyproject.toml): finished with status 'done'
-        Created wheel for wheel: filename=wheel-0.48.0-py3-none-any.whl size=33320 sha256=5b28a16f7f4218593423e1e4e7729c8fef6b8f6a58fda19ce4519c8fa08e1c8e
-        Stored in directory: /home/lucie/.cache/pip/wheels/72/9d/9d/f49c5e2f6221926d88f2b822584a20e01b5b11c5319466b25c
-        Building wheel for pkgconfig (pyproject.toml): started
-        Building wheel for pkgconfig (pyproject.toml): finished with status 'done'
-        Created wheel for pkgconfig: filename=pkgconfig-1.6.0-py3-none-any.whl size=7087 sha256=9c7a2c3a7a2708e597882852c92c70b6f989178ffee7ebf2c979aca4b208e017
-        Stored in directory: /home/lucie/.cache/pip/wheels/16/f5/16/e95152264603df9170ebabeec29e0a7ec966c52d17fe9c8084
-        Building wheel for Cython (pyproject.toml): started
-        Building wheel for Cython (pyproject.toml): finished with status 'error'
-        error: subprocess-exited-with-error
-
-        × Building wheel for Cython (pyproject.toml) did not run successfully.
-        ¦ exit code: 1
-        ?-> [346 lines of output]
-            Unable to find pgen, not compiling formal grammar.
-            running bdist_wheel
-            running build
-            running build_py
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312
-            copying cython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/CodeWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/Coverage.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/Debugging.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/LZSS.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/Shadow.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/StringIOTree.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/TestUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/Utils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            copying Cython/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/BuildExecutable.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/Cache.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/Cythonize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/Dependencies.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/Distutils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/Inline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/IpythonMagic.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/SharedModule.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            copying Cython/Build/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/AnalysedTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Annotate.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/AutoDocTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Buffer.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Builtin.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/CmdLine.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Code.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/CodeGeneration.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/CythonScope.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Dataclass.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/DebugFlags.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Errors.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/ExprNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/FlowControl.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/FusedNode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Future.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Interpreter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Lexicon.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/LineTable.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Main.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/MatchCaseNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/MemoryView.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/ModuleNode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Naming.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Nodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Optimize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Options.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/ParseTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Parsing.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Pipeline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/PyrexTypes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Pythran.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Scanning.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/StringEncoding.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Symtab.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/TreeFragment.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/TreePath.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/TypeInference.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/TypeSlots.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/UFuncs.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/UtilityCode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/UtilNodes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Version.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Visitor.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
-            copying Cython/Runtime/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
-            copying Cython/Distutils/build_ext.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
-            copying Cython/Distutils/extension.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
-            copying Cython/Distutils/old_build_ext.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
-            copying Cython/Distutils/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Distutils
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            copying Cython/Debugger/Cygdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            copying Cython/Debugger/DebugWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            copying Cython/Debugger/libcython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            copying Cython/Debugger/libpython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            copying Cython/Debugger/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Debugger/Tests/TestLibCython.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Debugger/Tests/test_libcython_in_gdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Debugger/Tests/test_libpython_in_gdb.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Debugger/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Actions.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/DFA.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Errors.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Lexicons.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Machines.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Regexps.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Scanners.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Transitions.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestCodeWriter.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestCythonUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestJediTyper.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestShadow.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestStringIOTree.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/TestTestUtils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/xmlrunner.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            copying Cython/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tests
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestCyCache.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestCythonizeArgsParser.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestDependencies.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestInline.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestIpythonMagic.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestRecythonize.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/TestStripLiterals.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            copying Cython/Build/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Build/Tests
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestBuffer.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestBuiltin.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestCmdLine.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestCode.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestFlowControl.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestGrammar.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestMemView.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestParseTreeTransforms.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestScanning.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestSignatureMatching.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestStringEncoding.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestTreeFragment.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestTreePath.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestTypes.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestUtilityLoad.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/TestVisitor.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/Utils.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            copying Cython/Compiler/Tests/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler/Tests
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
-            copying Cython/Tempita/_looper.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
-            copying Cython/Tempita/_tempita.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
-            copying Cython/Tempita/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Tempita
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
-            copying pyximport/pyxbuild.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
-            copying pyximport/pyximport.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
-            copying pyximport/__init__.py -> build/lib.cygwin-3.6.10-x86_64-cpython-312/pyximport
-            copying Cython/py.typed -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes
-            copying Cython/Includes/openmp.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/array.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/bool.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/buffer.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/bytearray.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/bytes.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/cellobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/ceval.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/codecs.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/contextvars.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/conversion.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/datetime.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/descr.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/dict.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/exc.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/fileobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/float.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/frozendict.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/function.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/genobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/getargs.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/instance.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/iterator.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/iterobject.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/long.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/longintrepr.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/mapping.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/marshal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/mem.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/memoryview.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/method.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/module.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/number.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/object.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/pycapsule.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/pylifecycle.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/pyport.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/pystate.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/pythread.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/ref.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/sentinel.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/sequence.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/slice.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/tuple.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/type.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/unicode.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/version.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/weakref.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            copying Cython/Includes/cpython/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/cpython
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/errno.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/float.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/limits.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/locale.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/math.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/setjmp.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/signal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/stddef.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/stdint.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/stdio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/stdlib.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/string.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/threads.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            copying Cython/Includes/libc/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libc
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/algorithm.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/any.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/atomic.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/barrier.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/bit.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/cast.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/cmath.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/complex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/condition_variable.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/deque.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/exception.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/execution.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/forward_list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/functional.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/future.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/iterator.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/latch.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/limits.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/list.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/map.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/memory.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/mutex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/numbers.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/numeric.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/optional.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/pair.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/queue.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/random.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/semaphore.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/shared_mutex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/span.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/stack.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/stop_token.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/string.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/string_view.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/typeindex.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/typeinfo.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/unordered_map.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/unordered_set.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/utility.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/vector.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            copying Cython/Includes/libcpp/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/libcpp
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/numpy
-            copying Cython/Includes/numpy/math.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/numpy
-            creating build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/dlfcn.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/fcntl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/ioctl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/mman.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/resource.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/select.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/signal.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/stat.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/stdio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/stdlib.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/strings.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/time.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/types.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/uio.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/unistd.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/wait.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Includes/posix/__init__.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Includes/posix
-            copying Cython/Compiler/Code.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/FlowControl.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/ParseTreeTransforms.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Parsing.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Scanning.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Compiler/Visitor.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Compiler
-            copying Cython/Runtime/refnanny.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Runtime
-            copying Cython/Debugger/Tests/codefile -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Debugger/Tests/cfuncs.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Debugger/Tests
-            copying Cython/Plex/Actions.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/DFA.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Machines.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Scanners.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Plex/Transitions.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Plex
-            copying Cython/Utility/CConvert.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CpdefEnums.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CppConvert.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Exceptions_Cy.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/FusedFunction.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/MatchCase_Cy.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/MemoryView.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/TestCythonScope.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/TestCyUtilityLoader.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/UFuncs.pyx -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/BufferFormatFromTypeInfo.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/MemoryView.pxd -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/AsyncGen.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Buffer.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Builtins.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CMath.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CommonStructures.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Complex.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Coroutine.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CythonFunction.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Dataclasses.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Embed.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Exceptions.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/ExtensionTypes.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/FunctionArguments.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/ImportExport.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/MatchCase.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/MemoryView_C.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/ModuleSetupCode.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/NumpyImportArray.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/ObjectHandling.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Optimize.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Overflow.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Profile.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/StringTools.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/Synchronization.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/TestUtilityLoader.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/TString.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/TypeConversion.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/UFuncs_C.c -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/arrayarray.h -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            copying Cython/Utility/CppSupport.cpp -> build/lib.cygwin-3.6.10-x86_64-cpython-312/Cython/Utility
-            running build_ext
-            Compiling /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.py because it changed.
-            [1/1] Cythonizing /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.py
-            building 'Cython.Compiler.Parsing' extension
-            gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O3 -Wall -DCYTHON_USE_TYPE_SPECS=1 -I/usr/include/python3.12 -c /tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.c -o build/temp.cygwin-3.6.10-x86_64-cpython-312/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.o
-            error: Command '['gcc', '-fno-strict-overflow', '-Wsign-compare', '-DNDEBUG', '-g', '-O3', '-Wall', '-DCYTHON_USE_TYPE_SPECS=1', '-I/usr/include/python3.12', '-c', '/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.c', '-o', 'build/temp.cygwin-3.6.10-x86_64-cpython-312/tmp/pip-install-gq85qqrz/cython_931be54f1e63477a9a1b872710bf1d87/Cython/Compiler/Parsing.o']' returned non-zero exit status 1.
-            [end of output]
-
-        note: This error originates from a subprocess, and is likely not a problem with pip.
-        ERROR: Failed building wheel for Cython
-      Successfully built setuptools setuptools_scm wheel pkgconfig
-      Failed to build Cython
-      error: failed-wheel-build-for-install
-
-      × Failed to build installable wheels for some pyproject.toml based projects
-      ?-> Cython
-      [end of output]
-
-  note: This error originates from a subprocess, and is likely not a problem with pip.
-ERROR: Failed to build 'borgbackup' when installing build dependencies for borgbackup
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/usr/lib/python3.12/site-packages/pip/__main__.py", line 24, in <module>
+    sys.exit(_main())
+             ^^^^^^^
+  File "/usr/lib/python3.12/site-packages/pip/_internal/cli/main.py", line 47, in main
+    from pip._internal.cli.autocompletion import autocomplete
+  File "/usr/lib/python3.12/site-packages/pip/_internal/cli/autocompletion.py", line 12, in <module>
+    from pip._internal.cli.main_parser import create_main_parser
+  File "/usr/lib/python3.12/site-packages/pip/_internal/cli/main_parser.py", line 6, in <module>
+    import subprocess
+  File "/usr/lib/python3.12/subprocess.py", line 104, in <module>
+    from _posixsubprocess import fork_exec as _fork_exec
+ImportError: Permission denied
 commande Cygwin en échec (1) : set -e
 rm -rf /tmp/sources && mkdir -p /tmp/sources
 printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
-python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+# --no-deps : sans lui, pip résout les dépendances, ce qui l'amène à construire
+# les métadonnées des paquets, donc à installer puis compiler leurs outils de
+# construction. Les dépendances d'exécution sont déjà listées ici, une par une.
+python3.12 -m pip download --no-deps --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
 Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:158 : 32
 + ... DE -ne 0) { throw "commande Cygwin en échec ($LASTEXITCODE) : $Script ...
 +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -980,6 +577,9 @@ Au caractère C:\Users\lucie\Downloads\build\runtime\build-runtime.ps1:158 : 32
     + FullyQualifiedErrorId : commande Cygwin en échec (1) : set -e
 rm -rf /tmp/sources && mkdir -p /tmp/sources
 printf '%s\n' 'borgbackup==1.4.5' 'msgpack==1.0.8' 'packaging==24.1' > /tmp/plain.txt
-python3.12 -m pip download --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
+# --no-deps : sans lui, pip résout les dépendances, ce qui l'amène à construire
+# les métadonnées des paquets, donc à installer puis compiler leurs outils de
+# construction. Les dépendances d'exécution sont déjà listées ici, une par une.
+python3.12 -m pip download --no-deps --no-binary :all: --dest /tmp/sources --requirement /tmp/plain.txt
 
 PS C:\Users\lucie\Downloads\build\runtime>
