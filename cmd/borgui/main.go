@@ -94,7 +94,7 @@ func run(args []string) int {
 	if install != "" {
 		code, err := application.installSchedule(ctx)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": err.Error()}))
+			fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": application.describeError(err)}))
 		}
 		return code
 	}
@@ -111,7 +111,7 @@ func run(args []string) int {
 			fmt.Fprintln(os.Stderr, loc.T("cli.cancelled"))
 			return exitError
 		}
-		fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": err.Error()}))
+		fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": application.describeError(err)}))
 		return code
 	}
 	return code
@@ -142,6 +142,8 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandHistory(ctx, args)
 	case "schedule":
 		return a.commandSchedule(ctx, args)
+	case "state":
+		return a.commandState(ctx, args)
 	case "help", "--help", "-h":
 		fmt.Println(a.T("cli.usage"))
 		return exitSuccess, nil

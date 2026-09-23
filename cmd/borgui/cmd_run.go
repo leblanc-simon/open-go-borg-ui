@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
+
+	"leblanc.io/open-go-borg-ui/internal/config"
 )
 
 // maxLogSize borne le journal d'un profil. Au-delà, il est renommé en .1 et
@@ -60,25 +61,5 @@ func (a *app) openLog() (*os.File, error) {
 
 // logPath retourne le journal des exécutions planifiées du profil.
 func (a *app) logPath() string {
-	return filepath.Join(a.stateDir, "logs", safeName(a.profileName)+".log")
-}
-
-// safeName réduit un nom de profil à des caractères admis partout dans un nom
-// de fichier ou d'unité systemd. Les autres sont remplacés par « _ » suivi de
-// leur code ; « _ » lui-même est échappé, ce qui garde deux noms distincts
-// distincts.
-func safeName(name string) string {
-	if name == "" {
-		return "default"
-	}
-	var b strings.Builder
-	for _, r := range name {
-		switch {
-		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '-':
-			b.WriteRune(r)
-		default:
-			fmt.Fprintf(&b, "_%x", r)
-		}
-	}
-	return b.String()
+	return filepath.Join(a.stateDir, "logs", config.SafeName(a.profileName)+".log")
 }

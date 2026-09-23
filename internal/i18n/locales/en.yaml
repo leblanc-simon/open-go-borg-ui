@@ -20,6 +20,7 @@ cli.usage: |
     restore          restore a backup into a new folder
     history          backup history of this computer
     schedule         set up automatic backup
+    state            status of this computer, as stored on its destination
 
   Common options:
     --config <file>    configuration file to use
@@ -59,6 +60,8 @@ error.passphrase_wrong: "The destination password was refused."
 error.connection: "The destination could not be reached."
 error.already_running: "A backup is already running on this destination. Wait for it to finish."
 error.maintenance: "The backup is stored, but older backups could not be removed. This will be retried at the next backup."
+error.key_permissions: "This computer's connection key is accessible to other accounts, and the connection refuses it for that reason. Run the command again: the application fixes its permissions before each use. If the error persists, delete the key and create it again with borgui key show."
+error.native_launch: "The backup engine could not call the application back to obtain the password. This is a defect of the application, not of this computer: report it with the log."
 
 config.usage: "Usage: borgui config init | show"
 config.missing_destination: "provide the sub-account (--user) and the destination name (--repo)"
@@ -197,3 +200,17 @@ schedule.weekly: "every {{.Day}} at {{.At}}"
 schedule.manual: "manual"
 schedule.catch_up: ", caught up at startup if the computer was off"
 schedule.task_description: "BorgUI backup of profile {{.Profile}}"
+state.empty: "This computer has not stored any status on its destination yet."
+state.entry: "{{.Health}}  last run on {{.Date}}, {{.Size}} on the destination"
+state.stale: "no backup for {{.Days}} days"
+state.next_run: "next backup planned on {{.Date}}"
+state.health_ok: "[green] "
+state.health_warning: "[orange]"
+state.health_stale: "[orange]"
+state.health_failed: "[red]   "
+state.rejected: "The status stored on the destination is unreadable and was ignored: {{.Reason}}."
+state.rejected_name: "it describes another computer"
+state.rejected_size: "file too large"
+state.rejected_version: "format written by a newer version of the application"
+state.rejected_invalid: "unreadable or inconsistent content"
+state.publish_failed: "This computer's status could not be stored on its destination: {{.Message}}"

@@ -231,3 +231,20 @@ func (s *Store) Recent(ctx context.Context, profile string, limit int) ([]Run, e
 	}
 	return runs, rows.Err()
 }
+
+// LastSuccess retourne le lancement de la dernière exécution exploitable du
+// profil — réussie ou terminée avec des avertissements —, zéro s'il n'y en a
+// aucune.
+func (s *Store) LastSuccess(ctx context.Context, profile string) (time.Time, error) {
+	var started sql.NullInt64
+	err := s.db.QueryRowContext(ctx,
+		`SELECT MAX(finished) FROM runs WHERE profile = ? AND status IN (?, ?)`,
+		profile, StatusSuccess, StatusWarning).Scan(&started)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("historique: %w", err)
+	}
+	if !started.Valid {
+		return time.Time{}, nil
+	}
+	return time.UnixMilli(started.Int64), nil
+}

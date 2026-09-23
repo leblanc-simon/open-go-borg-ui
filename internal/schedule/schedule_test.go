@@ -216,3 +216,32 @@ func TestCitationWindows(t *testing.T) {
 		}
 	}
 }
+
+// TestProchaineExecution vérifie le calcul de la prochaine exécution, y
+// compris l'heure du jour déjà passée et le changement d'heure.
+func TestProchaineExecution(t *testing.T) {
+	paris, err := time.LoadLocation("Europe/Paris")
+	if err != nil {
+		t.Skip("base des fuseaux indisponible")
+	}
+	at := func(y int, m time.Month, d, h, min int) time.Time { return time.Date(y, m, d, h, min, 0, 0, paris) }
+
+	cases := []struct {
+		name string
+		plan Plan
+		now  time.Time
+		want time.Time
+	}{
+		{"plus tard dans la journée", Plan{Frequency: Daily, Hour: 22}, at(2026, 9, 24, 10, 0), at(2026, 9, 24, 22, 0)},
+		{"heure passée : lendemain", Plan{Frequency: Daily, Hour: 22}, at(2026, 9, 24, 22, 0), at(2026, 9, 25, 22, 0)},
+		{"jeudi → vendredi", Plan{Frequency: Weekly, Hour: 21, Minute: 30, Day: time.Friday}, at(2026, 9, 24, 12, 0), at(2026, 9, 25, 21, 30)},
+		{"vendredi passé → suivant", Plan{Frequency: Weekly, Hour: 21, Minute: 30, Day: time.Friday}, at(2026, 9, 25, 22, 0), at(2026, 10, 2, 21, 30)},
+		{"passage à l'heure d'hiver", Plan{Frequency: Daily, Hour: 3}, at(2026, 10, 24, 12, 0), at(2026, 10, 25, 3, 0)},
+		{"manuelle", Plan{Frequency: Manual}, at(2026, 9, 24, 12, 0), time.Time{}},
+	}
+	for _, c := range cases {
+		if got := Next(c.plan, c.now); !got.Equal(c.want) {
+			t.Errorf("%s: %v, attendu %v", c.name, got, c.want)
+		}
+	}
+}

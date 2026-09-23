@@ -12,6 +12,7 @@ import (
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/history"
 	"leblanc.io/open-go-borg-ui/internal/lock"
+	"leblanc.io/open-go-borg-ui/internal/statusfile"
 )
 
 // fakeRunner rejoue une issue de Borg pour « create », répond par un succès
@@ -22,7 +23,9 @@ type fakeRunner struct {
 	// block attend l'annulation du contexte avant de répondre.
 	block bool
 	// failing liste les sous-commandes qui échouent.
-	failing  map[string]bool
+	failing map[string]bool
+	// stdout donne la sortie des autres sous-commandes.
+	stdout   map[string]string
 	received borg.Command
 	names    []string
 }
@@ -33,7 +36,7 @@ func (f *fakeRunner) Run(ctx context.Context, cmd borg.Command) (*borg.Result, e
 		if f.failing[cmd.Name] {
 			return &borg.Result{Status: borg.StatusError, ExitCode: 2}, nil
 		}
-		return &borg.Result{Status: borg.StatusSuccess}, nil
+		return &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(f.stdout[cmd.Name])}, nil
 	}
 	f.received = cmd
 	if f.block {
@@ -279,5 +282,122 @@ func TestExecutionConcurrente(t *testing.T) {
 	held.Release()
 	if _, err := service.Run(context.Background(), BackupRequest{Profile: profile(), Env: env}); err != nil {
 		t.Errorf("après libération: %v", err)
+	}
+}
+
+// infoJSON est la réponse de « borg info --json » d'une destination chiffrée.
+const infoJSON = `{"encryption":{"mode":"repokey-blake2"},"cache":{"stats":{"unique_csize":7340032}}}`
+
+// publisher retient les états publiés.
+type publisher struct {
+	published []statusfile.Status
+	err       error
+}
+
+func (p *publisher) publish(_ context.Context, s statusfile.Status) error {
+	p.published = append(p.published, s)
+	return p.err
+}
+
+// withFleet branche un publieur sur le service.
+func withFleet(service *Backup) *publisher {
+	p := &publisher{}
+	service.Publish = p.publish
+	service.Hostname = "poste-marc"
+	next := time.Date(2026, 9, 25, 22, 0, 0, 0, time.Local)
+	service.NextRun = func() time.Time { return next }
+	return p
+}
+
+// TestPublicationReussie vérifie l'état publié après une sauvegarde réussie :
+// taille de la destination relue, dernière réussite, prochaine exécution.
+func TestPublicationReussie(t *testing.T) {
+	runner := &fakeRunner{
+		result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)},
+		stdout: map[string]string{"info": infoJSON},
+	}
+	service, _, _ := setup(t, runner, nil)
+	p := withFleet(service)
+
+	report, err := service.Run(context.Background(), BackupRequest{Profile: profile()})
+	if err != nil || report.PublishErr != nil {
+		t.Fatalf("Run: %v, publication: %v", err, report.PublishErr)
+	}
+	if len(p.published) != 1 {
+		t.Fatalf("%d publications", len(p.published))
+	}
+	s := p.published[0]
+	if s.Hostname != "poste-marc" || s.Result != statusfile.ResultSuccess || s.Files != 42 ||
+		s.RepositorySize != 7340032 || s.Encryption != "repokey-blake2" ||
+		!s.LastSuccess.Equal(report.Run.Finished) || s.NextRun.IsZero() {
+		t.Errorf("état publié: %+v", s)
+	}
+}
+
+// TestPublicationEchec vérifie qu'un échec est publié, avec la date de la
+// dernière réussite connue.
+func TestPublicationEchec(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, _, _ := setup(t, runner, nil)
+	p := withFleet(service)
+
+	first, err := service.Run(context.Background(), BackupRequest{Profile: profile()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	runner.result = &borg.Result{Status: borg.StatusError, ExitCode: 2,
+		Messages: []borg.Message{{Level: "ERROR", MsgID: "LockTimeout"}}}
+	if _, err := service.Run(context.Background(), BackupRequest{Profile: profile()}); err == nil {
+		t.Fatal("échec attendu")
+	}
+
+	s := p.published[len(p.published)-1]
+	if s.Result != statusfile.ResultError || s.ErrorKey != "error.repository_locked" ||
+		!s.LastSuccess.Equal(first.Run.Finished) {
+		t.Errorf("état publié: %+v", s)
+	}
+}
+
+// TestPasDePublication vérifie les deux cas qui ne publient rien : une
+// simulation, et un refus pour exécution concurrente, qui remplacerait un bon
+// état par un faux échec.
+func TestPasDePublication(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, _, _ := setup(t, runner, nil)
+	p := withFleet(service)
+
+	service.Run(context.Background(), BackupRequest{Profile: profile(), DryRun: true})
+
+	service.LockDir = t.TempDir()
+	env := borg.Environment{Repository: "ssh://u1@u1.your-storagebox.de:23/./poste"}
+	held, err := lock.Acquire(lock.PathFor(service.LockDir, env.Repository))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer held.Release()
+	service.Run(context.Background(), BackupRequest{Profile: profile(), Env: env})
+
+	if len(p.published) != 0 {
+		t.Errorf("publications inattendues: %+v", p.published)
+	}
+}
+
+// TestPublicationEnEchec vérifie qu'un dépôt d'état impossible n'affecte pas
+// la sauvegarde.
+func TestPublicationEnEchec(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, store, _ := setup(t, runner, nil)
+	p := withFleet(service)
+	p.err = errors.New("sous-compte injoignable")
+
+	report, err := service.Run(context.Background(), BackupRequest{Profile: profile()})
+	if err != nil {
+		t.Fatalf("la sauvegarde a réussi: %v", err)
+	}
+	if report.PublishErr == nil {
+		t.Error("l'échec du dépôt doit être rapporté")
+	}
+	if run := lastRun(t, store); run.Status != history.StatusSuccess {
+		t.Errorf("exécution consignée: %+v", run)
 	}
 }

@@ -284,22 +284,6 @@ func TestExecutionPlanifiee(t *testing.T) {
 	}
 }
 
-// TestNomSur vérifie qu'un nom de profil quelconque donne un nom de fichier
-// sûr, et que deux noms distincts le restent.
-func TestNomSur(t *testing.T) {
-	cases := map[string]string{
-		"poste":         "poste",
-		"Poste de Marc": "Poste_20de_20Marc",
-		"été/../x":      "_e9t_e9_2f_2e_2e_2fx",
-		"":              "default",
-	}
-	for in, want := range cases {
-		if got := safeName(in); got != want {
-			t.Errorf("safeName(%q) = %q, attendu %q", in, got, want)
-		}
-	}
-}
-
 // fauxOrdonnanceur remplace l'ordonnanceur du système par un systemd écrivant
 // dans un dossier de test et n'exécutant aucune commande.
 func fauxOrdonnanceur(t *testing.T) (dir string, commandes *[]string) {

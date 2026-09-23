@@ -103,6 +103,7 @@ internal/history/      historique des exécutions (HistoryStore), SQLite pur Go
 internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
 internal/lock/         verrou local par destination (EF-57), libéré par le système à la mort du processus
 internal/probe/        diagnostic SSH et clé dédiée à l'application
+internal/statusfile/   fichier d'état du poste, déposé par SFTP dans son propre sous-compte
 internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
 ```
@@ -128,6 +129,8 @@ Les tests substituent à Borg un script shell qui en reproduit le comportement o
 Le runtime Windows se construit avec `build/runtime/build-runtime.ps1`, sur une machine Windows ; `build/runtime/README.md` décrit la recette, la publication et les valeurs à reporter dans `internal/borgruntime/spec.go`. L'empreinte du runtime `1.4.5-cygwin.1` est épinglée ; tant que `Pinned.URL` est vide, seule la voie hors ligne fonctionne (`borgui runtime install --archive`).
 
 Le runtime est livré en `.tar.gz` : les liens symboliques y sont écrits **à la manière de Cygwin** (fichier `!<symlink>` + attribut « système », `internal/borgruntime/extract.go`), jamais en liens NTFS, qui demanderaient des droits d'administrateur. `BORGUI_RUNTIME_ARCHIVE=<archive> go test ./internal/borgruntime -run TestArchivePubliee` éprouve l'extraction sur l'archive réelle.
+
+Le fichier d'état d'un poste vit dans **son propre sous-compte** et n'est visible d'aucun autre poste : pas de tableau de bord partagé (addendum §8, EF-84 et TR-50/51 retirées). Il est relu comme une donnée non fiable (EF-86).
 
 Un hook (`.claude/hooks/guard-delete.sh`) refuse toute suppression hors du projet et du dossier temporaire.
 

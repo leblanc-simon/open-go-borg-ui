@@ -4,6 +4,7 @@ go 1.26.7
 
 require (
 	github.com/pelletier/go-toml/v2 v2.4.3
+	github.com/pkg/sftp v1.13.11
 	github.com/zalando/go-keyring v0.2.8
 	golang.org/x/crypto v0.56.0
 	golang.org/x/sys v0.47.0
@@ -21,6 +22,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/ilyakaznacheev/cleanenv v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.6.1 // indirect

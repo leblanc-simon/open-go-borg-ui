@@ -190,8 +190,8 @@ Priorités : **O** = obligatoire v1 · **I** = important · **S** = souhaité (p
 | EF-81 | Sont affichés : date et résultat de la dernière sauvegarde, durée, nombre de fichiers, volume transféré, date de la prochaine exécution, espace occupé sur la destination. | O |
 | EF-82 | Un historique des exécutions est conservé localement et consultable ; chaque ligne en échec ouvre l'explication et le journal complet. | O |
 | EF-83 | À la fin de chaque exécution, un fichier d'état `status/<hostname>.json` est déposé sur la destination par SFTP, contenant : nom du poste, date, résultat, durée, volume, taille du dépôt, mode de chiffrement, prochaine exécution. | I |
-| EF-84 | L'écran d'accueil agrège les fichiers d'état disponibles et affiche l'état de **tous les postes** du parc, pas seulement du poste local. | I |
-| EF-85 | Un poste dont le fichier d'état n'a pas été mis à jour depuis plus de 48 heures est signalé en orange, avec la mention « aucune sauvegarde depuis N jours ». | I |
+| EF-84 | ~~L'écran d'accueil agrège les fichiers d'état disponibles et affiche l'état de tous les postes du parc.~~ **Retirée** le 24 septembre 2026 : l'état d'un poste n'est pas visible des autres (addendum §8). | — |
+| EF-85 | Le poste courant, si son fichier d'état n'a pas été mis à jour depuis plus de 48 heures, est signalé en orange, avec la mention « aucune sauvegarde depuis N jours ». | I |
 | EF-86 | Les fichiers d'état sont traités comme des données non fiables au parsing. | O |
 | EF-87 | Un `borg check --repository-only` est exécuté mensuellement en tâche de fond ; son résultat est affiché. | I |
 
@@ -322,7 +322,7 @@ BorgBackup 1.4  ──ssh port 23──►  Hetzner Storage Box
 |---|---|---|
 | **v0.1** | Programme en ligne de commande, sans interface : téléchargement et vérification du runtime, connexion à une vraie Storage Box, `init` dans les deux modes, `create` sur 50 Go réels, `list`. Puis restauration de l'archive Windows par le `borg` officiel d'une machine Linux. | TR-01 à TR-04 passants |
 | **v0.2** | MVP : écrans État, Sauvegarde, Destination ; assistant complet ; sauvegarde manuelle avec progression ; historique local ; espaces réservés cloud ; voie hors ligne. | Une sauvegarde configurée de bout en bout par un utilisateur non technique |
-| **v0.3** | Planification, fichiers d'état SFTP et tableau de bord multi-postes, export/import de configuration, notifications. | Trois postes sauvegardant automatiquement et visibles depuis chacun d'eux |
+| **v0.3** | Planification, fichier d'état SFTP du poste dans son sous-compte, export/import de configuration, notifications. | Trois postes, dont au moins un de chaque système, sauvegardant automatiquement vers des sous-comptes distincts |
 | **v1.0** | Restauration guidée complète, test de restauration mensuel, `borg check` planifié, traduction des erreurs, documentation. | Recette du §11 intégralement passante |
 
 Charge indicative pour un développeur seul à l'aise en Go : v0.1 quelques jours, v0.2 trois semaines, v0.3 trois semaines, v1.0 environ trois mois au total. La restauration et le traitement des cas d'erreur représentent à eux seuls près d'un tiers de la charge.
@@ -386,8 +386,8 @@ Chaque test est binaire, exécuté sur les deux plateformes sauf mention contrai
 
 | Réf. | Test |
 |---|---|
-| TR-50 | Trois postes, dont au moins un de chaque système, sauvegardent vers des sous-comptes distincts, et chacun affiche l'état des trois. |
-| TR-51 | Un poste n'ayant pas sauvegardé depuis 72 heures apparaît en orange sur les autres postes. |
+| TR-50 | ~~Trois postes sauvegardent vers des sous-comptes distincts, et chacun affiche l'état des trois.~~ **Retirée** le 24 septembre 2026 (EF-84). |
+| TR-51 | ~~Un poste n'ayant pas sauvegardé depuis 72 heures apparaît en orange sur les autres postes.~~ **Retirée** le 24 septembre 2026 (EF-84). |
 | TR-52 | Une configuration exportée puis importée sur un autre poste aboutit à une sauvegarde fonctionnelle sans ressaisie autre que le sous-compte et la passphrase. |
 
 ---

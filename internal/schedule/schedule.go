@@ -152,3 +152,26 @@ func NewSystemd(dir string, run CommandFunc) *Systemd { return &Systemd{Dir: dir
 
 // NewTaskScheduler construit l'ordonnanceur Windows.
 func NewTaskScheduler(run CommandFunc) *TaskScheduler { return &TaskScheduler{run: run} }
+
+// Next retourne la prochaine exécution prévue strictement après now, dans le
+// fuseau de now. Zéro en planification manuelle.
+//
+// La date est reconstruite par time.Date plutôt qu'obtenue en ajoutant des
+// durées : un passage à l'heure d'été ne décale pas l'heure prévue.
+func Next(plan Plan, now time.Time) time.Time {
+	if plan.Frequency != Daily && plan.Frequency != Weekly {
+		return time.Time{}
+	}
+	for offset := 0; offset <= 7; offset++ {
+		day := now.AddDate(0, 0, offset)
+		candidate := time.Date(day.Year(), day.Month(), day.Day(), plan.Hour, plan.Minute, 0, 0, now.Location())
+		if !candidate.After(now) {
+			continue
+		}
+		if plan.Frequency == Weekly && candidate.Weekday() != plan.Day {
+			continue
+		}
+		return candidate
+	}
+	return time.Time{}
+}

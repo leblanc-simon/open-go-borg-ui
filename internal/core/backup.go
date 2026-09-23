@@ -10,6 +10,7 @@ import (
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/history"
 	"leblanc.io/open-go-borg-ui/internal/lock"
+	"leblanc.io/open-go-borg-ui/internal/statusfile"
 )
 
 // Phase est l'étape en cours d'une sauvegarde, pour l'affichage.
@@ -48,6 +49,14 @@ type Backup struct {
 	// LockDir accueille les verrous locaux (EF-57). Vide, aucun verrou n'est
 	// pris — réservé aux tests.
 	LockDir string
+
+	// Publish dépose l'état du poste dans son sous-compte (EF-83). Nil,
+	// rien n'est publié.
+	Publish func(context.Context, statusfile.Status) error
+	// Hostname est le nom court du poste, celui des sauvegardes.
+	Hostname string
+	// NextRun donne la prochaine exécution planifiée, zéro si aucune.
+	NextRun func() time.Time
 }
 
 // BackupRequest décrit une sauvegarde à exécuter.
@@ -74,6 +83,9 @@ type BackupReport struct {
 	// MaintenanceErr signale l'échec de la conservation ou de la
 	// récupération d'espace, après une sauvegarde réussie.
 	MaintenanceErr error
+	// PublishErr signale un état qui n'a pas pu être déposé. Comme
+	// l'historique, il n'affecte pas la sauvegarde.
+	PublishErr error
 	// HistoryErr signale un historique qui n'a pas pu être tenu. Il
 	// n'empêche jamais une sauvegarde : l'historique est un témoin, pas une
 	// condition.
@@ -139,7 +151,53 @@ func (b *Backup) Run(ctx context.Context, req BackupRequest) (*BackupReport, err
 			report.HistoryErr = finishErr
 		}
 	}
+	if b.Publish != nil && !req.DryRun && report.Run.ErrorKey != ErrorKeyAlreadyRunning {
+		// Un refus pour exécution concurrente ne dit rien de l'état de la
+		// destination : le publier remplacerait un bon état par un faux
+		// échec. Une annulation, elle, se publie : le poste passerait
+		// sinon pour à jour.
+		status := b.status(context.WithoutCancel(ctx), req, report)
+		report.PublishErr = b.Publish(context.WithoutCancel(ctx), status)
+	}
 	return report, err
+}
+
+// status construit l'état publié du poste.
+func (b *Backup) status(ctx context.Context, req BackupRequest, report *BackupReport) statusfile.Status {
+	run := report.Run
+	status := statusfile.Status{
+		Hostname:         b.Hostname,
+		Started:          run.Started,
+		Finished:         run.Finished,
+		Result:           statusfile.Result(run.Status),
+		ErrorKey:         run.ErrorKey,
+		Files:            run.Files,
+		OriginalSize:     run.OriginalSize,
+		DeduplicatedSize: run.DeduplicatedSize,
+		Encryption:       req.Profile.Encryption.BorgMode(),
+	}
+	if b.NextRun != nil {
+		status.NextRun = b.NextRun()
+	}
+
+	switch run.Status {
+	case history.StatusSuccess, history.StatusWarning:
+		status.LastSuccess = run.Finished
+		// La destination vient de répondre : l'interroger sur l'espace
+		// occupé ne coûte qu'un aller-retour. Un échec laisse la taille
+		// inconnue, sans plus.
+		if info, _, err := borg.Info(ctx, b.Runner, req.Env); err == nil {
+			status.RepositorySize = info.Cache.Stats.UniqueCSize
+			if info.Encryption.Mode != "" {
+				status.Encryption = info.Encryption.Mode
+			}
+		}
+	default:
+		if b.History != nil {
+			status.LastSuccess, _ = b.History.LastSuccess(ctx, run.Profile)
+		}
+	}
+	return status
 }
 
 // run fait le travail proprement dit.

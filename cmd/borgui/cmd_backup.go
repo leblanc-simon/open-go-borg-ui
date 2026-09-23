@@ -52,7 +52,14 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 
 	fmt.Println(a.T("backup.starting", map[string]any{"Count": len(profile.Sources)}))
 
-	service := core.Backup{Runner: runner, History: store, LockDir: a.lockDir()}
+	service := core.Backup{
+		Runner:   runner,
+		History:  store,
+		LockDir:  a.lockDir(),
+		Publish:  a.statePublisher(profile),
+		Hostname: hostname(),
+		NextRun:  nextRun(profile),
+	}
 	report, err := service.Run(ctx, core.BackupRequest{
 		Profile: profile,
 		Env:     env,
@@ -73,6 +80,9 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 
 	if report.HistoryErr != nil {
 		notice(a.T("history.unavailable", map[string]any{"Message": report.HistoryErr.Error()}))
+	}
+	if report.PublishErr != nil {
+		notice(a.T("state.publish_failed", map[string]any{"Message": report.PublishErr.Error()}))
 	}
 	if len(report.CloudSkipped) > 0 {
 		// Signalé même en cas d'échec : c'est une information sur ce que la

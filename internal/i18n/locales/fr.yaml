@@ -23,6 +23,7 @@ cli.usage: |
     restore          restaure une sauvegarde dans un dossier neuf
     history          historique des sauvegardes de ce poste
     schedule         règle la sauvegarde automatique
+    state            état de ce poste, tel que déposé sur sa destination
 
   Options communes :
     --config <fichier>   fichier de configuration à utiliser
@@ -62,6 +63,8 @@ error.passphrase_wrong: "Le mot de passe de la destination est refusé."
 error.connection: "La destination n'a pas pu être jointe."
 error.already_running: "Une sauvegarde est déjà en cours sur cette destination. Attendez qu'elle se termine."
 error.maintenance: "La sauvegarde est enregistrée, mais les anciennes sauvegardes n'ont pas pu être retirées. Ce sera retenté à la prochaine sauvegarde."
+error.key_permissions: "La clé de connexion de ce poste est accessible à d'autres comptes, et la connexion la refuse pour cette raison. Relancez la commande : l'application en corrige les droits avant chaque usage. Si l'erreur persiste, supprimez la clé et recréez-la avec borgui key show."
+error.native_launch: "Le moteur de sauvegarde n'a pas pu rappeler l'application pour obtenir le mot de passe. C'est un défaut de l'application, pas de ce poste : signalez-le avec le journal."
 
 config.usage: "Utilisation : borgui config init | show"
 config.missing_destination: "indiquez le sous-compte (--user) et le nom de la destination (--repo)"
@@ -200,3 +203,17 @@ schedule.weekly: "chaque {{.Day}} à {{.At}}"
 schedule.manual: "manuelle"
 schedule.catch_up: ", rattrapée au démarrage si le poste était éteint"
 schedule.task_description: "Sauvegarde BorgUI du profil {{.Profile}}"
+state.empty: "Ce poste n'a encore déposé aucun état sur sa destination."
+state.entry: "{{.Health}}  dernière exécution le {{.Date}}, {{.Size}} sur la destination"
+state.stale: "aucune sauvegarde depuis {{.Days}} jours"
+state.next_run: "prochaine sauvegarde prévue le {{.Date}}"
+state.health_ok: "[vert]  "
+state.health_warning: "[orange]"
+state.health_stale: "[orange]"
+state.health_failed: "[rouge] "
+state.rejected: "L'état déposé sur la destination est illisible et a été ignoré : {{.Reason}}."
+state.rejected_name: "il décrit un autre poste"
+state.rejected_size: "fichier trop volumineux"
+state.rejected_version: "format produit par une version plus récente de l'application"
+state.rejected_invalid: "contenu illisible ou incohérent"
+state.publish_failed: "L'état de ce poste n'a pas pu être déposé sur sa destination : {{.Message}}"

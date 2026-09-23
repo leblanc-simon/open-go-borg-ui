@@ -83,7 +83,7 @@ func (a *app) applySchedule(ctx context.Context, profile *config.Profile) (int, 
 		return exitError, err
 	}
 
-	name := safeName(profile.Name)
+	name := config.SafeName(profile.Name)
 	if plan.Frequency == schedule.Manual {
 		if err := scheduler.Remove(ctx, name); err != nil {
 			return exitError, err
@@ -126,7 +126,7 @@ func (a *app) scheduledTask(profile *config.Profile) (schedule.Task, error) {
 	args = append(args, "--run", profile.Name)
 
 	return schedule.Task{
-		Name:        safeName(profile.Name),
+		Name:        config.SafeName(profile.Name),
 		Description: a.T("schedule.task_description", map[string]any{"Profile": profile.Name}),
 		Executable:  executable,
 		Args:        args,
@@ -152,7 +152,7 @@ func (a *app) scheduleStatus(ctx context.Context) (int, error) {
 	if err != nil {
 		return exitError, err
 	}
-	installed, err := scheduler.Installed(ctx, safeName(profile.Name))
+	installed, err := scheduler.Installed(ctx, config.SafeName(profile.Name))
 	if err != nil {
 		return exitError, err
 	}

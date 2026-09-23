@@ -171,6 +171,8 @@ Sous Linux, chemins absolus habituels. Les archives n'ont donc pas la même form
 
 Un poste dont le fichier d'état n'a pas été mis à jour depuis plus de 48 h passe en orange. **L'absence de sauvegarde est le mode de défaillance le plus fréquent, et le seul qu'un affichage purement local ne peut pas détecter.**
 
+**Fichier d'état limité au poste** (décision du 24 septembre 2026, qui remplace le tableau de bord partagé ci-dessus). L'état d'un poste n'est **pas** visible des autres : chaque poste dépose son `status/<hostname>.json` dans **son propre sous-compte**, à côté de son dépôt, par la connexion de sa destination, et nul autre ne le lit. Le cloisonnement de SEC-07 reste entier, sans sous-compte partagé ni clé autorisée ailleurs que chez soi. EF-84, TR-50 et TR-51 sont retirées ; EF-85 ne s'applique plus qu'au poste courant. Le fichier reste relu comme une donnée non fiable (EF-86) : il vit sur la destination, hors du poste.
+
 ---
 
 ## 9. Feuille de route
@@ -189,7 +191,7 @@ Mesurez la durée d'une sauvegarde initiale et d'une incrémentale, et vérifiez
 
 **v0.3 — Automatisation et parc**
 
-Planification (`schtasks`, timers systemd utilisateur avec `Persistent=true`), fichier d'état SFTP et tableau de bord multi-postes, export/import de configuration, notifications, icône de barre système.
+Planification (`schtasks`, timers systemd utilisateur avec `Persistent=true`), fichier d'état SFTP du poste dans son sous-compte, export/import de configuration, notifications, icône de barre système.
 
 **v1.0 — Confiance**
 
