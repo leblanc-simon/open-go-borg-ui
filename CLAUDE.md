@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Le projet (nom de travail : **BorgUI**) est une application desktop Go/Fyne de configuration et de supervision de sauvegardes BorgBackup vers une Hetzner Storage Box.
 
-Le jalon en cours est la **v0.1** : la ligne de commande, sans aucune interface. Elle porte le risque principal du projet et doit être validée sur du matériel réel avant qu'une ligne de Fyne ne soit écrite.
+La **v0.1** — la ligne de commande, sans interface — a été **validée sur matériel réel le 24 septembre 2026** : runtime Cygwin sous Windows, vraie Storage Box, restauration fidèle par le `borg` 1.4 officiel d'une machine Linux (recette `docs/recette-v0.1.md`). L'interface Fyne peut commencer. Les couches sans interface des jalons suivants (historique, planification, verrou, fichier d'état, fichiers à la demande) sont déjà en place.
 
 Les trois documents de `specs/` font autorité et se lisent dans cet ordre :
 
@@ -29,6 +29,10 @@ Ces choix ne sont pas des arbitrages ouverts (`cahier-des-charges.md` §3) :
 - Restauration sur `borg list --json` + `borg extract`, **jamais** `borg mount` (pas de FUSE sous Windows → parité impossible)
 - Aucun droit administrateur, aucun démon résident
 - Un dépôt Borg et un sous-compte Hetzner **par poste**, jamais mutualisés
+- Licence **WTFPL** (PA-01) ; runtime Windows publié en **GitHub Releases** (PA-03)
+- Mode **chiffré** (`repokey-blake2`) présélectionné et recommandé par défaut (PA-04)
+- Français par défaut, **anglais complet dès la v1** (PA-05) : les deux catalogues restent alignés
+- Linux : paquet **`.deb` uniquement**, ni AppImage ni Flatpak (PA-06)
 
 Bibliothèques prévues : `golang.org/x/crypto/ssh` + `github.com/pkg/sftp` (diagnostic et tableau de bord, sans binaire externe), `github.com/zalando/go-keyring` (passphrase), `fyne.io/systray` (v0.3).
 
@@ -83,9 +87,9 @@ Invariants (AR-01 à AR-06) :
 
 ## Feuille de route
 
-La **v0.1 est réalisée en premier, sans aucune interface** : ligne de commande validant téléchargement du runtime, connexion à une vraie Storage Box, `init` dans les deux modes, `create` sur données réelles, `list`, puis **restauration de l'archive Windows par le `borg` officiel d'une machine Linux**. Cette étape porte le risque principal du projet ; si elle échoue, l'architecture est à revoir.
+La **v0.1**, réalisée en premier et sans interface, est validée : téléchargement du runtime, connexion à une vraie Storage Box, `init`, `create`, `list`, puis **restauration de l'archive Windows par le `borg` officiel d'une machine Linux**, fidèle bit pour bit. Deux anomalies Windows relevées en recette sont corrigées (`docs/anomalie-*.md` sur le poste de recette) : `BORG_PASSCOMMAND` enveloppé dans bash pour quitter `/cygdrive`, DACL réservée au propriétaire sur la clé SSH.
 
-Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors ligne), v0.3 (planification, statuts SFTP multi-postes), v1.0 (restauration guidée, test de restauration mensuel, traduction des erreurs).
+Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors ligne), v0.3 (planification, fichier d'état du poste dans son sous-compte, export/import de configuration), v1.0 (restauration guidée, test de restauration mensuel, traduction des erreurs).
 
 ## Organisation du code
 
@@ -134,7 +138,7 @@ Le fichier d'état d'un poste vit dans **son propre sous-compte** et n'est visib
 
 Un hook (`.claude/hooks/guard-delete.sh`) refuse toute suppression hors du projet et du dossier temporaire.
 
-Ce qu'aucun test local ne couvre et qui conditionne le passage de la v0.1 : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04).
+Ce qu'aucun test local ne couvre : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04). La recette `docs/recette-v0.1.md` les éprouve sur matériel réel ; elle est à rejouer à chaque nouvelle version du runtime.
 
 **Fyne dépend de CGO** : pas de compilation croisée. La CI doit avoir deux exécuteurs, `windows-latest` et `ubuntu-latest` (LI-04). Les couches non graphiques (`BorgRunner`, stores, scheduler) doivent rester testables sans Fyne.
 
