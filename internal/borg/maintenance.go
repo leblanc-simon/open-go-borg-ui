@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
 )
 
 // ErrNoRetention signale une rétention vide. Borg refuserait la rotation ; le
@@ -100,4 +101,54 @@ func BreakLock(ctx context.Context, runner Runner, env Environment) (*Result, er
 		return result, failure(result, "break-lock")
 	}
 	return result, nil
+}
+
+// PrunePlan est le sort des sauvegardes selon une rotation : celles qui
+// restent et celles qui partent. C'est ce que l'utilisateur voit avant de
+// confirmer un changement de conservation (EF-72).
+type PrunePlan struct {
+	Kept   []string
+	Pruned []string
+}
+
+// ParsePruneList lit les messages de « borg prune --list ». Borg 1.4 écrit
+// une ligne par sauvegarde : un libellé aligné sur 40 colonnes, puis le nom.
+//
+//	Keeping archive (rule: daily #1):        poste-2026-09-24T22:00:00 Thu, …
+//	Would prune:                             poste-2026-09-01T22:00:00 Mon, …
+//	Pruning archive (2/5):                   poste-2026-09-01T22:00:00 Mon, …
+//
+// Le libellé est reconnu à son début et le nom pris juste après lui, plutôt
+// qu'à la 41e colonne : un libellé plus long que prévu repousse l'alignement.
+func ParsePruneList(messages []Message) PrunePlan {
+	var plan PrunePlan
+	for _, m := range messages {
+		text := m.Text
+		var rest string
+		var pruned bool
+		switch {
+		case strings.HasPrefix(text, "Would prune:"):
+			rest, pruned = strings.TrimPrefix(text, "Would prune:"), true
+		case strings.HasPrefix(text, "Pruning archive ("), strings.HasPrefix(text, "Keeping archive ("):
+			end := strings.Index(text, "):")
+			if end < 0 {
+				continue
+			}
+			rest, pruned = text[end+2:], strings.HasPrefix(text, "Pruning")
+		case strings.HasPrefix(text, "Keeping checkpoint archive:"):
+			rest = strings.TrimPrefix(text, "Keeping checkpoint archive:")
+		default:
+			continue
+		}
+		fields := strings.Fields(rest)
+		if len(fields) == 0 {
+			continue
+		}
+		if pruned {
+			plan.Pruned = append(plan.Pruned, fields[0])
+		} else {
+			plan.Kept = append(plan.Kept, fields[0])
+		}
+	}
+	return plan
 }

@@ -3,6 +3,7 @@ package borg
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -52,5 +53,29 @@ func TestRotationPartielle(t *testing.T) {
 	}
 	if got := strings.Join(runner.cmd.Flags, " "); got != "--glob-archives {hostname}-* --keep-monthly 12" {
 		t.Errorf("options: %s", got)
+	}
+}
+
+// TestListeRotation vérifie la lecture de « prune --list » dans ses quatre
+// formes, alignement de Borg compris.
+func TestListeRotation(t *testing.T) {
+	line := func(label, name string) Message {
+		return Message{Level: "INFO", Text: fmt.Sprintf("%-40s %-36s Thu, 2026-09-24 22:00:00 [0123abcd]", label, name)}
+	}
+	plan := ParsePruneList([]Message{
+		{Level: "INFO", Text: "Synchronizing chunks cache..."},
+		line("Keeping archive (rule: daily #1):", "poste-2026-09-24T22:00:00"),
+		line("Keeping archive (rule: monthly #12):", "poste-2025-10-31T22:00:00"),
+		line("Keeping checkpoint archive:", "poste-2026-09-23T22:00:00.checkpoint"),
+		line("Would prune:", "poste-2026-09-01T22:00:00"),
+		line("Pruning archive (2/5):", "poste-2026-08-31T22:00:00"),
+	})
+	kept := strings.Join(plan.Kept, " ")
+	pruned := strings.Join(plan.Pruned, " ")
+	if kept != "poste-2026-09-24T22:00:00 poste-2025-10-31T22:00:00 poste-2026-09-23T22:00:00.checkpoint" {
+		t.Errorf("conservées: %s", kept)
+	}
+	if pruned != "poste-2026-09-01T22:00:00 poste-2026-08-31T22:00:00" {
+		t.Errorf("supprimées: %s", pruned)
 	}
 }
