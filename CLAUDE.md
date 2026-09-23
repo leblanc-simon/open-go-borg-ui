@@ -116,7 +116,11 @@ GOOS=windows go build ./...    # la partie Windows se compile depuis Linux
 
 Les tests substituent à Borg un script shell qui en reproduit le comportement observable (codes de retour, `--log-json`, JSON de sortie) : toute la chaîne se vérifie sans installation de Borg. Ces tests portent `//go:build !windows`.
 
-Le runtime Windows se construit avec `build/runtime/build-runtime.ps1`, sur une machine Windows ; `build/runtime/README.md` décrit la recette, la publication et les valeurs à reporter dans `internal/borgruntime/spec.go`. Tant que `Pinned.URL` et `Pinned.SHA256` sont vides, seule la voie hors ligne fonctionne.
+Le runtime Windows se construit avec `build/runtime/build-runtime.ps1`, sur une machine Windows ; `build/runtime/README.md` décrit la recette, la publication et les valeurs à reporter dans `internal/borgruntime/spec.go`. L'empreinte du runtime `1.4.5-cygwin.1` est épinglée ; tant que `Pinned.URL` est vide, seule la voie hors ligne fonctionne (`borgui runtime install --archive`).
+
+Le runtime est livré en `.tar.gz` : les liens symboliques y sont écrits **à la manière de Cygwin** (fichier `!<symlink>` + attribut « système », `internal/borgruntime/extract.go`), jamais en liens NTFS, qui demanderaient des droits d'administrateur. `BORGUI_RUNTIME_ARCHIVE=<archive> go test ./internal/borgruntime -run TestArchivePubliee` éprouve l'extraction sur l'archive réelle.
+
+Un hook (`.claude/hooks/guard-delete.sh`) refuse toute suppression hors du projet et du dossier temporaire.
 
 Ce qu'aucun test local ne couvre et qui conditionne le passage de la v0.1 : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04).
 

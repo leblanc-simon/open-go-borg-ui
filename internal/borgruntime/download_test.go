@@ -44,11 +44,11 @@ func TestTelechargementAvecReprise(t *testing.T) {
 	digest := sha256.Sum256([]byte(content))
 	spec := Spec{
 		Version: "test",
-		URL:     server.URL + "/runtime.zip",
+		URL:     server.URL + "/runtime.tar.gz",
 		SHA256:  hex.EncodeToString(digest[:]),
 	}
 
-	dest := filepath.Join(t.TempDir(), "runtime.zip")
+	dest := filepath.Join(t.TempDir(), "runtime.tar.gz")
 
 	// Première passe : le serveur n'envoie qu'un fragment, le fichier partiel
 	// est conservé.
@@ -86,7 +86,7 @@ func TestProgressionTelechargement(t *testing.T) {
 	}))
 	defer server.Close()
 
-	dest := filepath.Join(t.TempDir(), "runtime.zip")
+	dest := filepath.Join(t.TempDir(), "runtime.tar.gz")
 	var last int64
 	err := download(context.Background(), Spec{URL: server.URL}, dest, func(downloaded, _ int64) {
 		last = downloaded

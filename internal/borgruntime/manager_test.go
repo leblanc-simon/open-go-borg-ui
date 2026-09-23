@@ -1,7 +1,9 @@
 package borgruntime
 
 import (
-	"archive/zip"
+	"archive/tar"
+	"bytes"
+	"compress/gzip"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -11,37 +13,66 @@ import (
 	"testing"
 )
 
-// makeArchive écrit une archive de test et retourne son chemin et son
-// empreinte.
-func makeArchive(t *testing.T, entries map[string]string) (string, string) {
+// entry décrit une entrée d'archive de test.
+type entry struct {
+	name     string
+	typeflag byte
+	content  string
+	linkname string
+}
+
+// file, dir, symlink et hardlink construisent les entrées de test.
+func file(name, content string) entry {
+	return entry{name: name, typeflag: tar.TypeReg, content: content}
+}
+func dir(name string) entry { return entry{name: name, typeflag: tar.TypeDir} }
+func symlink(name, target string) entry {
+	return entry{name: name, typeflag: tar.TypeSymlink, linkname: target}
+}
+func hardlink(name, target string) entry {
+	return entry{name: name, typeflag: tar.TypeLink, linkname: target}
+}
+
+// makeArchive écrit une archive .tar.gz de test, dans l'ordre donné, et
+// retourne son chemin et son empreinte.
+func makeArchive(t *testing.T, entries ...entry) (string, string) {
 	t.Helper()
 
-	path := filepath.Join(t.TempDir(), "runtime.zip")
-	file, err := os.Create(path)
-	if err != nil {
-		t.Fatalf("création de l'archive: %v", err)
-	}
-
-	writer := zip.NewWriter(file)
-	for name, content := range entries {
-		entry, err := writer.Create(name)
-		if err != nil {
-			t.Fatalf("entrée %s: %v", name, err)
+	var buffer bytes.Buffer
+	compressed := gzip.NewWriter(&buffer)
+	writer := tar.NewWriter(compressed)
+	for _, e := range entries {
+		header := &tar.Header{
+			Name:     e.name,
+			Typeflag: e.typeflag,
+			Linkname: e.linkname,
+			Mode:     0o755,
+			Size:     int64(len(e.content)),
 		}
-		if _, err := entry.Write([]byte(content)); err != nil {
-			t.Fatalf("écriture de %s: %v", name, err)
+		if e.typeflag != tar.TypeReg {
+			header.Size = 0
+		}
+		if err := writer.WriteHeader(header); err != nil {
+			t.Fatalf("entrée %s: %v", e.name, err)
+		}
+		if e.typeflag == tar.TypeReg {
+			if _, err := writer.Write([]byte(e.content)); err != nil {
+				t.Fatalf("écriture de %s: %v", e.name, err)
+			}
 		}
 	}
 	if err := writer.Close(); err != nil {
 		t.Fatalf("fermeture de l'archive: %v", err)
 	}
-	file.Close()
-
-	data, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatalf("lecture de l'archive: %v", err)
+	if err := compressed.Close(); err != nil {
+		t.Fatalf("compression de l'archive: %v", err)
 	}
-	digest := sha256.Sum256(data)
+
+	path := filepath.Join(t.TempDir(), "runtime.tar.gz")
+	if err := os.WriteFile(path, buffer.Bytes(), 0o600); err != nil {
+		t.Fatalf("écriture de l'archive: %v", err)
+	}
+	digest := sha256.Sum256(buffer.Bytes())
 	return path, hex.EncodeToString(digest[:])
 }
 
@@ -49,10 +80,10 @@ func makeArchive(t *testing.T, entries map[string]string) (string, string) {
 // réseau : l'archive déposée à la main est vérifiée par la même empreinte que
 // celle téléchargée (EF-06).
 func TestInstallationHorsLigne(t *testing.T) {
-	archive, checksum := makeArchive(t, map[string]string{
-		"runtime/bin/borg.exe": "faux moteur",
-		"runtime/bin/bash.exe": "faux shell",
-	})
+	archive, checksum := makeArchive(t,
+		file("runtime/bin/borg.exe", "faux moteur"),
+		file("runtime/bin/bash.exe", "faux shell"),
+	)
 
 	root := t.TempDir()
 	manager := NewManager(root, Spec{Version: "1.4.5-test", BorgVersion: "1.4.5", SHA256: checksum})
@@ -77,7 +108,7 @@ func TestInstallationHorsLigne(t *testing.T) {
 // TestEmpreinteIncorrecte vérifie qu'une archive altérée est rejetée avant
 // toute extraction : l'application s'apprête à exécuter ce code (SEC-01).
 func TestEmpreinteIncorrecte(t *testing.T) {
-	archive, _ := makeArchive(t, map[string]string{"runtime/bin/borg.exe": "faux moteur"})
+	archive, _ := makeArchive(t, file("runtime/bin/borg.exe", "faux moteur"))
 
 	root := t.TempDir()
 	manager := NewManager(root, Spec{
@@ -98,9 +129,7 @@ func TestEmpreinteIncorrecte(t *testing.T) {
 // TestArchiveHorsDossier vérifie qu'une entrée cherchant à écrire hors du
 // dossier d'extraction est refusée.
 func TestArchiveHorsDossier(t *testing.T) {
-	archive, checksum := makeArchive(t, map[string]string{
-		"../evasion.txt": "contenu",
-	})
+	archive, checksum := makeArchive(t, file("../evasion.txt", "contenu"))
 
 	root := t.TempDir()
 	manager := NewManager(root, Spec{Version: "1.4.5-test", SHA256: checksum})

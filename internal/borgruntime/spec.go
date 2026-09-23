@@ -32,16 +32,21 @@ type Spec struct {
 
 // Pinned est le runtime de cette version de l'application.
 //
-// URL et SHA256 restent à renseigner : ils désignent l'archive produite par la
-// recette de construction du runtime (LI-05), publiée avec son empreinte. Tant
-// qu'ils sont vides, seule la voie hors ligne est utilisable, ce que
-// l'application signale explicitement.
+// SHA256 et Size désignent l'archive produite par la recette de construction
+// du runtime (LI-05, build/runtime). URL reste à renseigner une fois l'archive
+// publiée : tant qu'elle est vide, seule la voie hors ligne est utilisable, ce
+// que l'application signale explicitement.
 var Pinned = Spec{
 	Version:     "1.4.5-cygwin.1",
 	BorgVersion: "1.4.5",
 	URL:         "",
-	SHA256:      "",
+	SHA256:      "1926b2941925e2ccfd155eeb66a4067d93401d7248483cf0f5212d66371e60f7",
+	Size:        62517029,
 }
 
 // Publié indique si le runtime épinglé peut être téléchargé.
 func (s Spec) Published() bool { return s.URL != "" && s.SHA256 != "" }
+
+// ArchiveName est le nom de l'archive du runtime, tel que la recette de
+// construction le produit.
+func (s Spec) ArchiveName() string { return "borgui-runtime-" + s.Version + ".tar.gz" }

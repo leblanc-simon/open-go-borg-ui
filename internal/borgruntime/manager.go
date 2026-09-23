@@ -88,7 +88,7 @@ func (m *Manager) Install(ctx context.Context, progress ProgressFunc) (string, e
 		return path, nil
 	}
 
-	archive := filepath.Join(m.root, m.spec.Version+".zip")
+	archive := filepath.Join(m.root, m.spec.ArchiveName())
 	if err := os.MkdirAll(m.root, 0o700); err != nil {
 		return "", fmt.Errorf("runtime: création de %s: %w", m.root, err)
 	}
@@ -117,7 +117,7 @@ func (m *Manager) InstallFromArchive(ctx context.Context, archive string) (strin
 	}
 	defer os.RemoveAll(staging)
 
-	if err := unzip(ctx, archive, staging); err != nil {
+	if err := extract(ctx, archive, staging); err != nil {
 		return "", err
 	}
 
