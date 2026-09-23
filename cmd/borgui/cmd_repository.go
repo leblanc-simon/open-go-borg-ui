@@ -7,6 +7,8 @@ import (
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/config"
+	"leblanc.io/open-go-borg-ui/internal/core"
+	"leblanc.io/open-go-borg-ui/internal/lock"
 	"leblanc.io/open-go-borg-ui/internal/secret"
 )
 
@@ -20,6 +22,8 @@ func (a *app) commandRepository(ctx context.Context, args []string) (int, error)
 		return a.repositoryInfo(ctx)
 	case "export-key":
 		return a.repositoryExportKey(ctx)
+	case "unlock":
+		return a.repositoryUnlock(ctx)
 	default:
 		return exitError, fmt.Errorf("%s", a.T("repository.usage"))
 	}
@@ -161,6 +165,48 @@ func (a *app) repositoryExportKey(ctx context.Context) (int, error) {
 	fmt.Print(string(result.Stdout))
 	fmt.Println()
 	fmt.Println(a.T("repository.key_warning"))
+	return exitSuccess, nil
+}
+
+// repositoryUnlock lève le verrou laissé sur la destination par une
+// sauvegarde interrompue brutalement (EF-58).
+//
+// Le verrou local est pris d'abord : s'il est tenu, une exécution est en
+// cours sur ce poste, et le verrou de la destination est légitime.
+func (a *app) repositoryUnlock(ctx context.Context) (int, error) {
+	profile, err := a.profile()
+	if err != nil {
+		return exitError, err
+	}
+	if err := a.ensurePassphrase(profile); err != nil {
+		return exitError, err
+	}
+	runner, err := a.runner()
+	if err != nil {
+		return a.reportMissingEngine(err)
+	}
+	env, err := a.environment(profile)
+	if err != nil {
+		return exitError, err
+	}
+
+	held, err := lock.Acquire(lock.PathFor(a.lockDir(), env.Repository))
+	if errors.Is(err, lock.ErrBusy) {
+		return exitError, fmt.Errorf("%s", a.T(core.ErrorKeyAlreadyRunning))
+	}
+	if err != nil {
+		return exitError, err
+	}
+	defer held.Release()
+
+	result, err := borg.BreakLock(ctx, runner, env)
+	if err != nil {
+		if result != nil {
+			return exitError, a.borgFailure(result)
+		}
+		return exitError, err
+	}
+	fmt.Println(a.T("repository.unlocked"))
 	return exitSuccess, nil
 }
 

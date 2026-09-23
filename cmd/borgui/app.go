@@ -62,6 +62,9 @@ func (a *app) historyStore() (*history.Store, error) {
 	return history.Open(path)
 }
 
+// lockDir est le dossier des verrous locaux (EF-57).
+func (a *app) lockDir() string { return filepath.Join(a.stateDir, "locks") }
+
 // secrets construit le magasin de passphrases.
 func (a *app) secrets() *secret.Store { return secret.NewStore(a.stateDir) }
 

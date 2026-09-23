@@ -4,24 +4,37 @@ import (
 	"context"
 	"errors"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/history"
+	"leblanc.io/open-go-borg-ui/internal/lock"
 )
 
-// fakeRunner rejoue une issue de Borg et retient la commande reçue.
+// fakeRunner rejoue une issue de Borg pour « create », répond par un succès
+// aux autres commandes sauf celles de failing, et retient tout ce qu'il reçoit.
 type fakeRunner struct {
 	result *borg.Result
 	err    error
 	// block attend l'annulation du contexte avant de répondre.
-	block    bool
+	block bool
+	// failing liste les sous-commandes qui échouent.
+	failing  map[string]bool
 	received borg.Command
+	names    []string
 }
 
 func (f *fakeRunner) Run(ctx context.Context, cmd borg.Command) (*borg.Result, error) {
+	f.names = append(f.names, cmd.Name)
+	if cmd.Name != "create" {
+		if f.failing[cmd.Name] {
+			return &borg.Result{Status: borg.StatusError, ExitCode: 2}, nil
+		}
+		return &borg.Result{Status: borg.StatusSuccess}, nil
+	}
 	f.received = cmd
 	if f.block {
 		<-ctx.Done()
@@ -180,5 +193,91 @@ func TestSimulationNonConsignee(t *testing.T) {
 	runs, _ := store.Recent(context.Background(), "poste", 10)
 	if len(runs) != 0 {
 		t.Errorf("une simulation a été consignée: %+v", runs)
+	}
+}
+
+// TestMaintenanceApresSauvegarde vérifie l'enchaînement de EF-55 : la
+// conservation puis la récupération d'espace suivent la sauvegarde.
+func TestMaintenanceApresSauvegarde(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, _, _ := setup(t, runner, nil)
+
+	if _, err := service.Run(context.Background(), BackupRequest{Profile: profile()}); err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(runner.names, " "); got != "create prune compact" {
+		t.Errorf("commandes: %s", got)
+	}
+}
+
+// TestMaintenanceEnEchec vérifie qu'une conservation en échec laisse la
+// sauvegarde réussie, avec un avertissement et son diagnostic.
+func TestMaintenanceEnEchec(t *testing.T) {
+	runner := &fakeRunner{
+		result:  &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)},
+		failing: map[string]bool{"prune": true},
+	}
+	service, store, _ := setup(t, runner, nil)
+
+	report, err := service.Run(context.Background(), BackupRequest{Profile: profile()})
+	if err != nil {
+		t.Fatalf("la sauvegarde elle-même a réussi: %v", err)
+	}
+	if report.MaintenanceErr == nil {
+		t.Error("l'échec de la conservation doit être rapporté")
+	}
+	if got := strings.Join(runner.names, " "); got != "create prune" {
+		t.Errorf("commandes: %s — rien ne doit être compacté après un échec", got)
+	}
+	run := lastRun(t, store)
+	if run.Status != history.StatusWarning || run.ErrorKey != ErrorKeyMaintenance || run.Archive == "" {
+		t.Errorf("exécution consignée: %+v", run)
+	}
+}
+
+// TestSansConservation vérifie qu'une rétention vide ne supprime ni ne
+// compacte rien.
+func TestSansConservation(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, _, _ := setup(t, runner, nil)
+
+	p := profile()
+	p.Retention = config.Retention{}
+	if _, err := service.Run(context.Background(), BackupRequest{Profile: p}); err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(runner.names, " "); got != "create" {
+		t.Errorf("commandes: %s", got)
+	}
+}
+
+// TestExecutionConcurrente vérifie qu'une seconde exécution sur la même
+// destination est refusée sans appeler Borg, et consignée (EF-57).
+func TestExecutionConcurrente(t *testing.T) {
+	runner := &fakeRunner{result: &borg.Result{Status: borg.StatusSuccess, Stdout: []byte(statsJSON)}}
+	service, store, _ := setup(t, runner, nil)
+	service.LockDir = t.TempDir()
+	env := borg.Environment{Repository: "ssh://u1@u1.your-storagebox.de:23/./poste"}
+
+	held, err := lock.Acquire(lock.PathFor(service.LockDir, env.Repository))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer held.Release()
+
+	_, err = service.Run(context.Background(), BackupRequest{Profile: profile(), Env: env})
+	if !errors.Is(err, lock.ErrBusy) {
+		t.Fatalf("erreur %v, attendu lock.ErrBusy", err)
+	}
+	if len(runner.names) != 0 {
+		t.Errorf("Borg a été appelé: %v", runner.names)
+	}
+	if run := lastRun(t, store); run.Status != history.StatusError || run.ErrorKey != ErrorKeyAlreadyRunning {
+		t.Errorf("exécution consignée: %+v", run)
+	}
+
+	held.Release()
+	if _, err := service.Run(context.Background(), BackupRequest{Profile: profile(), Env: env}); err != nil {
+		t.Errorf("après libération: %v", err)
 	}
 }

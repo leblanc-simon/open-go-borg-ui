@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"time"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/core"
+	"leblanc.io/open-go-borg-ui/internal/lock"
 )
 
 // commandBackup exécute une sauvegarde.
@@ -50,14 +52,19 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 
 	fmt.Println(a.T("backup.starting", map[string]any{"Count": len(profile.Sources)}))
 
-	service := core.Backup{Runner: runner, History: store}
+	service := core.Backup{Runner: runner, History: store, LockDir: a.lockDir()}
 	report, err := service.Run(ctx, core.BackupRequest{
 		Profile: profile,
 		Env:     env,
 		DryRun:  dryRun,
 		OnPhase: func(phase core.Phase) {
-			if phase == core.PhaseCloudScan {
+			switch phase {
+			case core.PhaseCloudScan:
 				progressLine(a.T("backup.cloud_scan"))
+			case core.PhasePrune:
+				progressLine(a.T("backup.pruning"))
+			case core.PhaseCompact:
+				progressLine(a.T("backup.compacting"))
 			}
 		},
 		OnEvent: a.backupProgress(),
@@ -71,6 +78,9 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		// Signalé même en cas d'échec : c'est une information sur ce que la
 		// sauvegarde couvre, indépendante de son issue.
 		fmt.Println(a.T("backup.cloud_skipped", map[string]any{"Count": len(report.CloudSkipped)}))
+	}
+	if errors.Is(err, lock.ErrBusy) {
+		return exitError, fmt.Errorf("%s", a.T(core.ErrorKeyAlreadyRunning))
 	}
 	if err != nil {
 		return exitError, err
@@ -96,6 +106,13 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		fmt.Println(a.T("backup.archive_name", map[string]any{"Name": stats.Archive.Name}))
 	}
 
+	code := exitSuccess
+	if report.MaintenanceErr != nil {
+		fmt.Println(a.T(core.ErrorKeyMaintenance))
+		fmt.Println(a.T("cli.details", map[string]any{"Message": report.MaintenanceErr.Error()}))
+		code = exitWarning
+	}
+
 	// Un code de retour 1 signale des fichiers illisibles : la sauvegarde
 	// existe et reste exploitable, elle est simplement incomplète (EF-56).
 	if report.Result.Status == borg.StatusWarning {
@@ -106,7 +123,7 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		}
 		return exitWarning, nil
 	}
-	return exitSuccess, nil
+	return code, nil
 }
 
 // backupProgress affiche l'avancement sur la sortie d'erreur.
