@@ -19,6 +19,7 @@ cli.usage: |
     archives         list available backups
     restore          restore a backup into a new folder
     history          backup history of this computer
+    schedule         set up automatic backup
 
   Common options:
     --config <file>    configuration file to use
@@ -39,6 +40,14 @@ duration.seconds: "{{.Seconds}}s"
 duration.minutes_seconds: "{{.Minutes}}m {{.Seconds}}s"
 duration.hours_minutes: "{{.Hours}}h {{.Minutes}}m"
 
+weekday.monday: "Monday"
+weekday.tuesday: "Tuesday"
+weekday.wednesday: "Wednesday"
+weekday.thursday: "Thursday"
+weekday.friday: "Friday"
+weekday.saturday: "Saturday"
+weekday.sunday: "Sunday"
+
 encryption.encrypted: "encrypted"
 encryption.none: "not encrypted"
 
@@ -48,6 +57,8 @@ error.repository_missing: "No backup has been created on this destination yet."
 error.repository_exists: "This destination already holds backups."
 error.passphrase_wrong: "The destination password was refused."
 error.connection: "The destination could not be reached."
+error.already_running: "A backup is already running on this destination. Wait for it to finish."
+error.maintenance: "The backup is stored, but older backups could not be removed. This will be retried at the next backup."
 
 config.usage: "Usage: borgui config init | show"
 config.missing_destination: "provide the sub-account (--user) and the destination name (--repo)"
@@ -106,7 +117,7 @@ passphrase.available: "Password available."
 passphrase.not_needed: "This destination is not encrypted: no password is needed."
 passphrase.not_encrypted: "this destination is not encrypted: it uses no password"
 
-repository.usage: "Usage: borgui repository init | info | export-key"
+repository.usage: "Usage: borgui repository init | info | export-key | unlock"
 repository.creating: "Preparing destination {{.Repository}} ({{.Mode}})"
 repository.created: "Destination ready."
 repository.already_exists: "this destination already holds backups"
@@ -119,6 +130,7 @@ repository.mode_differs: "The configuration says the destination is {{.Configure
 repository.no_key: "This destination is not encrypted: there is no recovery key."
 repository.key_intro: "Recovery key. Print it or copy it out, and keep it away from this computer:"
 repository.key_warning: "Without this key and the password, the backups are permanently unreadable."
+repository.unlocked: "The destination is unlocked."
 
 backup.no_sources: "no folder to back up is listed in the configuration"
 backup.starting: "Backing up {{.Count}} folder(s)…"
@@ -129,10 +141,15 @@ backup.archive_name: "Backup stored as {{.Name}}"
 backup.warnings: "{{.Count}} file(s) could not be read. The backup is still usable."
 backup.cloud_scan: "Looking for online-only files…"
 backup.cloud_skipped: "{{.Count}} online-only file(s) were not backed up, so as not to download them."
+backup.pruning: "Removing backups that are no longer kept…"
+backup.compacting: "Reclaiming freed space…"
 
 archives.empty: "No backup on this destination."
 archives.entry: "  {{.Date}}  {{.Name}}"
 archives.count: "{{.Count}} backup(s)."
+
+run.header: "=== {{.Date}} — scheduled backup of profile {{.Profile}} ==="
+run.footer: "=== end, code {{.Code}} ==="
 
 history.unavailable: "The history could not be kept: {{.Message}}"
 history.empty: "No backup has been run from this computer yet."
@@ -167,3 +184,16 @@ recette.more: "  … and {{.Count}} more difference(s)"
 recette.summary: "{{.Identical}} identical, {{.Missing}} missing, {{.Different}} different, {{.Extra}} extra"
 recette.passed: "Faithful restore: every item is identical to the original."
 recette.failed: "Unfaithful restore."
+
+schedule.usage: "Usage: borgui schedule [status] | daily <HH:MM> | weekly <day> <HH:MM> | manual  (days: monday … sunday)"
+schedule.invalid: "invalid schedule: give a time as HH:MM and, for weekly, a day from monday to sunday"
+schedule.current: "Schedule: {{.Plan}}"
+schedule.installed: "Backup scheduled: {{.Plan}}"
+schedule.removed: "Automatic backup disabled: backups are started by hand."
+schedule.not_installed: "The schedule is set but not installed on this computer. Run: borgui schedule, followed by the frequency you want."
+schedule.log: "Scheduled backup log: {{.Path}}"
+schedule.daily: "every day at {{.At}}"
+schedule.weekly: "every {{.Day}} at {{.At}}"
+schedule.manual: "manual"
+schedule.catch_up: ", caught up at startup if the computer was off"
+schedule.task_description: "BorgUI backup of profile {{.Profile}}"

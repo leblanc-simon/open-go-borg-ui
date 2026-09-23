@@ -101,7 +101,9 @@ internal/config/       configuration TOML et emplacements par plateforme
 internal/core/         cœur applicatif : enchaînements partagés par la CLI et l'interface
 internal/history/      historique des exécutions (HistoryStore), SQLite pur Go
 internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
+internal/lock/         verrou local par destination (EF-57), libéré par le système à la mort du processus
 internal/probe/        diagnostic SSH et clé dédiée à l'application
+internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
 ```
 

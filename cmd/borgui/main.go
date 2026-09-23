@@ -40,6 +40,8 @@ func run(args []string) int {
 		profileName string
 		language    string
 		passphrase  string
+		scheduled   string
+		install     string
 	)
 
 	flags := flag.NewFlagSet("borgui", flag.ContinueOnError)
@@ -49,6 +51,10 @@ func run(args []string) int {
 	flags.StringVar(&language, "lang", "", "langue de l'interface")
 	flags.StringVar(&passphrase, "print-passphrase", "",
 		"écrit la passphrase du profil sur la sortie standard, pour BORG_PASSCOMMAND")
+	flags.StringVar(&scheduled, "run", "",
+		"exécute la sauvegarde planifiée du profil, sans interface")
+	flags.StringVar(&install, "install-schedule", "",
+		"installe la tâche planifiée du profil selon sa configuration")
 	flags.Usage = func() {}
 
 	if err := flags.Parse(args); err != nil {
@@ -61,6 +67,12 @@ func run(args []string) int {
 		return exitError
 	}
 
+	if scheduled != "" {
+		profileName = scheduled
+	}
+	if install != "" {
+		profileName = install
+	}
 	application, err := newApp(loc, configPath, profileName)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -75,6 +87,17 @@ func run(args []string) int {
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
+
+	if scheduled != "" {
+		return application.runScheduled(ctx)
+	}
+	if install != "" {
+		code, err := application.installSchedule(ctx)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": err.Error()}))
+		}
+		return code
+	}
 
 	rest := flags.Args()
 	if len(rest) == 0 {
@@ -117,6 +140,8 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandRestore(ctx, args)
 	case "history":
 		return a.commandHistory(ctx, args)
+	case "schedule":
+		return a.commandSchedule(ctx, args)
 	case "help", "--help", "-h":
 		fmt.Println(a.T("cli.usage"))
 		return exitSuccess, nil

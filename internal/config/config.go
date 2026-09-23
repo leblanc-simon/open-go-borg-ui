@@ -106,11 +106,17 @@ type Retention struct {
 	Monthly int `toml:"monthly"`
 }
 
-// Schedule décrit le déclenchement automatique. Il n'est pas exploité en v0.1.
+// Schedule décrit le déclenchement automatique (EF-61).
 type Schedule struct {
-	Kind            string `toml:"kind"`
-	At              string `toml:"at,omitempty"`
-	CatchUpIfMissed bool   `toml:"catch_up_if_missed"`
+	// Kind vaut manual, daily ou weekly.
+	Kind string `toml:"kind"`
+	// At est l'heure de déclenchement, « HH:MM ».
+	At string `toml:"at,omitempty"`
+	// Day est le jour d'une planification hebdomadaire (monday…sunday).
+	Day string `toml:"day,omitempty"`
+	// CatchUpIfMissed rattrape au démarrage suivant une exécution manquée
+	// (EF-62).
+	CatchUpIfMissed bool `toml:"catch_up_if_missed"`
 }
 
 // ErrNoProfile signale une configuration sans profil exploitable.

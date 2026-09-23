@@ -16,6 +16,7 @@ import (
 
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/history"
+	"leblanc.io/open-go-borg-ui/internal/schedule"
 )
 
 // poste prépare un poste de test : dossier personnel isolé, faux moteur dans
@@ -251,5 +252,149 @@ func TestHistoriqueConsigne(t *testing.T) {
 	}
 	if len(runs) != 1 || runs[0].Status != history.StatusSuccess || runs[0].Files != 3 {
 		t.Errorf("historique: %+v", runs)
+	}
+}
+
+// TestExecutionPlanifiee vérifie le mode de la tâche planifiée : rien sur le
+// terminal, tout dans le journal du profil, et le code de sortie de Borg.
+func TestExecutionPlanifiee(t *testing.T) {
+	poste(t, `echo '{"archive":{"name":"poste-2026-09-23T22:00:00","stats":{"nfiles":3}}}'`, "--clear")
+	ajouterSource(t, filepath.Join(t.TempDir(), "Documents"))
+
+	stdout, stderrBefore := os.Stdout, stderr
+	t.Cleanup(func() { os.Stdout, os.Stderr, stderr = stdout, stdout, stderrBefore })
+
+	if code := run([]string{"--run", "poste"}); code != exitSuccess {
+		t.Fatalf("--run a retourné %d", code)
+	}
+	os.Stdout, os.Stderr, stderr = stdout, stdout, stderrBefore
+
+	stateDir, err := config.StateDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	journal, err := os.ReadFile(filepath.Join(stateDir, "logs", "poste.log"))
+	if err != nil {
+		t.Fatalf("journal absent: %v", err)
+	}
+	for _, want := range []string{"poste", "poste-2026-09-23T22:00:00", "code 0"} {
+		if !strings.Contains(string(journal), want) {
+			t.Errorf("le journal ne contient pas %q:\n%s", want, journal)
+		}
+	}
+}
+
+// TestNomSur vérifie qu'un nom de profil quelconque donne un nom de fichier
+// sûr, et que deux noms distincts le restent.
+func TestNomSur(t *testing.T) {
+	cases := map[string]string{
+		"poste":         "poste",
+		"Poste de Marc": "Poste_20de_20Marc",
+		"été/../x":      "_e9t_e9_2f_2e_2e_2fx",
+		"":              "default",
+	}
+	for in, want := range cases {
+		if got := safeName(in); got != want {
+			t.Errorf("safeName(%q) = %q, attendu %q", in, got, want)
+		}
+	}
+}
+
+// fauxOrdonnanceur remplace l'ordonnanceur du système par un systemd écrivant
+// dans un dossier de test et n'exécutant aucune commande.
+func fauxOrdonnanceur(t *testing.T) (dir string, commandes *[]string) {
+	t.Helper()
+	dir = t.TempDir()
+	var calls []string
+	previous := newScheduler
+	newScheduler = func() (schedule.Scheduler, error) {
+		return schedule.NewSystemd(dir, func(_ context.Context, name string, args ...string) ([]byte, error) {
+			calls = append(calls, name+" "+strings.Join(args, " "))
+			return nil, nil
+		}), nil
+	}
+	t.Cleanup(func() { newScheduler = previous })
+	return dir, &calls
+}
+
+// TestPlanification vérifie le cycle complet : réglage enregistré, tâche
+// installée pour lancer « --run <profil> », puis retirée.
+func TestPlanification(t *testing.T) {
+	poste(t, "exit 0", "--clear")
+	dir, _ := fauxOrdonnanceur(t)
+
+	if code := run([]string{"schedule", "weekly", "friday", "21:30"}); code != exitSuccess {
+		t.Fatalf("schedule weekly a retourné %d", code)
+	}
+	service, err := os.ReadFile(filepath.Join(dir, "borgui-poste.service"))
+	if err != nil {
+		t.Fatalf("service absent: %v", err)
+	}
+	if !strings.Contains(string(service), `"--run" "poste"`) {
+		t.Errorf("le service ne lance pas --run poste:\n%s", service)
+	}
+	timer, _ := os.ReadFile(filepath.Join(dir, "borgui-poste.timer"))
+	if !strings.Contains(string(timer), "OnCalendar=Fri *-*-* 21:30:00") || !strings.Contains(string(timer), "Persistent=true") {
+		t.Errorf("timer inattendu:\n%s", timer)
+	}
+
+	cfg, err := config.Load("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s := cfg.Profiles[0].Schedule; s.Kind != "weekly" || s.Day != "friday" || s.At != "21:30" {
+		t.Errorf("réglage enregistré: %+v", s)
+	}
+	if code := run([]string{"schedule"}); code != exitSuccess {
+		t.Errorf("schedule status a retourné %d", code)
+	}
+
+	if code := run([]string{"schedule", "manual"}); code != exitSuccess {
+		t.Fatalf("schedule manual a retourné %d", code)
+	}
+	if entries, _ := os.ReadDir(dir); len(entries) != 0 {
+		t.Errorf("unités restantes après retrait: %v", entries)
+	}
+}
+
+// TestPlanificationInvalide vérifie qu'une heure mal saisie ne remplace pas
+// la planification en place.
+func TestPlanificationInvalide(t *testing.T) {
+	poste(t, "exit 0", "--clear")
+	_, commandes := fauxOrdonnanceur(t)
+
+	if code := run([]string{"schedule", "daily", "22:00"}); code != exitSuccess {
+		t.Fatal("réglage initial refusé")
+	}
+	*commandes = nil
+	if code := run([]string{"schedule", "daily", "25:99"}); code != exitError {
+		t.Errorf("une heure invalide doit être refusée")
+	}
+	if len(*commandes) != 0 {
+		t.Errorf("l'ordonnanceur ne doit pas être touché: %v", *commandes)
+	}
+	cfg, _ := config.Load("")
+	if cfg.Profiles[0].Schedule.At != "22:00" {
+		t.Errorf("la planification en place a été remplacée: %+v", cfg.Profiles[0].Schedule)
+	}
+}
+
+// TestInstallationDepuisConfiguration vérifie le mode --install-schedule, qui
+// applique ce que la configuration contient déjà.
+func TestInstallationDepuisConfiguration(t *testing.T) {
+	poste(t, "exit 0", "--clear")
+	dir, _ := fauxOrdonnanceur(t)
+
+	cfg, _ := config.Load("")
+	cfg.Profiles[0].Schedule = config.Schedule{Kind: "daily", At: "12:15", CatchUpIfMissed: true}
+	if err := config.Save("", cfg); err != nil {
+		t.Fatal(err)
+	}
+
+	if code := run([]string{"--install-schedule", "poste"}); code != exitSuccess {
+		t.Fatalf("--install-schedule a retourné %d", code)
+	}
+	if _, err := os.Stat(filepath.Join(dir, "borgui-poste.timer")); err != nil {
+		t.Errorf("timer absent: %v", err)
 	}
 }

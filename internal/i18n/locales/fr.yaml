@@ -22,6 +22,7 @@ cli.usage: |
     archives         liste les sauvegardes disponibles
     restore          restaure une sauvegarde dans un dossier neuf
     history          historique des sauvegardes de ce poste
+    schedule         règle la sauvegarde automatique
 
   Options communes :
     --config <fichier>   fichier de configuration à utiliser
@@ -42,6 +43,14 @@ duration.seconds: "{{.Seconds}} s"
 duration.minutes_seconds: "{{.Minutes}} min {{.Seconds}} s"
 duration.hours_minutes: "{{.Hours}} h {{.Minutes}} min"
 
+weekday.monday: "lundi"
+weekday.tuesday: "mardi"
+weekday.wednesday: "mercredi"
+weekday.thursday: "jeudi"
+weekday.friday: "vendredi"
+weekday.saturday: "samedi"
+weekday.sunday: "dimanche"
+
 encryption.encrypted: "chiffrée"
 encryption.none: "non chiffrée"
 
@@ -51,6 +60,8 @@ error.repository_missing: "Aucune sauvegarde n'a encore été créée sur cette 
 error.repository_exists: "Cette destination contient déjà des sauvegardes."
 error.passphrase_wrong: "Le mot de passe de la destination est refusé."
 error.connection: "La destination n'a pas pu être jointe."
+error.already_running: "Une sauvegarde est déjà en cours sur cette destination. Attendez qu'elle se termine."
+error.maintenance: "La sauvegarde est enregistrée, mais les anciennes sauvegardes n'ont pas pu être retirées. Ce sera retenté à la prochaine sauvegarde."
 
 config.usage: "Utilisation : borgui config init | show"
 config.missing_destination: "indiquez le sous-compte (--user) et le nom de la destination (--repo)"
@@ -109,7 +120,7 @@ passphrase.available: "Mot de passe disponible."
 passphrase.not_needed: "Cette destination n'est pas chiffrée : aucun mot de passe n'est nécessaire."
 passphrase.not_encrypted: "cette destination n'est pas chiffrée : elle n'utilise pas de mot de passe"
 
-repository.usage: "Utilisation : borgui repository init | info | export-key"
+repository.usage: "Utilisation : borgui repository init | info | export-key | unlock"
 repository.creating: "Préparation de la destination {{.Repository}} ({{.Mode}})"
 repository.created: "Destination prête."
 repository.already_exists: "cette destination contient déjà des sauvegardes"
@@ -122,6 +133,7 @@ repository.mode_differs: "La configuration annonce une destination {{.Configured
 repository.no_key: "Cette destination n'est pas chiffrée : il n'y a pas de clé de secours."
 repository.key_intro: "Clé de secours. Imprimez-la ou recopiez-la, et rangez-la hors de ce poste :"
 repository.key_warning: "Sans cette clé ni le mot de passe, les sauvegardes sont définitivement illisibles."
+repository.unlocked: "La destination est débloquée."
 
 backup.no_sources: "aucun dossier à sauvegarder n'est indiqué dans la configuration"
 backup.starting: "Sauvegarde de {{.Count}} dossier(s)…"
@@ -132,10 +144,15 @@ backup.archive_name: "Sauvegarde enregistrée sous {{.Name}}"
 backup.warnings: "{{.Count}} fichier(s) n'ont pas pu être lus. La sauvegarde reste utilisable."
 backup.cloud_scan: "Recherche des fichiers disponibles uniquement en ligne…"
 backup.cloud_skipped: "{{.Count}} fichier(s) disponibles uniquement en ligne n'ont pas été sauvegardés, pour ne pas les télécharger."
+backup.pruning: "Retrait des sauvegardes qui ne sont plus à conserver…"
+backup.compacting: "Récupération de l'espace libéré…"
 
 archives.empty: "Aucune sauvegarde sur cette destination."
 archives.entry: "  {{.Date}}  {{.Name}}"
 archives.count: "{{.Count}} sauvegarde(s)."
+
+run.header: "=== {{.Date}} — sauvegarde planifiée du profil {{.Profile}} ==="
+run.footer: "=== fin, code {{.Code}} ==="
 
 history.unavailable: "L'historique n'a pas pu être tenu : {{.Message}}"
 history.empty: "Aucune sauvegarde n'a encore été lancée depuis ce poste."
@@ -170,3 +187,16 @@ recette.more: "  … et {{.Count}} autre(s) écart(s)"
 recette.summary: "{{.Identical}} identique(s), {{.Missing}} absent(s), {{.Different}} différent(s), {{.Extra}} en trop"
 recette.passed: "Restauration fidèle : chaque élément est identique à l'original."
 recette.failed: "Restauration infidèle."
+
+schedule.usage: "Utilisation : borgui schedule [status] | daily <HH:MM> | weekly <jour> <HH:MM> | manual  (jours : monday … sunday)"
+schedule.invalid: "planification invalide : indiquez une heure HH:MM et, chaque semaine, un jour de monday à sunday"
+schedule.current: "Planification : {{.Plan}}"
+schedule.installed: "Sauvegarde planifiée : {{.Plan}}"
+schedule.removed: "Sauvegarde automatique désactivée : les sauvegardes se lancent à la main."
+schedule.not_installed: "La planification est réglée mais pas installée sur ce poste. Lancez : borgui schedule, suivi de la fréquence voulue."
+schedule.log: "Journal des sauvegardes planifiées : {{.Path}}"
+schedule.daily: "chaque jour à {{.At}}"
+schedule.weekly: "chaque {{.Day}} à {{.At}}"
+schedule.manual: "manuelle"
+schedule.catch_up: ", rattrapée au démarrage si le poste était éteint"
+schedule.task_description: "Sauvegarde BorgUI du profil {{.Profile}}"
