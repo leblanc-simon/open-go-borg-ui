@@ -164,3 +164,50 @@ func ajouterSource(t *testing.T, dossier string) {
 		t.Fatalf("écriture de la configuration: %v", err)
 	}
 }
+
+// TestRestaurationPlusRecente vérifie qu'une restauration sans nom choisit la
+// sauvegarde la plus récente, quel que soit l'ordre de la liste, et qu'elle
+// s'exécute dans le dossier neuf demandé.
+func TestRestaurationPlusRecente(t *testing.T) {
+	journal := poste(t, `
+case "$*" in
+*list*)
+  echo '{"archives":[{"name":"poste-2026-09-03T12:00:00","start":"2026-09-03T12:00:00.000000"},{"name":"poste-2026-09-01T12:00:00","start":"2026-09-01T12:00:00.000000"}]}'
+  ;;
+*extract*)
+  echo "PWD $(pwd)" >> "$HOME/appels.txt"
+  ;;
+esac
+exit 0
+`, "--clear")
+
+	destination := filepath.Join(t.TempDir(), "restauration")
+	if code := run([]string{"restore", "--to", destination}); code != exitSuccess {
+		t.Fatalf("restore a retourné %d", code)
+	}
+
+	appels := lireJournal(t, journal)
+	if !strings.Contains(appels, "::poste-2026-09-03T12:00:00") {
+		t.Errorf("la sauvegarde la plus récente n'a pas été choisie\n%s", appels)
+	}
+	if !strings.Contains(appels, "PWD "+destination) {
+		t.Errorf("l'extraction ne s'est pas faite dans %s\n%s", destination, appels)
+	}
+}
+
+// TestRestaurationDossierOccupe vérifie qu'une restauration refuse un dossier
+// qui contient déjà des fichiers, sans appeler le moteur (EF-95).
+func TestRestaurationDossierOccupe(t *testing.T) {
+	journal := poste(t, "exit 0", "--clear")
+
+	destination := t.TempDir()
+	if err := os.WriteFile(filepath.Join(destination, "rapport.odt"), []byte("original"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if code := run([]string{"restore", "--to", destination, "poste-2026-09-03T12:00:00"}); code != exitError {
+		t.Fatalf("restore a retourné %d, attendu %d", code, exitError)
+	}
+	if strings.Contains(lireJournal(t, journal), "extract") {
+		t.Error("le moteur ne devrait pas être appelé sur un dossier occupé")
+	}
+}

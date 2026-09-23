@@ -17,6 +17,7 @@ cli.usage: |
     repository info  destination status
     backup           run a backup
     archives         list available backups
+    restore          restore a backup into a new folder
 
   Common options:
     --config <file>    configuration file to use
@@ -127,3 +128,31 @@ backup.warnings: "{{.Count}} file(s) could not be read. The backup is still usab
 archives.empty: "No backup on this destination."
 archives.entry: "  {{.Date}}  {{.Name}}"
 archives.count: "{{.Count}} backup(s)."
+
+restore.not_empty: "the folder {{.Path}} is not empty: a restore always goes into a new folder"
+restore.starting: "Restoring {{.Name}} into {{.Path}}…"
+restore.progress: "Restoring: {{.Percent}}%"
+restore.finished: "Restore completed in {{.Path}}, in {{.Duration}}"
+restore.warnings: "{{.Count}} file(s) could not be restored."
+
+# v0.1 acceptance tool, borgui-recette.
+recette.usage: |
+  Usage: borgui-recette <command> [options]
+
+  Commands:
+    generate <folder> [--size <MiB>]      create an acceptance data set
+    manifest <folder> [-o <file>]         record the checksums of a folder
+    compare <manifest> <folder>           check a restored folder
+recette.not_empty: "the folder {{.Path}} is not empty"
+recette.not_a_directory: "{{.Path}} is not a folder"
+recette.generated: "{{.Count}} acceptance files created in {{.Path}}"
+recette.scanning: "{{.Count}} items, {{.Size}} MiB read…"
+recette.manifest_written: "Manifest of {{.Count}} items written to {{.Path}}"
+recette.malformed: "{{.Path}}, line {{.Line}}: unreadable manifest"
+recette.missing: "  missing    {{.Path}}"
+recette.different: "  different  {{.Path}}"
+recette.extra: "  extra      {{.Path}}"
+recette.more: "  … and {{.Count}} more difference(s)"
+recette.summary: "{{.Identical}} identical, {{.Missing}} missing, {{.Different}} different, {{.Extra}} extra"
+recette.passed: "Faithful restore: every item is identical to the original."
+recette.failed: "Unfaithful restore."

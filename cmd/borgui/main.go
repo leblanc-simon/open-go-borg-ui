@@ -113,6 +113,8 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandBackup(ctx, args)
 	case "archives":
 		return a.commandArchives(ctx, args)
+	case "restore":
+		return a.commandRestore(ctx, args)
 	case "help", "--help", "-h":
 		fmt.Println(a.T("cli.usage"))
 		return exitSuccess, nil
