@@ -32,14 +32,13 @@ type Spec struct {
 
 // Pinned est le runtime de cette version de l'application.
 //
-// SHA256 et Size désignent l'archive produite par la recette de construction
-// du runtime (LI-05, build/runtime). URL reste à renseigner une fois l'archive
-// publiée : tant qu'elle est vide, seule la voie hors ligne est utilisable, ce
-// que l'application signale explicitement.
+// Il désigne l'archive produite par la recette de construction du runtime
+// (LI-05, build/runtime), publiée en release du dépôt sous une étiquette
+// propre à sa version : l'adresse ne change jamais pour une version donnée.
 var Pinned = Spec{
 	Version:     "1.4.5-cygwin.1",
 	BorgVersion: "1.4.5",
-	URL:         "",
+	URL:         "https://github.com/leblanc-simon/open-go-borg-ui/releases/download/runtime-1.4.5-cygwin.1/borgui-runtime-1.4.5-cygwin.1.tar.gz",
 	SHA256:      "1926b2941925e2ccfd155eeb66a4067d93401d7248483cf0f5212d66371e60f7",
 	Size:        62517029,
 }
