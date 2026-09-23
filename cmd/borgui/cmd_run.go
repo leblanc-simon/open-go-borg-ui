@@ -36,7 +36,7 @@ func (a *app) runScheduled(ctx context.Context) int {
 
 	fmt.Println(a.T("run.header", map[string]any{
 		"Date":    time.Now().Format("2006-01-02 15:04:05"),
-		"Profile": a.profileName,
+		"Profile": a.ProfileName,
 	}))
 
 	code, err := a.dispatch(ctx, "backup", nil)
@@ -61,5 +61,5 @@ func (a *app) openLog() (*os.File, error) {
 
 // logPath retourne le journal des exécutions planifiées du profil.
 func (a *app) logPath() string {
-	return filepath.Join(a.stateDir, "logs", config.SafeName(a.profileName)+".log")
+	return filepath.Join(a.StateDir, "logs", config.SafeName(a.ProfileName)+".log")
 }

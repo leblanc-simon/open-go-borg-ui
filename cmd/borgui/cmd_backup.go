@@ -21,7 +21,7 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		return exitError, err
 	}
 
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -32,16 +32,16 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 		return exitError, err
 	}
 
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
 
-	store, err := a.historyStore()
+	store, err := a.History()
 	if err != nil {
 		// Sans historique, la sauvegarde reste possible : c'est un témoin,
 		// pas une condition.
@@ -52,14 +52,7 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 
 	fmt.Println(a.T("backup.starting", map[string]any{"Count": len(profile.Sources)}))
 
-	service := core.Backup{
-		Runner:   runner,
-		History:  store,
-		LockDir:  a.lockDir(),
-		Publish:  a.statePublisher(profile),
-		Hostname: hostname(),
-		NextRun:  nextRun(profile),
-	}
+	service := a.BackupService(profile, runner, store)
 	report, err := service.Run(ctx, core.BackupRequest{
 		Profile: profile,
 		Env:     env,

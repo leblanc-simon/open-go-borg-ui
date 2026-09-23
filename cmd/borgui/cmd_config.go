@@ -50,7 +50,7 @@ func (a *app) configInit(args []string) (int, error) {
 		return exitError, fmt.Errorf("%s", a.T("config.missing_destination"))
 	}
 
-	path := a.configPath
+	path := a.ConfigPath
 	if path == "" {
 		var err error
 		if path, err = config.DefaultPath(); err != nil {
@@ -80,7 +80,7 @@ func (a *app) configInit(args []string) (int, error) {
 
 // configShow affiche l'emplacement et le contenu de la configuration.
 func (a *app) configShow() (int, error) {
-	path := a.configPath
+	path := a.ConfigPath
 	if path == "" {
 		var err error
 		if path, err = config.DefaultPath(); err != nil {
@@ -105,7 +105,7 @@ func (a *app) configExport(args []string) (int, error) {
 	if err := flags.Parse(args); err != nil {
 		return exitError, err
 	}
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -137,7 +137,7 @@ func (a *app) configImport(args []string) (int, error) {
 		return exitError, fmt.Errorf("%s", a.T("config.import_usage"))
 	}
 
-	path := a.configPath
+	path := a.ConfigPath
 	if path == "" {
 		if path, err = config.DefaultPath(); err != nil {
 			return exitError, err
@@ -151,7 +151,7 @@ func (a *app) configImport(args []string) (int, error) {
 	if err != nil {
 		return exitError, err
 	}
-	profile, err := config.Import(file, a.profileName)
+	profile, err := config.Import(file, a.ProfileName)
 	file.Close()
 	if err != nil {
 		return exitError, fmt.Errorf("%s", a.T("config.import_invalid", map[string]any{"Message": err.Error()}))
@@ -174,7 +174,7 @@ func (a *app) configImport(args []string) (int, error) {
 		return exitError, err
 	}
 	fmt.Println(a.T("config.written", map[string]any{"Path": path}))
-	a.profileName = profile.Name
+	a.ProfileName = profile.Name
 
 	// Les dossiers viennent d'un autre poste : ceux qui n'existent pas ici
 	// sont signalés, sans être retirés — c'est à l'utilisateur d'en décider.

@@ -26,12 +26,12 @@ func (a *app) commandRuntime(ctx context.Context, args []string) (int, error) {
 
 // runtimeStatus rend compte du moteur disponible.
 func (a *app) runtimeStatus(ctx context.Context) (int, error) {
-	manager := a.runtimeManager()
+	manager := a.RuntimeManager()
 	fmt.Println(a.T("runtime.pinned", map[string]any{
 		"Version": manager.Spec().BorgVersion,
 	}))
 
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
@@ -90,7 +90,7 @@ func (a *app) runtimeInstall(ctx context.Context, args []string) (int, error) {
 		}))
 	}
 
-	manager := a.runtimeManager()
+	manager := a.RuntimeManager()
 	var (
 		path string
 		err  error

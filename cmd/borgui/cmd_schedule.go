@@ -38,11 +38,11 @@ func (a *app) commandSchedule(ctx context.Context, args []string) (int, error) {
 		return exitError, fmt.Errorf("%s", a.T("schedule.usage"))
 	}
 
-	cfg, err := config.Load(a.configPath)
+	cfg, err := config.Load(a.ConfigPath)
 	if err != nil {
 		return exitError, err
 	}
-	profile, err := cfg.Profile(a.profileName)
+	profile, err := cfg.Profile(a.ProfileName)
 	if err != nil {
 		return exitError, err
 	}
@@ -54,7 +54,7 @@ func (a *app) commandSchedule(ctx context.Context, args []string) (int, error) {
 		return exitError, fmt.Errorf("%s", a.T("schedule.invalid"))
 	}
 	profile.Schedule = updated
-	if err := config.Save(a.configPath, cfg); err != nil {
+	if err := config.Save(a.ConfigPath, cfg); err != nil {
 		return exitError, err
 	}
 	return a.applySchedule(ctx, profile)
@@ -63,7 +63,7 @@ func (a *app) commandSchedule(ctx context.Context, args []string) (int, error) {
 // installSchedule est le mode « --install-schedule <profil> » (AR-03) : il
 // applique la planification enregistrée dans la configuration.
 func (a *app) installSchedule(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -116,8 +116,8 @@ func (a *app) scheduledTask(profile *config.Profile) (schedule.Task, error) {
 	}
 
 	var args []string
-	if a.configPath != "" {
-		path, err := filepath.Abs(a.configPath)
+	if a.ConfigPath != "" {
+		path, err := filepath.Abs(a.ConfigPath)
 		if err != nil {
 			return schedule.Task{}, err
 		}
@@ -135,7 +135,7 @@ func (a *app) scheduledTask(profile *config.Profile) (schedule.Task, error) {
 
 // scheduleStatus affiche la planification enregistrée et l'état de la tâche.
 func (a *app) scheduleStatus(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}

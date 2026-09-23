@@ -9,7 +9,7 @@ import (
 
 // commandArchives énumère les sauvegardes disponibles.
 func (a *app) commandArchives(ctx context.Context, _ []string) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -17,11 +17,11 @@ func (a *app) commandArchives(ctx context.Context, _ []string) (int, error) {
 		return exitError, err
 	}
 
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}

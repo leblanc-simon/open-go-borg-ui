@@ -33,18 +33,18 @@ func (a *app) commandRestore(ctx context.Context, args []string) (int, error) {
 	}
 	rest := flags.Args()
 
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
 	if err := a.ensurePassphrase(profile); err != nil {
 		return exitError, err
 	}
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}

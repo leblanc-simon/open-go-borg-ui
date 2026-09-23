@@ -17,11 +17,11 @@ func (a *app) commandHistory(ctx context.Context, args []string) (int, error) {
 		return exitError, err
 	}
 
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
-	store, err := a.historyStore()
+	store, err := a.History()
 	if err != nil {
 		return exitError, err
 	}

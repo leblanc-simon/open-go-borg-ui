@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"leblanc.io/open-go-borg-ui/internal/station"
 	"time"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
@@ -27,7 +28,7 @@ func (a *app) commandConnection(ctx context.Context, args []string) (int, error)
 		return exitError, err
 	}
 
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -35,7 +36,7 @@ func (a *app) commandConnection(ctx context.Context, args []string) (int, error)
 	if err != nil {
 		return exitError, err
 	}
-	keyPath, err := a.sshKeyPath(profile)
+	keyPath, err := a.SSHKeyPath(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -44,8 +45,8 @@ func (a *app) commandConnection(ctx context.Context, args []string) (int, error)
 		return exitError, err
 	}
 
-	host, port := hostPort(repository)
-	user := sshUser(repository)
+	host, port := station.HostPort(repository)
+	user := station.SSHUser(repository)
 	if user == "" {
 		user = profile.Destination.User
 	}
@@ -83,11 +84,11 @@ func (a *app) commandConnection(ctx context.Context, args []string) (int, error)
 
 // testRepository vérifie que le dépôt est lisible.
 func (a *app) testRepository(ctx context.Context, profile *config.Profile) (int, error) {
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}

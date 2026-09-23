@@ -4,93 +4,23 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
+	"leblanc.io/open-go-borg-ui/internal/station"
 	"time"
 
-	"leblanc.io/open-go-borg-ui/internal/config"
-	"leblanc.io/open-go-borg-ui/internal/probe"
-	"leblanc.io/open-go-borg-ui/internal/schedule"
 	"leblanc.io/open-go-borg-ui/internal/statusfile"
 )
 
-// stateTimeout borne un échange avec la destination pour le fichier d'état :
-// il ne doit jamais retenir une sauvegarde planifiée.
+// stateTimeout borne la relecture de l'état sur la destination.
 const stateTimeout = 30 * time.Second
-
-// stateTarget désigne le fichier d'état du poste : dans son propre
-// sous-compte, par la connexion de la destination (EF-83, addendum §8).
-func (a *app) stateTarget(profile *config.Profile) (statusfile.Target, error) {
-	repository, err := profile.Destination.RepositoryURL()
-	if err != nil {
-		return statusfile.Target{}, err
-	}
-	host, port := hostPort(repository)
-	user := sshUser(repository)
-	if user == "" {
-		user = profile.Destination.User
-	}
-	keyPath, err := a.sshKeyPath(profile)
-	if err != nil {
-		return statusfile.Target{}, err
-	}
-	knownHosts, err := config.KnownHostsPath()
-	if err != nil {
-		return statusfile.Target{}, err
-	}
-	return statusfile.Target{
-		Params: probe.Params{
-			Host:           host,
-			Port:           port,
-			User:           user,
-			KeyPath:        keyPath,
-			KnownHostsPath: knownHosts,
-			Timeout:        stateTimeout,
-		},
-		Dir: statusfile.DefaultDir,
-	}, nil
-}
-
-// statePublisher retourne la fonction qui dépose l'état du poste.
-func (a *app) statePublisher(profile *config.Profile) func(context.Context, statusfile.Status) error {
-	return func(ctx context.Context, status statusfile.Status) error {
-		target, err := a.stateTarget(profile)
-		if err != nil {
-			return err
-		}
-		ctx, cancel := context.WithTimeout(ctx, stateTimeout)
-		defer cancel()
-		return statusfile.PublishTo(ctx, target, status)
-	}
-}
-
-// hostname retourne le nom court du poste.
-func hostname() string {
-	name, err := os.Hostname()
-	if err != nil {
-		return "poste"
-	}
-	return statusfile.Hostname(name)
-}
-
-// nextRun calcule la prochaine exécution planifiée du profil.
-func nextRun(profile *config.Profile) func() time.Time {
-	return func() time.Time {
-		plan, err := schedule.FromConfig(profile.Schedule)
-		if err != nil {
-			return time.Time{}
-		}
-		return schedule.Next(plan, time.Now())
-	}
-}
 
 // commandState relit l'état que le poste a déposé sur sa destination et
 // l'apprécie (EF-85).
 func (a *app) commandState(ctx context.Context, _ []string) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
-	target, err := a.stateTarget(profile)
+	target, err := a.StateTarget(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -98,7 +28,7 @@ func (a *app) commandState(ctx context.Context, _ []string) (int, error) {
 	ctx, cancel := context.WithTimeout(ctx, stateTimeout)
 	defer cancel()
 	now := time.Now()
-	status, err := statusfile.ReadFrom(ctx, target, hostname(), now)
+	status, err := statusfile.ReadFrom(ctx, target, station.Hostname(), now)
 	switch {
 	case errors.Is(err, statusfile.ErrNotPublished):
 		fmt.Println(a.T("state.empty"))

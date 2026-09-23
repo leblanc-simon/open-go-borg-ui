@@ -30,7 +30,7 @@ func (a *app) commandRetention(ctx context.Context, args []string) (int, error) 
 	action, rest := subcommand(args)
 	switch action {
 	case "":
-		profile, err := a.profile()
+		profile, err := a.Profile()
 		if err != nil {
 			return exitError, err
 		}
@@ -64,22 +64,22 @@ func (a *app) retentionSet(ctx context.Context, args []string) (int, error) {
 	}
 	retention := config.Retention{Daily: values[0], Weekly: values[1], Monthly: values[2]}
 
-	cfg, err := config.Load(a.configPath)
+	cfg, err := config.Load(a.ConfigPath)
 	if err != nil {
 		return exitError, err
 	}
-	profile, err := cfg.Profile(a.profileName)
+	profile, err := cfg.Profile(a.ProfileName)
 	if err != nil {
 		return exitError, err
 	}
 	if err := a.ensurePassphrase(profile); err != nil {
 		return exitError, err
 	}
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -113,7 +113,7 @@ func (a *app) retentionSet(ctx context.Context, args []string) (int, error) {
 	}
 
 	profile.Retention = retention
-	if err := config.Save(a.configPath, cfg); err != nil {
+	if err := config.Save(a.ConfigPath, cfg); err != nil {
 		return exitError, err
 	}
 	fmt.Println(a.T("retention.saved"))

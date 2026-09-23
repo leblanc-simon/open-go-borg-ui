@@ -156,8 +156,14 @@ func TestCommandeInconnue(t *testing.T) {
 }
 
 // ajouterSource inscrit un dossier dans la configuration du poste de test.
+//
+// Tout test qui sauvegarde passe par ici : la destination y est aussi
+// ramenée sur une adresse locale fermée, pour que le dépôt du fichier d'état
+// qui suit chaque sauvegarde échoue aussitôt, sans jamais sortir sur le
+// réseau.
 func ajouterSource(t *testing.T, dossier string) {
 	t.Helper()
+	horsReseau(t)
 
 	if err := os.MkdirAll(dossier, 0o700); err != nil {
 		t.Fatalf("création de %s: %v", dossier, err)
@@ -483,5 +489,20 @@ func TestExportImportEntrePostes(t *testing.T) {
 	}
 	if code := run([]string{"config", "import", export, "--user", "u654321"}); code != exitError {
 		t.Error("un import ne doit jamais écraser une configuration existante")
+	}
+}
+
+// horsReseau ramène la destination du poste de test sur une adresse locale
+// fermée.
+func horsReseau(t *testing.T) {
+	t.Helper()
+	cfg, err := config.Load("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg.Profiles[0].Destination.Kind = config.KindSSH
+	cfg.Profiles[0].Destination.Repo = "ssh://u123456@127.0.0.1:9/./poste-marc"
+	if err := config.Save("", cfg); err != nil {
+		t.Fatal(err)
 	}
 }

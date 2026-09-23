@@ -27,7 +27,7 @@ func (a *app) commandPassphrase(args []string) (int, error) {
 
 // passphraseSet enregistre la passphrase du profil.
 func (a *app) passphraseSet() (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -43,7 +43,7 @@ func (a *app) passphraseSet() (int, error) {
 		return exitError, fmt.Errorf("%s", a.T("passphrase.empty"))
 	}
 
-	fallback, err := a.secrets().Set(profile.Name, passphrase)
+	fallback, err := a.Secrets().Set(profile.Name, passphrase)
 	if err != nil {
 		return exitError, err
 	}
@@ -51,14 +51,14 @@ func (a *app) passphraseSet() (int, error) {
 	if fallback {
 		// Le trousseau du système n'a pas répondu : l'utilisateur doit savoir
 		// que le secret est désormais dans un fichier (EF-36).
-		fmt.Println(a.T("passphrase.fallback_warning", map[string]any{"Dir": a.stateDir}))
+		fmt.Println(a.T("passphrase.fallback_warning", map[string]any{"Dir": a.StateDir}))
 	}
 	return exitSuccess, nil
 }
 
 // passphraseCheck vérifie qu'une passphrase est disponible sans l'afficher.
 func (a *app) passphraseCheck() (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -66,7 +66,7 @@ func (a *app) passphraseCheck() (int, error) {
 		fmt.Println(a.T("passphrase.not_needed"))
 		return exitSuccess, nil
 	}
-	if _, err := a.secrets().Get(profile.Name); err != nil {
+	if _, err := a.Secrets().Get(profile.Name); err != nil {
 		return exitError, fmt.Errorf("%s", a.T("passphrase.missing"))
 	}
 	fmt.Println(a.T("passphrase.available"))
@@ -99,7 +99,7 @@ func (a *app) readPassphrase() (string, error) {
 // C'est le mode qu'invoque BORG_PASSCOMMAND : la sortie ne doit contenir que
 // la passphrase, et rien d'autre ne doit être écrit sur la sortie standard.
 func (a *app) printPassphrase(profileName string) int {
-	passphrase, err := a.secrets().Get(profileName)
+	passphrase, err := a.Secrets().Get(profileName)
 	if err != nil {
 		if errors.Is(err, secret.ErrNotFound) {
 			fmt.Fprintln(os.Stderr, a.T("passphrase.missing"))

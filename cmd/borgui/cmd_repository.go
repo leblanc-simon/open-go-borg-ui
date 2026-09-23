@@ -35,15 +35,15 @@ func (a *app) commandRepository(ctx context.Context, args []string) (int, error)
 // Le mode est figé ici pour toute la vie du dépôt : en changer imposerait d'en
 // créer un autre et de perdre l'historique (EF-32).
 func (a *app) repositoryInit(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -52,7 +52,7 @@ func (a *app) repositoryInit(ctx context.Context) (int, error) {
 		// Sans passphrase enregistrée, la création s'arrêterait sur une
 		// demande de saisie que rien ne peut satisfaire dans une exécution non
 		// interactive.
-		if _, err := a.secrets().Get(profile.Name); err != nil {
+		if _, err := a.Secrets().Get(profile.Name); err != nil {
 			return exitError, fmt.Errorf("%s", a.T("repository.passphrase_required"))
 		}
 	}
@@ -90,15 +90,15 @@ func (a *app) repositoryInit(ctx context.Context) (int, error) {
 //
 // Le mode de chiffrement est lu ici, jamais demandé à l'utilisateur (EF-34).
 func (a *app) repositoryInfo(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -129,7 +129,7 @@ func (a *app) repositoryInfo(ctx context.Context) (int, error) {
 
 // repositoryExportKey affiche la clé de secours du dépôt.
 func (a *app) repositoryExportKey(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
@@ -139,11 +139,11 @@ func (a *app) repositoryExportKey(ctx context.Context) (int, error) {
 		return exitSuccess, nil
 	}
 
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
@@ -175,23 +175,23 @@ func (a *app) repositoryExportKey(ctx context.Context) (int, error) {
 // Le verrou local est pris d'abord : s'il est tenu, une exécution est en
 // cours sur ce poste, et le verrou de la destination est légitime.
 func (a *app) repositoryUnlock(ctx context.Context) (int, error) {
-	profile, err := a.profile()
+	profile, err := a.Profile()
 	if err != nil {
 		return exitError, err
 	}
 	if err := a.ensurePassphrase(profile); err != nil {
 		return exitError, err
 	}
-	runner, err := a.runner()
+	runner, err := a.Runner()
 	if err != nil {
 		return a.reportMissingEngine(err)
 	}
-	env, err := a.environment(profile)
+	env, err := a.Environment(profile)
 	if err != nil {
 		return exitError, err
 	}
 
-	held, err := lock.Acquire(lock.PathFor(a.lockDir(), env.Repository))
+	held, err := lock.Acquire(lock.PathFor(a.LockDir(), env.Repository))
 	if errors.Is(err, lock.ErrBusy) {
 		return exitError, fmt.Errorf("%s", a.T(core.ErrorKeyAlreadyRunning))
 	}
@@ -252,7 +252,7 @@ func (a *app) ensurePassphrase(profile *config.Profile) error {
 	if !profile.Encryption.Encrypted() {
 		return nil
 	}
-	if _, err := a.secrets().Get(profile.Name); err != nil {
+	if _, err := a.Secrets().Get(profile.Name); err != nil {
 		if errors.Is(err, secret.ErrNotFound) {
 			return errors.New(a.T("passphrase.missing"))
 		}
