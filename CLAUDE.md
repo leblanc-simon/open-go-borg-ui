@@ -103,10 +103,14 @@ internal/borgruntime/  runtime Windows : téléchargement, empreinte, extraction
 internal/cloudfiles/   repérage des fichiers « à la demande » (OneDrive…), écartés par défaut
 internal/config/       configuration TOML et emplacements par plateforme
 internal/core/         cœur applicatif : enchaînements partagés par la CLI et l'interface
+internal/format/       tailles, durées et débits lisibles, partagés par la CLI et l'interface
+internal/fsperm/       fichiers sensibles réservés au propriétaire (DACL protégée sous Windows)
+internal/gui/          interface Fyne : écrans État, Sauvegarde, Destination
 internal/history/      historique des exécutions (HistoryStore), SQLite pur Go
 internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
 internal/lock/         verrou local par destination (EF-57), libéré par le système à la mort du processus
 internal/probe/        diagnostic SSH et clé dédiée à l'application
+internal/station/      le poste : configuration, moteur, environnement Borg, services assemblés
 internal/statusfile/   fichier d'état du poste, déposé par SFTP dans son propre sous-compte
 internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
@@ -125,8 +129,11 @@ go build ./...
 go test ./...
 go test ./internal/borg -run TestScriptSauvegarde -v   # un test isolé
 go vet ./...
-GOOS=windows go build ./...    # la partie Windows se compile depuis Linux
+go test -tags nogui ./...                 # sans Fyne : ni CGO ni bibliothèques graphiques
+GOOS=windows go build -tags nogui ./...   # ligne de commande Windows, depuis Linux
 ```
+
+L'exécutable ouvre l'interface Fyne quand il est lancé sans commande (AR-03) : `cmd/borgui` exige donc CGO et, sous Linux, les paquets de développement X11/OpenGL (dont `libxxf86vm-dev`). L'étiquette `nogui` l'en dispense et produit la ligne de commande seule. `internal/gui` ne dépend que des widgets de Fyne, en Go pur : il se teste sans affichage, par le pilote de test de Fyne.
 
 Les tests substituent à Borg un script shell qui en reproduit le comportement observable (codes de retour, `--log-json`, JSON de sortie) : toute la chaîne se vérifie sans installation de Borg. Ces tests portent `//go:build !windows`.
 

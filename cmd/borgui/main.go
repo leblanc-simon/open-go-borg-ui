@@ -101,8 +101,8 @@ func run(args []string) int {
 
 	rest := flags.Args()
 	if len(rest) == 0 {
-		fmt.Fprintln(os.Stderr, loc.T("cli.usage"))
-		return exitError
+		// Sans commande, l'exécutable est l'application elle-même.
+		return application.runGUI()
 	}
 
 	code, err := application.dispatch(ctx, rest[0], rest[1:])
