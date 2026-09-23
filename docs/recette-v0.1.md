@@ -91,7 +91,9 @@ cmd /c mklink /J C:\Recette\donnees\jonction C:\Recette\donnees\accents
 ```
 
 Son sort n'est pas un critère de TR-01 à TR-04 : il est à consigner, pas à
-réussir.
+réussir. `compare --ignore jonction` l'écarte du verdict ; sans cette option,
+elle apparaît « en trop », avec sa nature et, si c'est un lien, sa cible — ce
+qui est précisément l'observation à consigner.
 
 ## 4. Mode chiffré sous Windows
 
@@ -144,13 +146,13 @@ Restauration sur le poste lui-même, dans un dossier neuf :
 
 ```powershell
 .\borgui.exe @cfg restore --to C:\Recette\restauration-chiffre
-.\borgui-recette.exe compare C:\Recette\donnees.tsv C:\Recette\restauration-chiffre\Recette\donnees
+.\borgui-recette.exe compare C:\Recette\donnees.tsv C:\Recette\restauration-chiffre\Recette\donnees --ignore jonction
 .\borgui-recette.exe compare C:\Recette\reelles.tsv C:\Recette\restauration-chiffre\Users\<vous>\<dossier réel>
 ```
 
 La lettre de lecteur est retirée à la restauration (`--strip-components 1`) :
 `C:\Recette\donnees` revient donc sous `restauration-chiffre\Recette\donnees`.
-Attendu : `Restauration fidèle` pour les deux, à la jonction près.
+Attendu : `Restauration fidèle` pour les deux.
 
 ## 5. Mode non chiffré sous Windows
 
@@ -204,7 +206,7 @@ initial.
 ```bash
 mkdir ~/restauration-chiffre && cd ~/restauration-chiffre
 borg extract "::$ARCHIVE"
-borgui-recette compare ~/donnees.tsv ~/restauration-chiffre/c/Recette/donnees
+borgui-recette compare ~/donnees.tsv ~/restauration-chiffre/c/Recette/donnees --ignore jonction
 borgui-recette compare ~/reelles.tsv ~/restauration-chiffre/c/Users/<vous>/<dossier réel>
 ```
 

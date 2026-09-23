@@ -114,3 +114,22 @@ func TestManifesteRelu(t *testing.T) {
 		t.Fatalf("compare: code %d, erreur %v", code, err)
 	}
 }
+
+// TestComparaisonIgnore vérifie qu'un élément ajouté exprès après le
+// manifeste — la jonction de la recette — peut être écarté, lui et son
+// contenu, sans masquer les autres écarts.
+func TestComparaisonIgnore(t *testing.T) {
+	root, expected := generated(t)
+	os.MkdirAll(filepath.Join(root, "jonction", "dedans"), 0o755)
+	os.WriteFile(filepath.Join(root, "intrus.txt"), []byte("?"), 0o644)
+
+	actual, err := scan(identity, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ignored := pathList{"jonction"}
+	report := compare(ignored.filter(expected), ignored.filter(actual))
+	if len(report.extra) != 1 || report.extra[0].path != "intrus.txt" {
+		t.Errorf("en trop: %+v", report.extra)
+	}
+}

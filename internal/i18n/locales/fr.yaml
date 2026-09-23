@@ -176,20 +176,24 @@ recette.usage: |
   Commandes :
     generate <dossier> [--size <Mio>]     crée un jeu de données de recette
     manifest <dossier> [-o <fichier>]     établit les empreintes d'un dossier
-    compare <manifeste> <dossier>         vérifie un dossier restauré
+    compare <manifeste> <dossier> [--ignore <chemin>]  vérifie un dossier restauré
 recette.not_empty: "le dossier {{.Path}} n'est pas vide"
 recette.not_a_directory: "{{.Path}} n'est pas un dossier"
 recette.generated: "{{.Count}} fichiers de recette créés dans {{.Path}}"
 recette.scanning: "{{.Count}} éléments, {{.Size}} Mio lus…"
 recette.manifest_written: "Manifeste de {{.Count}} éléments écrit dans {{.Path}}"
 recette.malformed: "{{.Path}}, ligne {{.Line}} : manifeste illisible"
-recette.missing: "  absent     {{.Path}}"
-recette.different: "  différent  {{.Path}}"
-recette.extra: "  en trop    {{.Path}}"
+recette.missing: "  absent     {{.Path}} ({{.Kind}})"
+recette.different: "  différent  {{.Path}} ({{.Kind}})"
+recette.extra: "  en trop    {{.Path}} ({{.Kind}})"
 recette.more: "  … et {{.Count}} autre(s) écart(s)"
 recette.summary: "{{.Identical}} identique(s), {{.Missing}} absent(s), {{.Different}} différent(s), {{.Extra}} en trop"
 recette.passed: "Restauration fidèle : chaque élément est identique à l'original."
 recette.failed: "Restauration infidèle."
+recette.ignored: "Écarté de la comparaison : {{.Paths}}"
+recette.kind_file: "fichier"
+recette.kind_dir: "dossier"
+recette.kind_link: "lien vers {{.Target}}"
 
 schedule.usage: "Utilisation : borgui schedule [status] | daily <HH:MM> | weekly <jour> <HH:MM> | manual  (jours : monday … sunday)"
 schedule.invalid: "planification invalide : indiquez une heure HH:MM et, chaque semaine, un jour de monday à sunday"

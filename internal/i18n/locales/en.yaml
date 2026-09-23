@@ -173,20 +173,24 @@ recette.usage: |
   Commands:
     generate <folder> [--size <MiB>]      create an acceptance data set
     manifest <folder> [-o <file>]         record the checksums of a folder
-    compare <manifest> <folder>           check a restored folder
+    compare <manifest> <folder> [--ignore <path>]  check a restored folder
 recette.not_empty: "the folder {{.Path}} is not empty"
 recette.not_a_directory: "{{.Path}} is not a folder"
 recette.generated: "{{.Count}} acceptance files created in {{.Path}}"
 recette.scanning: "{{.Count}} items, {{.Size}} MiB read…"
 recette.manifest_written: "Manifest of {{.Count}} items written to {{.Path}}"
 recette.malformed: "{{.Path}}, line {{.Line}}: unreadable manifest"
-recette.missing: "  missing    {{.Path}}"
-recette.different: "  different  {{.Path}}"
-recette.extra: "  extra      {{.Path}}"
+recette.missing: "  missing    {{.Path}} ({{.Kind}})"
+recette.different: "  different  {{.Path}} ({{.Kind}})"
+recette.extra: "  extra      {{.Path}} ({{.Kind}})"
 recette.more: "  … and {{.Count}} more difference(s)"
 recette.summary: "{{.Identical}} identical, {{.Missing}} missing, {{.Different}} different, {{.Extra}} extra"
 recette.passed: "Faithful restore: every item is identical to the original."
 recette.failed: "Unfaithful restore."
+recette.ignored: "Left out of the comparison: {{.Paths}}"
+recette.kind_file: "file"
+recette.kind_dir: "folder"
+recette.kind_link: "link to {{.Target}}"
 
 schedule.usage: "Usage: borgui schedule [status] | daily <HH:MM> | weekly <day> <HH:MM> | manual  (days: monday … sunday)"
 schedule.invalid: "invalid schedule: give a time as HH:MM and, for weekly, a day from monday to sunday"

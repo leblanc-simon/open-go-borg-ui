@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
 )
 
 // maxReported borne le nombre d'écarts détaillés : au-delà, la liste n'aide
@@ -11,7 +12,9 @@ const maxReported = 50
 
 // commandCompare confronte un dossier restauré au manifeste des originaux.
 func commandCompare(t translate, args []string) (int, error) {
+	var ignored pathList
 	flags := flag.NewFlagSet("compare", flag.ContinueOnError)
+	flags.Var(&ignored, "ignore", "chemin relatif à écarter de la comparaison, répétable")
 	positional, err := parse(flags, args)
 	if err != nil || len(positional) != 2 {
 		return exitError, usageError{}
@@ -26,11 +29,16 @@ func commandCompare(t translate, args []string) (int, error) {
 		return exitError, err
 	}
 
+	expected, actual = ignored.filter(expected), ignored.filter(actual)
+	if len(ignored) > 0 {
+		fmt.Println(t("recette.ignored", map[string]any{"Paths": strings.Join(ignored, ", ")}))
+	}
+
 	report := compare(expected, actual)
 	reported := 0
 	show := func(key string, e entry) {
 		if reported < maxReported {
-			fmt.Println(t(key, map[string]any{"Path": e.path}))
+			fmt.Println(t(key, map[string]any{"Path": e.path, "Kind": kindLabel(t, e)}))
 		}
 		reported++
 	}
@@ -104,4 +112,48 @@ func compare(expected, actual []entry) comparison {
 		}
 	}
 	return result
+}
+
+// kindLabel décrit la nature d'un élément. La cible d'un lien est montrée :
+// c'est ce que la recette demande d'observer pour les jonctions Windows.
+func kindLabel(t translate, e entry) string {
+	switch e.kind {
+	case "d":
+		return t("recette.kind_dir")
+	case "l":
+		return t("recette.kind_link", map[string]any{"Target": e.digest})
+	default:
+		return t("recette.kind_file")
+	}
+}
+
+// pathList est une option répétable de chemins relatifs.
+type pathList []string
+
+func (p *pathList) String() string { return strings.Join(*p, ",") }
+
+func (p *pathList) Set(value string) error {
+	*p = append(*p, strings.Trim(strings.ReplaceAll(value, `\`, "/"), "/"))
+	return nil
+}
+
+// filter retire les entrées désignées, et tout ce qu'elles contiennent.
+func (p pathList) filter(entries []entry) []entry {
+	if len(p) == 0 {
+		return entries
+	}
+	kept := entries[:0:0]
+	for _, e := range entries {
+		skip := false
+		for _, ignored := range p {
+			if e.path == ignored || strings.HasPrefix(e.path, ignored+"/") {
+				skip = true
+				break
+			}
+		}
+		if !skip {
+			kept = append(kept, e)
+		}
+	}
+	return kept
 }
