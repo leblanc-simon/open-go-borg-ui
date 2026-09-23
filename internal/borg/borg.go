@@ -87,6 +87,12 @@ type Command struct {
 	Dir string
 	// PathMode choisit la convention appliquée aux Sources.
 	PathMode PathMode
+	// ExcludePaths sont des chemins natifs précis à écarter, calculés au
+	// moment de l'exécution — fichiers à la demande d'un service de
+	// stockage en ligne, par exemple. Le Runner les traduit dans la forme
+	// de l'archive, comme les Sources ; ils ne sont jamais enregistrés dans
+	// la configuration, où seuls des motifs portables ont leur place.
+	ExcludePaths []string
 	// Env est l'environnement Borg de l'exécution.
 	Env Environment
 	// LogJSON demande les événements de progression sur stderr. Le Runner les

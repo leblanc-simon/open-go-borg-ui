@@ -147,6 +147,9 @@ type CreateOptions struct {
 	// chemins absolus, afin de rester valides sur les deux plateformes
 	// (EF-43).
 	Excludes []string
+	// ExcludePaths sont des chemins natifs précis à écarter de cette
+	// exécution seulement.
+	ExcludePaths []string
 	// ExcludeCaches fait respecter CACHEDIR.TAG (EF-44).
 	ExcludeCaches bool
 	// OneFileSystem empêche de franchir les points de montage (EF-47).
@@ -188,14 +191,15 @@ func Create(ctx context.Context, runner Runner, opts CreateOptions) (*CreateStat
 	}
 
 	result, err := runner.Run(ctx, Command{
-		Name:     "create",
-		Flags:    flags,
-		Target:   "::" + archive,
-		Sources:  opts.Sources,
-		PathMode: PathSources,
-		Env:      opts.Env,
-		LogJSON:  true,
-		OnEvent:  opts.OnEvent,
+		Name:         "create",
+		Flags:        flags,
+		Target:       "::" + archive,
+		Sources:      opts.Sources,
+		PathMode:     PathSources,
+		ExcludePaths: opts.ExcludePaths,
+		Env:          opts.Env,
+		LogJSON:      true,
+		OnEvent:      opts.OnEvent,
 	})
 	if err != nil {
 		return nil, nil, err

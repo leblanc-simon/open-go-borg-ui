@@ -68,6 +68,11 @@ type Profile struct {
 	ExcludeCaches bool `toml:"exclude_caches"`
 	OneFileSystem bool `toml:"one_file_system"`
 
+	// IncludeCloudPlaceholders inclut les fichiers « à la demande » des
+	// services de stockage en ligne. Faux par défaut : les lire déclenche
+	// leur téléchargement complet (addendum §6.1).
+	IncludeCloudPlaceholders bool `toml:"include_cloud_placeholders"`
+
 	// Compression est la valeur transmise à Borg (lz4, zstd,3, zstd,9).
 	Compression string `toml:"compression"`
 

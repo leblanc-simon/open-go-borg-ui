@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -33,6 +34,12 @@ func (r *NativeRunner) Executable() string { return r.executable }
 
 // Run exécute la commande.
 func (r *NativeRunner) Run(ctx context.Context, cmd Command) (*Result, error) {
+	cmd, cleanup, err := withExcludeFile(cmd, nativeArchivePath, nativePath)
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
+
 	inv, err := r.invocation(cmd)
 	if err != nil {
 		return nil, err
@@ -70,3 +77,12 @@ func (r *NativeRunner) invocation(cmd Command) (invocation, error) {
 
 // nativePath laisse les chemins inchangés.
 func nativePath(path string) string { return path }
+
+// nativeArchivePath donne la forme qu'un chemin absolu prend dans l'archive :
+// Borg y retire la barre oblique initiale.
+func nativeArchivePath(path string) (string, error) {
+	if !filepath.IsAbs(path) {
+		return "", fmt.Errorf("borg: chemin absolu attendu: %s", path)
+	}
+	return strings.TrimPrefix(filepath.ToSlash(filepath.Clean(path)), "/"), nil
+}

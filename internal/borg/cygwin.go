@@ -91,6 +91,12 @@ func (r *CygwinRunner) Executable() string { return r.borgPath }
 
 // Run exécute la commande à travers le shell du runtime.
 func (r *CygwinRunner) Run(ctx context.Context, cmd Command) (*Result, error) {
+	cmd, cleanup, err := withExcludeFile(cmd, toDriveRelative, toCygwinPath)
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
+
 	inv, err := r.invocation(cmd)
 	if err != nil {
 		return nil, err
