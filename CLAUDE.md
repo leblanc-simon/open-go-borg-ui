@@ -92,6 +92,8 @@ Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors lign
 ```
 build/runtime/         recette de construction du runtime Cygwin livré aux postes Windows
 cmd/borgui/            ligne de commande v0.1 (une commande par fichier cmd_*.go)
+cmd/borgui-recette/    outil de recette : jeu de données piégé, manifeste d'empreintes, comparaison
+docs/recette-v0.1.md   procédure de recette TR-01 à TR-04, Windows puis Linux
 internal/borg/         pilotage de Borg : Runner, environnement, chemins, événements
 internal/borgruntime/  runtime Windows : téléchargement, empreinte, extraction
 internal/config/       configuration TOML et emplacements par plateforme
