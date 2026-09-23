@@ -23,6 +23,7 @@ cli.usage: |
     restore          restaure une sauvegarde dans un dossier neuf
     history          historique des sauvegardes de ce poste
     schedule         règle la sauvegarde automatique
+    retention        durée de conservation des sauvegardes
     state            état de ce poste, tel que déposé sur sa destination
 
   Options communes :
@@ -221,3 +222,18 @@ state.rejected_size: "fichier trop volumineux"
 state.rejected_version: "format produit par une version plus récente de l'application"
 state.rejected_invalid: "contenu illisible ou incohérent"
 state.publish_failed: "L'état de ce poste n'a pas pu être déposé sur sa destination : {{.Message}}"
+
+retention.usage: "Utilisation : borgui retention | set <jours> <semaines> <mois> [--yes]"
+retention.invalid: "chaque valeur doit être un nombre entier de 0 à {{.Max}}"
+retention.rules: "Conservation : une sauvegarde par jour sur {{.Daily}} jour(s), par semaine sur {{.Weekly}} semaine(s), par mois sur {{.Monthly}} mois"
+retention.horizon_months: "vous pourrez revenir en arrière jusqu'à {{.Count}} mois"
+retention.horizon_weeks: "vous pourrez revenir en arrière jusqu'à {{.Count}} semaine(s)"
+retention.horizon_days: "vous pourrez revenir en arrière jusqu'à {{.Count}} jour(s)"
+retention.horizon_all: "aucune sauvegarde n'est jamais retirée"
+retention.nothing_removed: "Aucune sauvegarde existante ne serait retirée."
+retention.would_remove: "{{.Count}} sauvegarde(s) existante(s) seraient retirées à la prochaine sauvegarde :"
+retention.more: "   … et {{.Count}} autre(s)"
+retention.confirm: "Confirmer ce réglage ? [o/N]"
+retention.confirm_required: "confirmation impossible sans terminal : relancez avec --yes pour l'accepter"
+retention.cancelled: "Réglage abandonné, rien n'a changé."
+retention.saved: "Conservation enregistrée. Elle s'appliquera à la prochaine sauvegarde."

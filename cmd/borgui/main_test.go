@@ -382,3 +382,62 @@ func TestInstallationDepuisConfiguration(t *testing.T) {
 		t.Errorf("timer absent: %v", err)
 	}
 }
+
+// pruneScript simule « borg prune --list --dry-run » : une sauvegarde gardée,
+// une retirée, sur la sortie d'erreur au format --log-json.
+const pruneScript = `
+case "$*" in
+*prune*)
+  echo '{"type":"log_message","levelname":"INFO","name":"borg.output.list","message":"Keeping archive (rule: daily #1):        poste-2026-09-24T22:00:00 Thu"}' >&2
+  echo '{"type":"log_message","levelname":"INFO","name":"borg.output.list","message":"Would prune:                             poste-2026-09-01T22:00:00 Mon"}' >&2
+  ;;
+esac
+exit 0
+`
+
+// TestConservationConfirmee vérifie EF-72 : l'aperçu est simulé, sans rien
+// supprimer, et le réglage enregistré une fois confirmé.
+func TestConservationConfirmee(t *testing.T) {
+	journal := poste(t, pruneScript, "--clear")
+
+	if code := run([]string{"retention", "set", "3", "0", "0", "--yes"}); code != exitSuccess {
+		t.Fatalf("retention set a retourné %d", code)
+	}
+	appels := lireJournal(t, journal)
+	if !strings.Contains(appels, "prune") || !strings.Contains(appels, "--dry-run") || !strings.Contains(appels, "--keep-daily 3") {
+		t.Errorf("aperçu inattendu:\n%s", appels)
+	}
+	cfg, _ := config.Load("")
+	if r := cfg.Profiles[0].Retention; r != (config.Retention{Daily: 3}) {
+		t.Errorf("conservation enregistrée: %+v", r)
+	}
+}
+
+// TestConservationSansConfirmation vérifie qu'un réglage qui retirerait des
+// sauvegardes n'est pas enregistré sans confirmation possible.
+func TestConservationSansConfirmation(t *testing.T) {
+	poste(t, pruneScript, "--clear")
+
+	if code := run([]string{"retention", "set", "3", "0", "0"}); code != exitError {
+		t.Fatalf("retention set sans terminal a retourné %d, attendu %d", code, exitError)
+	}
+	cfg, _ := config.Load("")
+	if r := cfg.Profiles[0].Retention; r != (config.Retention{Daily: 7, Weekly: 4, Monthly: 6}) {
+		t.Errorf("la conservation a changé sans confirmation: %+v", r)
+	}
+}
+
+// TestConservationInvalide vérifie qu'une saisie aberrante est refusée avant
+// tout appel au moteur.
+func TestConservationInvalide(t *testing.T) {
+	journal := poste(t, pruneScript, "--clear")
+	for _, args := range [][]string{{"-1", "0", "0"}, {"7", "4"}, {"sept", "4", "6"}, {"5000", "0", "0"}} {
+		if code := run(append([]string{"retention", "set"}, args...)); code != exitError {
+			t.Errorf("%v accepté", args)
+		}
+	}
+	if strings.Contains(lireJournal(t, journal), "prune") {
+		t.Error("le moteur ne doit pas être appelé")
+	}
+}
+

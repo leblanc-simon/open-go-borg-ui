@@ -20,6 +20,7 @@ cli.usage: |
     restore          restore a backup into a new folder
     history          backup history of this computer
     schedule         set up automatic backup
+    retention        how long backups are kept
     state            status of this computer, as stored on its destination
 
   Common options:
@@ -218,3 +219,18 @@ state.rejected_size: "file too large"
 state.rejected_version: "format written by a newer version of the application"
 state.rejected_invalid: "unreadable or inconsistent content"
 state.publish_failed: "This computer's status could not be stored on its destination: {{.Message}}"
+
+retention.usage: "Usage: borgui retention | set <days> <weeks> <months> [--yes]"
+retention.invalid: "each value must be a whole number from 0 to {{.Max}}"
+retention.rules: "Retention: one backup per day over {{.Daily}} day(s), per week over {{.Weekly}} week(s), per month over {{.Monthly}} month(s)"
+retention.horizon_months: "you will be able to go back up to {{.Count}} month(s)"
+retention.horizon_weeks: "you will be able to go back up to {{.Count}} week(s)"
+retention.horizon_days: "you will be able to go back up to {{.Count}} day(s)"
+retention.horizon_all: "no backup is ever removed"
+retention.nothing_removed: "No existing backup would be removed."
+retention.would_remove: "{{.Count}} existing backup(s) would be removed at the next backup:"
+retention.more: "   … and {{.Count}} more"
+retention.confirm: "Confirm this setting? [y/N]"
+retention.confirm_required: "cannot confirm without a terminal: run again with --yes to accept"
+retention.cancelled: "Setting abandoned, nothing changed."
+retention.saved: "Retention saved. It will apply at the next backup."

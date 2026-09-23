@@ -144,6 +144,8 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandSchedule(ctx, args)
 	case "state":
 		return a.commandState(ctx, args)
+	case "retention":
+		return a.commandRetention(ctx, args)
 	case "help", "--help", "-h":
 		fmt.Println(a.T("cli.usage"))
 		return exitSuccess, nil
@@ -159,4 +161,22 @@ func subcommand(args []string) (string, []string) {
 		return "", nil
 	}
 	return args[0], args[1:]
+}
+
+// parseInterleaved analyse des options mêlées aux arguments positionnels,
+// que le paquet flag n'admet pas seul : « set 7 4 6 --yes » comme
+// « set --yes 7 4 6 ».
+func parseInterleaved(flags *flag.FlagSet, args []string) ([]string, error) {
+	var positional []string
+	for {
+		if err := flags.Parse(args); err != nil {
+			return nil, err
+		}
+		args = flags.Args()
+		if len(args) == 0 {
+			return positional, nil
+		}
+		positional = append(positional, args[0])
+		args = args[1:]
+	}
 }
