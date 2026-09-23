@@ -161,6 +161,28 @@ wait $pid
 	}
 }
 
+// TestAnnulationDesEnfants vérifie que l'interruption atteint aussi les
+// enfants de Borg — ssh en pratique. Un enfant qui survivrait garderait les
+// sorties ouvertes et retiendrait la fin de l'exécution jusqu'au délai de
+// grâce.
+func TestAnnulationDesEnfants(t *testing.T) {
+	runner := fakeBorg(t, "sleep 30\n")
+
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		time.Sleep(200 * time.Millisecond)
+		cancel()
+	}()
+
+	started := time.Now()
+	if _, err := runner.Run(ctx, Command{Name: "create"}); err == nil {
+		t.Error("une annulation doit être rapportée comme telle")
+	}
+	if elapsed := time.Since(started); elapsed > 3*time.Second {
+		t.Errorf("annulation retenue par un enfant: %s", elapsed)
+	}
+}
+
 // TestVersion vérifie la lecture de la version du moteur.
 func TestVersion(t *testing.T) {
 	runner := fakeBorg(t, `echo "borg 1.4.5"`)

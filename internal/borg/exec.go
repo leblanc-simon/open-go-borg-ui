@@ -61,6 +61,7 @@ func run(ctx context.Context, inv invocation, onEvent func(Event)) (*Result, err
 	// Une annulation demande d'abord poliment l'arrêt : Borg relâche alors son
 	// verrou et laisse le dépôt utilisable, là où un processus tué impose un
 	// « break-lock » à la prochaine exécution.
+	prepareProcess(cmd)
 	cmd.Cancel = func() error { return interrupt(cmd) }
 	cmd.WaitDelay = interruptGrace
 
