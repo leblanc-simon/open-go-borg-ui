@@ -125,7 +125,7 @@ Priorités : **O** = obligatoire v1 · **I** = important · **S** = souhaité (p
 | Réf. | Exigence | Prio |
 |---|---|---|
 | EF-30 | Deux modes seulement sont exposés : « Chiffré » (`repokey-blake2`, proposé par défaut) et « Non chiffré » (`none`). Les modes intermédiaires de Borg ne sont pas exposés. | O |
-| EF-31 | Le choix est présenté **une seule fois**, sur un écran dédié de l'assistant, avec l'énoncé des deux conséquences : confidentialité vis-à-vis de l'hébergeur d'une part, risque de perte définitive en cas de passphrase égarée d'autre part. | O |
+| EF-31 | Le choix est présenté **une seule fois**, sur un écran dédié de l'assistant, avec l'énoncé des deux conséquences : confidentialité vis-à-vis de l'hébergeur d'une part, risque de perte définitive en cas de passphrase égarée d'autre part. Le mode chiffré y est présélectionné et signalé comme recommandé (PA-04). | O |
 | EF-32 | Le choix est présenté comme **irréversible** : un changement de mode impose la création d'un nouveau dépôt et la perte de l'historique. | O |
 | EF-33 | Le mode est affiché mais **non modifiable** ailleurs dans l'application. | O |
 | EF-34 | Pour un dépôt existant, le mode est **lu** via `borg info --json` et jamais redemandé à l'utilisateur. | O |
@@ -228,7 +228,7 @@ EI-01 | L'application comporte **au maximum quatre écrans** : État, Sauvegarde
 | EI-03 | Aucune opération ne bloque l'interface. Tout appel à Borg est asynchrone, avec progression et annulation lorsque c'est possible. | O |
 | EI-04 | Chaque erreur Borg connue est traduite en un message français accompagné d'une action proposée. Le journal brut reste accessible sous un dépliant « Détails ». | O |
 | EI-05 | L'application est pleinement utilisable sans jamais ouvrir l'écran Réglages. | O |
-| EI-06 | Langue : français par défaut, structure prête pour l'anglais. | I |
+| EI-06 | Langue : français par défaut, anglais complet dès la v1 (PA-05). | I |
 | EI-07 | Les écrans sont utilisables au clavier et lisibles à 125 % et 150 % de mise à l'échelle. | S |
 
 ---
@@ -305,9 +305,9 @@ BorgBackup 1.4  ──ssh port 23──►  Hetzner Storage Box
 
 | Réf. | Livrable |
 |---|---|
-| LI-01 | Code source complet, dépôt Git, licence à arbitrer (voir §12) |
+| LI-01 | Code source complet, dépôt Git, sous licence WTFPL (PA-01) |
 | LI-02 | Exécutable Windows x86-64 signé |
-| LI-03 | Exécutable Linux x86-64, plus paquet `.deb` et AppImage |
+| LI-03 | Exécutable Linux x86-64, plus paquet `.deb` — ni AppImage ni Flatpak (PA-06) |
 | LI-04 | Chaîne d'intégration continue produisant les artefacts, avec exécuteurs Windows et Linux (Fyne requiert CGO) |
 | LI-05 | Recette de construction du runtime Cygwin, reproductible, avec versions épinglées, et publication de l'archive et de son empreinte |
 | LI-06 | Documentation utilisateur : installation, première configuration, restauration, voie hors ligne |
@@ -394,14 +394,14 @@ Chaque test est binaire, exécuté sur les deux plateformes sauf mention contrai
 
 ## 12. Points à arbitrer avant démarrage
 
-| Réf. | Question | Impact |
-|---|---|---|
-| PA-01 | Licence du code (logiciel libre ou distribution fermée) | Aucune contrainte du côté de Fyne (BSD-3) ni de Go, mais détermine la stratégie de distribution et d'hébergement du runtime |
-| PA-02 | Budget pour un certificat de signature de code Windows | Sans signature, friction majeure au déploiement (SEC-02) |
-| PA-03 | Hébergement du runtime Cygwin et de son empreinte | GitHub Releases suffit ; à confirmer si la distribution est fermée |
-| PA-04 | Mode de chiffrement recommandé par défaut selon la nature des données | Détermine le libellé par défaut de l'écran EF-31, et l'exposition RGPD |
-| PA-05 | Anglais dès la v1 ou plus tard | Charge d'internationalisation |
-| PA-06 | Distribution Linux : `.deb` et AppImage suffisent, ou Flatpak attendu | Flatpak complique l'accès aux dossiers utilisateur et la planification systemd |
+| Réf. | Question | Impact | Décision |
+|---|---|---|---|
+| PA-01 | Licence du code (logiciel libre ou distribution fermée) | Aucune contrainte du côté de Fyne (BSD-3) ni de Go, mais détermine la stratégie de distribution et d'hébergement du runtime | **WTFPL** (24 septembre 2026) |
+| PA-02 | Budget pour un certificat de signature de code Windows | Sans signature, friction majeure au déploiement (SEC-02) | *ouvert* |
+| PA-03 | Hébergement du runtime Cygwin et de son empreinte | GitHub Releases suffit ; à confirmer si la distribution est fermée | **GitHub Releases** pour le moment (24 septembre 2026) |
+| PA-04 | Mode de chiffrement recommandé par défaut selon la nature des données | Détermine le libellé par défaut de l'écran EF-31, et l'exposition RGPD | **Chiffré** (`repokey-blake2`), présélectionné et signalé comme recommandé (24 septembre 2026) |
+| PA-05 | Anglais dès la v1 ou plus tard | Charge d'internationalisation | **Dès la v1** (24 septembre 2026) |
+| PA-06 | Distribution Linux : `.deb` et AppImage suffisent, ou Flatpak attendu | Flatpak complique l'accès aux dossiers utilisateur et la planification systemd | **`.deb` uniquement** (24 septembre 2026) |
 
 ---
 
