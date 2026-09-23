@@ -24,7 +24,7 @@ func TestEnvironnementNonChiffre(t *testing.T) {
 		Repository:     "ssh://u1@u1.your-storagebox.de:23/./poste",
 		Encrypted:      false,
 		PassCommandExe: "/usr/local/bin/borgui",
-	}.environ(nativePath)
+	}.environ(nativePath, nil)
 
 	if value, ok := lookup(env, "BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK"); !ok || value != "yes" {
 		t.Error("une destination non chiffrée doit accepter l'accès sans question")
@@ -42,7 +42,7 @@ func TestEnvironnementChiffre(t *testing.T) {
 		Encrypted:       true,
 		PassCommandExe:  `C:\Program Files\borgui\borgui.exe`,
 		PassCommandArgs: []string{"--print-passphrase", "Poste de Marc"},
-	}.environ(toCygwinPath)
+	}.environ(toCygwinPath, nil)
 
 	value, ok := lookup(env, "BORG_PASSCOMMAND")
 	if !ok {
@@ -67,7 +67,7 @@ func TestTransportSSH(t *testing.T) {
 		SSHKey:     `C:\Users\marc\AppData\Local\borgui\id_ed25519`,
 		KnownHosts: `C:\Users\marc\AppData\Local\borgui\known_hosts`,
 		Port:       23,
-	}.environ(toCygwinPath)
+	}.environ(toCygwinPath, nil)
 
 	rsh, ok := lookup(env, "BORG_RSH")
 	if !ok {
@@ -100,5 +100,93 @@ func TestProtectionShell(t *testing.T) {
 		if got := shellQuote(in); got != want {
 			t.Errorf("shellQuote(%q) = %q, attendu %q", in, got, want)
 		}
+	}
+}
+
+// shlexSplit découpe une chaîne comme shlex.split en mode POSIX, ce que fait
+// Borg de BORG_PASSCOMMAND : apostrophes littérales, guillemets avec
+// échappements, barre oblique inverse hors guillemets.
+func shlexSplit(t *testing.T, s string) []string {
+	t.Helper()
+	var words []string
+	var word strings.Builder
+	inWord := false
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		case c == '\'':
+			end := strings.IndexByte(s[i+1:], '\'')
+			if end < 0 {
+				t.Fatalf("apostrophe non fermée: %s", s)
+			}
+			word.WriteString(s[i+1 : i+1+end])
+			i += end + 1
+			inWord = true
+		case c == '"':
+			i++
+			for ; i < len(s) && s[i] != '"'; i++ {
+				if s[i] == '\\' && i+1 < len(s) && strings.IndexByte("\\\"$`", s[i+1]) >= 0 {
+					i++
+				}
+				word.WriteByte(s[i])
+			}
+			inWord = true
+		case c == '\\' && i+1 < len(s):
+			i++
+			word.WriteByte(s[i])
+			inWord = true
+		case c == ' ' || c == '\t':
+			if inWord {
+				words = append(words, word.String())
+				word.Reset()
+				inWord = false
+			}
+		default:
+			word.WriteByte(c)
+			inWord = true
+		}
+	}
+	if inWord {
+		words = append(words, word.String())
+	}
+	return words
+}
+
+// TestPassphraseDepuisCygdrive vérifie le correctif de l'anomalie relevée en
+// recette : sous Cygwin, la commande de passphrase est lancée par bash, qui
+// quitte /cygdrive avant d'exécuter l'application. La chaîne doit survivre au
+// découpage de Borg, espaces et apostrophes compris, et le script obtenu
+// doit à son tour désigner l'exécutable et ses arguments sans les altérer.
+func TestPassphraseDepuisCygdrive(t *testing.T) {
+	env := Environment{
+		Repository:      "ssh://u1@u1.your-storagebox.de:23/./poste",
+		Encrypted:       true,
+		PassCommandExe:  `C:\Users\Jean Dupont\AppData\Local\Programs\l'app\borgui.exe`,
+		PassCommandArgs: []string{"--print-passphrase", "Poste de Jean"},
+	}.environ(toCygwinPath, cygwinNativeCommand)
+
+	value, _ := lookup(env, "BORG_PASSCOMMAND")
+	argv := shlexSplit(t, value)
+	if len(argv) != 3 || argv[0] != "/usr/bin/bash" || argv[1] != "-c" {
+		t.Fatalf("découpage de Borg: %q", argv)
+	}
+	script, ok := strings.CutPrefix(argv[2], "cd / && exec ")
+	if !ok {
+		t.Fatalf("le script ne quitte pas /cygdrive: %q", argv[2])
+	}
+	got := shlexSplit(t, script)
+	want := []string{"/cygdrive/c/Users/Jean Dupont/AppData/Local/Programs/l'app/borgui.exe", "--print-passphrase", "Poste de Jean"}
+	if strings.Join(got, "|") != strings.Join(want, "|") {
+		t.Errorf("commande exécutée par bash: %q\nattendu: %q", got, want)
+	}
+}
+
+// TestPassphraseNative vérifie que Linux n'est pas concerné : aucune
+// enveloppe.
+func TestPassphraseNative(t *testing.T) {
+	env := Environment{Encrypted: true, PassCommandExe: "/usr/local/bin/borgui",
+		PassCommandArgs: []string{"--print-passphrase", "poste"}}.environ(nativePath, nil)
+	if value, _ := lookup(env, "BORG_PASSCOMMAND"); value != "/usr/local/bin/borgui --print-passphrase poste" {
+		t.Errorf("BORG_PASSCOMMAND = %q", value)
 	}
 }

@@ -19,6 +19,8 @@ import (
 	"strings"
 
 	"github.com/zalando/go-keyring"
+
+	"leblanc.io/open-go-borg-ui/internal/fsperm"
 )
 
 // service identifie l'application dans le trousseau.
@@ -92,7 +94,7 @@ func (s *Store) writeFallback(profile, passphrase string) error {
 	if err := os.MkdirAll(s.fallbackDir, 0o700); err != nil {
 		return fmt.Errorf("secret: création du dossier: %w", err)
 	}
-	if err := os.WriteFile(s.fallbackPath(profile), []byte(passphrase), 0o600); err != nil {
+	if err := fsperm.WritePrivate(s.fallbackPath(profile), []byte(passphrase)); err != nil {
 		return fmt.Errorf("secret: écriture du repli: %w", err)
 	}
 	return nil

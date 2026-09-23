@@ -2,6 +2,7 @@ package borg
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -34,6 +35,13 @@ const (
 	FailurePassphraseWrong
 	// FailureConnection : la destination n'a pas pu être jointe.
 	FailureConnection
+	// FailureKeyPermissions : la clé SSH est lisible par d'autres que son
+	// propriétaire, et ssh refuse de s'en servir.
+	FailureKeyPermissions
+	// FailureNativeLaunch : Cygwin n'a pas pu lancer un exécutable Windows
+	// depuis un répertoire virtuel. C'est un défaut de l'application, pas du
+	// poste.
+	FailureNativeLaunch
 )
 
 // TranslationKey retourne la clé de traduction du diagnostic. Le catalogue en
@@ -50,6 +58,10 @@ func (f Failure) TranslationKey() string {
 		return "error.passphrase_wrong"
 	case FailureConnection:
 		return "error.connection"
+	case FailureKeyPermissions:
+		return "error.key_permissions"
+	case FailureNativeLaunch:
+		return "error.native_launch"
 	default:
 		return "error.unknown"
 	}
@@ -86,6 +98,13 @@ func (r *Result) Diagnose() (Failure, bool) {
 	// messages, notamment ceux venant du transport SSH.
 	text := strings.ToLower(joinMessages(r.Messages))
 	switch {
+	// Avant la connexion : une clé refusée pour ses droits se termine aussi
+	// par « Permission denied (publickey ».
+	case strings.Contains(text, "unprotected private key file"),
+		strings.Contains(text, "bad permissions"):
+		return FailureKeyPermissions, true
+	case strings.Contains(text, "virtual cygwin directory"):
+		return FailureNativeLaunch, true
 	case strings.Contains(text, "failed to create/acquire the lock"),
 		strings.Contains(text, "lock.exclusive"):
 		return FailureRepositoryLocked, true
@@ -113,4 +132,20 @@ func (r *Result) Warnings() []Message {
 		}
 	}
 	return warnings
+}
+
+// CommandError est l'échec d'une commande Borg. Son texte complet, trace
+// Python comprise, est destiné au journal et à l'historique ; l'utilisateur
+// n'en voit que l'explication traduite de Diagnosis (EI-04).
+type CommandError struct {
+	Name      string
+	ExitCode  int
+	Diagnosis Failure
+	Messages  []Message
+}
+
+// Error retourne le texte complet de l'échec.
+func (e *CommandError) Error() string {
+	return fmt.Sprintf("borg: %s a échoué (code %d, %s): %s",
+		e.Name, e.ExitCode, e.Diagnosis.TranslationKey(), joinMessages(e.Messages))
 }

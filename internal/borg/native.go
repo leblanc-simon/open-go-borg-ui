@@ -52,7 +52,7 @@ func (r *NativeRunner) Version(ctx context.Context) (string, error) {
 	out, err := output(ctx, invocation{
 		Path:    r.executable,
 		Args:    []string{"--version"},
-		Env:     Environment{}.environ(nativePath),
+		Env:     Environment{}.environ(nativePath, nil),
 		Display: r.executable + " --version",
 	})
 	if err != nil {
@@ -70,7 +70,7 @@ func (r *NativeRunner) invocation(cmd Command) (invocation, error) {
 		Path:    r.executable,
 		Args:    args,
 		Dir:     cmd.Dir,
-		Env:     cmd.Env.environ(nativePath),
+		Env:     cmd.Env.environ(nativePath, nil),
 		Display: r.executable + " " + strings.Join(args, " "),
 	}, nil
 }

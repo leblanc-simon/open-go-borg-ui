@@ -259,6 +259,5 @@ func Extract(ctx context.Context, runner Runner, opts ExtractOptions) (*Result, 
 // diagnostic connu quand il y en a un.
 func failure(result *Result, name string) error {
 	diagnosis, _ := result.Diagnose()
-	return fmt.Errorf("borg: %s a échoué (code %d, %s): %s",
-		name, result.ExitCode, diagnosis.TranslationKey(), joinMessages(result.Messages))
+	return &CommandError{Name: name, ExitCode: result.ExitCode, Diagnosis: diagnosis, Messages: result.Messages}
 }

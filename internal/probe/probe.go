@@ -12,6 +12,8 @@ import (
 
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
+
+	"leblanc.io/open-go-borg-ui/internal/fsperm"
 )
 
 // Step identifie une étape du diagnostic. L'ordre est significatif : chaque
@@ -183,6 +185,16 @@ func reach(ctx context.Context, params Params) error {
 	return conn.Close()
 }
 
+// Dial ouvre une session SSH authentifiée par la clé de l'application, après
+// vérification de l'empreinte du serveur (SEC-04). C'est la connexion du
+// diagnostic, réutilisée par les échanges SFTP : l'épinglage y est le même.
+func Dial(ctx context.Context, params Params) (*ssh.Client, string, error) {
+	if params.Timeout == 0 {
+		params.Timeout = defaultTimeout
+	}
+	return connect(ctx, params)
+}
+
 // connect ouvre la session SSH et vérifie l'empreinte du serveur.
 func connect(ctx context.Context, params Params) (*ssh.Client, string, error) {
 	signer, err := EnsureKey(params.KeyPath)
@@ -228,7 +240,7 @@ func verifyHostKey(params Params, hostname string, remote net.Addr, key ssh.Publ
 		return fmt.Errorf("probe: dossier des empreintes: %w", err)
 	}
 	if _, err := os.Stat(params.KnownHostsPath); errors.Is(err, os.ErrNotExist) {
-		if err := os.WriteFile(params.KnownHostsPath, nil, 0o600); err != nil {
+		if err := fsperm.WritePrivate(params.KnownHostsPath, nil); err != nil {
 			return fmt.Errorf("probe: création du fichier d'empreintes: %w", err)
 		}
 	}

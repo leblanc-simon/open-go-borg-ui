@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/config"
@@ -214,11 +215,35 @@ func (a *app) repositoryUnlock(ctx context.Context) (int, error) {
 // le journal brut restant disponible (EI-04).
 func (a *app) borgFailure(result *borg.Result) error {
 	diagnosis, _ := result.Diagnose()
+	return errors.New(a.describeFailure(diagnosis, result.Warnings()))
+}
+
+// describeFailure rend un échec de Borg. Un échec diagnostiqué se résume à son
+// explication : la trace Python qui l'accompagne n'apprend rien à
+// l'utilisateur et noierait l'action à mener. Seul un échec inconnu montre les
+// messages bruts, faute de mieux.
+func (a *app) describeFailure(diagnosis borg.Failure, messages []borg.Message) string {
 	message := a.T(diagnosis.TranslationKey())
-	for _, warning := range result.Warnings() {
-		message += "\n" + a.T("cli.details", map[string]any{"Message": warning.Text})
+	if diagnosis != borg.FailureUnknown {
+		return message
 	}
-	return errors.New(message)
+	for _, m := range messages {
+		if strings.EqualFold(m.Level, "WARNING") || strings.EqualFold(m.Level, "ERROR") {
+			message += "\n" + a.T("cli.details", map[string]any{"Message": m.Text})
+		}
+	}
+	return message
+}
+
+// describeError rend une erreur à l'écran. Les échecs de Borg y sont
+// traduits ; le texte complet reste celui que consignent le journal et
+// l'historique.
+func (a *app) describeError(err error) string {
+	var failed *borg.CommandError
+	if errors.As(err, &failed) {
+		return a.describeFailure(failed.Diagnosis, failed.Messages)
+	}
+	return err.Error()
 }
 
 // ensurePassphrase vérifie qu'une passphrase est disponible pour un profil

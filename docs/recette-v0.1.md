@@ -112,6 +112,27 @@ Puis :
 .\borgui.exe @cfg key show               # déposer la clé dans la console Hetzner
 .\borgui.exe @cfg connection test --pin  # vérifier l'empreinte affichée avant d'accepter
 .\borgui.exe @cfg passphrase set
+```
+
+Deux contrôles, qui éprouvent les chemins où la recette a déjà buté
+(`docs/anomalie-permissions-cle-ssh.md`,
+`docs/anomalie-passcommand-cwd-cygdrive.md`) :
+
+```powershell
+$rt = "$env:LOCALAPPDATA\borgui\runtime\1.4.5-cygwin.1"
+# La clé telle que le ssh du runtime la voit. Attendu : -rw-------
+& "$rt\bin\bash.exe" -c 'export PATH=/usr/bin; ls -la "$(cygpath "$LOCALAPPDATA")/borgui/id_ed25519"'
+# Un exécutable Windows lancé depuis /cygdrive, comme Borg rappelle
+# l'application pour la passphrase. Attendu : OK
+# Sans guillemets imbriqués, que PowerShell 5 transmet mal : le sous-shell
+# quitte /cygdrive puis passe la main, comme le fait l'application.
+& "$rt\bin\bash.exe" -c 'cd /cygdrive && (cd / && exec /cygdrive/c/Windows/System32/cmd.exe /c echo OK)'
+```
+
+Toute autre sortie annonce l'échec de `backup` en mode chiffré : autant le voir
+ici qu'au travers d'une trace Python.
+
+```powershell
 .\borgui.exe @cfg repository init
 .\borgui.exe @cfg repository export-key  # à conserver ; l'étape 6 n'en a pas besoin, la clé est dans la destination
 .\borgui.exe @cfg backup                 # sauvegarde initiale : noter la durée affichée

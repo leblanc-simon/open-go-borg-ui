@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/borgruntime"
 	"leblanc.io/open-go-borg-ui/internal/config"
+	"leblanc.io/open-go-borg-ui/internal/fsperm"
 	"leblanc.io/open-go-borg-ui/internal/history"
 	"leblanc.io/open-go-borg-ui/internal/i18n"
 	"leblanc.io/open-go-borg-ui/internal/secret"
@@ -99,6 +101,15 @@ func (a *app) environment(profile *config.Profile) (borg.Environment, error) {
 	knownHosts, err := config.KnownHostsPath()
 	if err != nil {
 		return borg.Environment{}, err
+	}
+	// Le ssh du runtime refuse une clé lisible par d'autres que son
+	// propriétaire. Les droits sont remis en ordre avant chaque appel à
+	// Borg : une clé restaurée ou copiée à la main ne doit pas faire
+	// échouer une sauvegarde planifiée.
+	for _, path := range []string{keyPath, knownHosts} {
+		if err := fsperm.Restrict(path); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return borg.Environment{}, err
+		}
 	}
 	executable, err := os.Executable()
 	if err != nil {

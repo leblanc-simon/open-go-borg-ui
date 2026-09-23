@@ -124,7 +124,7 @@ func (r *CygwinRunner) invocation(cmd Command) (invocation, error) {
 		return invocation{}, err
 	}
 
-	env := cmd.Env.environ(toCygwinPath)
+	env := cmd.Env.environ(toCygwinPath, cygwinNativeCommand)
 	env = append(env, "PATH="+r.binDir()+string(os.PathListSeparator)+os.Getenv("PATH"))
 
 	return invocation{
@@ -200,6 +200,23 @@ func (r *CygwinRunner) convert(cmd Command) (workDir string, sources []string, f
 		}
 	}
 	return workDir, sources, flags, nil
+}
+
+// cygwinNativeCommand enveloppe dans le bash du runtime une commande que Borg
+// lance et qui désigne un exécutable Windows natif — l'application elle-même,
+// pour BORG_PASSCOMMAND.
+//
+// « borg create » tourne depuis /cygdrive, répertoire virtuel de Cygwin sans
+// équivalent Windows. Cygwin refuse d'y démarrer un exécutable natif, faute de
+// pouvoir lui donner un répertoire courant, et Python rapporte un trompeur
+// « NotADirectoryError » sur un exécutable pourtant présent (anomalie relevée
+// en recette v0.1). bash, binaire Cygwin, démarre sans difficulté ; il se
+// place à la racine du runtime, répertoire réel, avant de passer la main.
+//
+// Borg découpe la variable à la manière de shlex : la commande enveloppée est
+// donc citée d'un bloc, ses propres arguments l'étant déjà.
+func cygwinNativeCommand(command string) string {
+	return "/usr/bin/bash -c " + shellQuote("cd / && exec "+command)
 }
 
 // binDir retourne le dossier des exécutables du runtime, ajouté au PATH pour

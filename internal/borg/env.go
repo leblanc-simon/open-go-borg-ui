@@ -42,8 +42,9 @@ type Environment struct {
 
 // environ construit l'environnement du processus Borg. translate convertit un
 // chemin natif dans la forme comprise par l'exécutable ; nativePath convient
-// pour un Borg natif.
-func (e Environment) environ(translate func(string) string) []string {
+// pour un Borg natif. wrapNative, s'il est fourni, enveloppe les commandes que
+// Borg lance et qui désignent un exécutable natif du système.
+func (e Environment) environ(translate func(string) string, wrapNative func(string) string) []string {
 	env := os.Environ()
 
 	set := func(key, value string) {
@@ -59,7 +60,11 @@ func (e Environment) environ(translate func(string) string) []string {
 	}
 
 	if e.Encrypted {
-		set("BORG_PASSCOMMAND", e.passCommand(translate))
+		command := e.passCommand(translate)
+		if command != "" && wrapNative != nil {
+			command = wrapNative(command)
+		}
+		set("BORG_PASSCOMMAND", command)
 	} else {
 		// Sans cette variable, Borg pose une question interactive au premier
 		// accès à un dépôt non chiffré et toute sauvegarde planifiée reste

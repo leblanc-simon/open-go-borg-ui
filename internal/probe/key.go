@@ -14,6 +14,8 @@ import (
 	"path/filepath"
 
 	"golang.org/x/crypto/ssh"
+
+	"leblanc.io/open-go-borg-ui/internal/fsperm"
 )
 
 // EnsureKey retourne la clé SSH de l'application, en la créant si nécessaire.
@@ -23,6 +25,11 @@ import (
 // ne peut pas répondre à une invite de saisie.
 func EnsureKey(path string) (ssh.Signer, error) {
 	if signer, err := loadKey(path); err == nil {
+		// Une clé existante peut avoir été restaurée ou copiée avec des
+		// droits trop larges, que le ssh du runtime refuserait.
+		if err := fsperm.Restrict(path); err != nil {
+			return nil, err
+		}
 		return signer, nil
 	} else if !os.IsNotExist(errCause(err)) {
 		return nil, err
@@ -41,7 +48,7 @@ func EnsureKey(path string) (ssh.Signer, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
 		return nil, fmt.Errorf("probe: création du dossier de la clé: %w", err)
 	}
-	if err := os.WriteFile(path, pemEncode(block), 0o600); err != nil {
+	if err := fsperm.WritePrivate(path, pemEncode(block)); err != nil {
 		return nil, fmt.Errorf("probe: écriture de la clé: %w", err)
 	}
 
