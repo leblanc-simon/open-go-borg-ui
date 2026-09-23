@@ -441,3 +441,47 @@ func TestConservationInvalide(t *testing.T) {
 	}
 }
 
+// TestExportImportEntrePostes vérifie TR-52 : la configuration d'un poste,
+// exportée puis importée sur un poste neuf, n'y demande que le sous-compte.
+func TestExportImportEntrePostes(t *testing.T) {
+	poste(t, "exit 0", "--clear")
+	cfg, _ := config.Load("")
+	cfg.Profiles[0].Retention = config.Retention{Daily: 10, Monthly: 3}
+	cfg.Profiles[0].Excludes = []string{"**/node_modules"}
+	config.Save("", cfg)
+
+	export := filepath.Join(t.TempDir(), "poste.toml")
+	if code := run([]string{"config", "export", "-o", export}); code != exitSuccess {
+		t.Fatalf("export a retourné %d", code)
+	}
+	data, _ := os.ReadFile(export)
+	if strings.Contains(string(data), "u123456") {
+		t.Errorf("l'export contient le sous-compte du poste d'origine:\n%s", data)
+	}
+
+	// Un second poste, vierge.
+	autre := t.TempDir()
+	t.Setenv("HOME", autre)
+	t.Setenv("XDG_CONFIG_HOME", filepath.Join(autre, ".config"))
+	t.Setenv("XDG_DATA_HOME", filepath.Join(autre, ".local", "share"))
+
+	if code := run([]string{"config", "import", export}); code != exitError {
+		t.Errorf("un import sans sous-compte doit être refusé")
+	}
+	if code := run([]string{"config", "import", export, "--user", "u654321"}); code != exitSuccess {
+		t.Fatalf("import a retourné %d", code)
+	}
+	imported, err := config.Load("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := imported.Profiles[0]
+	if p.Destination.User != "u654321" || p.Destination.Repo != "poste-marc" ||
+		p.Retention != (config.Retention{Daily: 10, Monthly: 3}) || p.Excludes[0] != "**/node_modules" ||
+		p.Encryption != config.EncryptionNone {
+		t.Errorf("profil importé: %+v", p)
+	}
+	if code := run([]string{"config", "import", export, "--user", "u654321"}); code != exitError {
+		t.Error("un import ne doit jamais écraser une configuration existante")
+	}
+}
