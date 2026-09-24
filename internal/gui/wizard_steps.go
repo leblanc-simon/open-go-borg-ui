@@ -216,12 +216,21 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 		key.SetText(keyText)
 	})
 
+	// checkUser retourne la clé du message bloquant un sous-compte mal
+	// formé, ou "".
+	checkUser := func() string {
+		if profile.Destination.Kind == config.KindHetzner && !hetznerUser.MatchString(profile.Destination.User) {
+			return "wizard.destination.invalid_user"
+		}
+		return ""
+	}
+
 	var test *widget.Button
 	var runTest func(pin bool)
 	runTest = func(pin bool) {
-		if profile.Destination.Kind == config.KindHetzner && !hetznerUser.MatchString(profile.Destination.User) {
+		if key := checkUser(); key != "" {
 			results.RemoveAll()
-			results.Add(w.paragraph("wizard.destination.invalid_user"))
+			results.Add(w.paragraph(key))
 			return
 		}
 		test.Disable()
@@ -269,6 +278,7 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 		})
 	}
 	test = widget.NewButtonWithIcon(t("destination.test"), theme.MediaPlayIcon(), func() { runTest(false) })
+	installer := w.u.keyInstaller(func() (*config.Profile, error) { return profile, nil }, checkUser, func() { runTest(false) })
 
 	if w.state.DestinationChecked {
 		w.setReady(true)
@@ -281,6 +291,7 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle(t("destination.key"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 		key, container.NewHBox(copyKey), w.paragraph("destination.hetzner_steps"),
+		installer,
 		widget.NewSeparator(),
 		container.NewHBox(test), results,
 	)

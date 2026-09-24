@@ -195,22 +195,33 @@ func Dial(ctx context.Context, params Params) (*ssh.Client, string, error) {
 	return connect(ctx, params)
 }
 
-// connect ouvre la session SSH et vérifie l'empreinte du serveur.
+// connect ouvre la session SSH avec la clé de l'application et vérifie
+// l'empreinte du serveur.
 func connect(ctx context.Context, params Params) (*ssh.Client, string, error) {
 	signer, err := EnsureKey(params.KeyPath)
 	if err != nil {
 		return nil, "", err
 	}
+	client, fingerprint, _, err := dial(ctx, params, []ssh.AuthMethod{ssh.PublicKeys(signer)})
+	return client, fingerprint, err
+}
 
-	var fingerprint string
+// dial ouvre la session SSH avec les méthodes d'authentification données et
+// vérifie l'empreinte du serveur. verified indique que l'empreinte a été
+// acceptée : un échec survenu ensuite tient à l'authentification.
+func dial(ctx context.Context, params Params, auth []ssh.AuthMethod) (client *ssh.Client, fingerprint string, verified bool, err error) {
 	callback := func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 		fingerprint = ssh.FingerprintSHA256(key)
-		return verifyHostKey(params, hostname, remote, key)
+		if err := verifyHostKey(params, hostname, remote, key); err != nil {
+			return err
+		}
+		verified = true
+		return nil
 	}
 
 	config := &ssh.ClientConfig{
 		User:            params.User,
-		Auth:            []ssh.AuthMethod{ssh.PublicKeys(signer)},
+		Auth:            auth,
 		HostKeyCallback: callback,
 		Timeout:         params.Timeout,
 	}
@@ -219,15 +230,15 @@ func connect(ctx context.Context, params Params) (*ssh.Client, string, error) {
 	address := net.JoinHostPort(params.Host, fmt.Sprint(params.Port))
 	conn, err := dialer.DialContext(ctx, "tcp", address)
 	if err != nil {
-		return nil, fingerprint, fmt.Errorf("probe: connexion à %s: %w", address, err)
+		return nil, fingerprint, false, fmt.Errorf("probe: connexion à %s: %w", address, err)
 	}
 
 	sshConn, channels, requests, err := ssh.NewClientConn(conn, address, config)
 	if err != nil {
 		conn.Close()
-		return nil, fingerprint, fmt.Errorf("probe: authentification: %w", err)
+		return nil, fingerprint, verified, fmt.Errorf("probe: authentification: %w", err)
 	}
-	return ssh.NewClient(sshConn, channels, requests), fingerprint, nil
+	return ssh.NewClient(sshConn, channels, requests), fingerprint, verified, nil
 }
 
 // verifyHostKey confronte l'empreinte présentée au fichier known_hosts de

@@ -71,12 +71,14 @@ func newDestinationScreen(u *ui) *destinationScreen {
 
 	d.test = widget.NewButtonWithIcon(t("destination.test"), theme.MediaPlayIcon(), func() { d.runTest(false) })
 	d.results = container.NewVBox()
+	installer := u.keyInstaller(u.st.Profile, func() string { return "" }, func() { d.runTest(false) })
 
 	d.content = container.NewVScroll(container.NewPadded(container.NewVBox(
 		form,
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle(t("destination.key"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
 		d.key, container.NewHBox(copyKey), steps,
+		installer,
 		widget.NewSeparator(),
 		container.NewHBox(d.test), d.results,
 	)))
@@ -186,26 +188,12 @@ func (d *destinationScreen) diagnose(profile *config.Profile, pin bool) (lines [
 // nom, port, clé, moteur sur la destination. ok indique qu'elles ont toutes
 // abouti ; sinon, la dernière ligne porte l'action corrective.
 func (u *ui) probeDestination(profile *config.Profile, pin bool) (lines []testLine, fingerprint string, unknownHost, ok bool) {
-	repository, err := profile.Destination.RepositoryURL()
-	if err != nil {
-		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
-	}
-	host, port := station.HostPort(repository)
-	user := station.SSHUser(repository)
-	keyPath, err := u.st.SSHKeyPath(profile)
-	if err != nil {
-		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
-	}
-	knownHosts, err := config.KnownHostsPath()
+	params, err := u.probeParams(profile, pin)
 	if err != nil {
 		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
 	}
 
-	outcomes := probe.Run(context.Background(), probe.Params{
-		Host: host, Port: port, User: user,
-		KeyPath: keyPath, KnownHostsPath: knownHosts, AllowPinning: pin,
-		RemotePath: profile.Destination.RemotePath, Timeout: probeTimeout,
-	})
+	outcomes := probe.Run(context.Background(), params)
 	for _, outcome := range outcomes {
 		line := testLine{ok: outcome.OK, key: outcome.Step.TranslationKey()}
 		if outcome.OK {
@@ -228,6 +216,120 @@ func (u *ui) probeDestination(profile *config.Profile, pin bool) (lines []testLi
 		}
 	}
 	return lines, fingerprint, unknownHost, true
+}
+
+// probeParams décrit la connexion SSH à la destination du profil.
+func (u *ui) probeParams(profile *config.Profile, pin bool) (probe.Params, error) {
+	repository, err := profile.Destination.RepositoryURL()
+	if err != nil {
+		return probe.Params{}, err
+	}
+	host, port := station.HostPort(repository)
+	keyPath, err := u.st.SSHKeyPath(profile)
+	if err != nil {
+		return probe.Params{}, err
+	}
+	knownHosts, err := config.KnownHostsPath()
+	if err != nil {
+		return probe.Params{}, err
+	}
+	return probe.Params{
+		Host: host, Port: port, User: station.SSHUser(repository),
+		KeyPath: keyPath, KnownHostsPath: knownHosts, AllowPinning: pin,
+		RemotePath: profile.Destination.RemotePath, Timeout: probeTimeout,
+	}, nil
+}
+
+// keyInstaller propose de déposer la clé du poste avec le mot de passe du
+// compte, plutôt que de la coller dans la console Hetzner (EF-23, EF-24).
+// Les clés déjà autorisées sont conservées. profile fournit le profil à
+// l'instant du dépôt ; check retourne la clé d'un message bloquant, ou "" ;
+// done est appelé une fois la clé en place, pour enchaîner sur le test.
+func (u *ui) keyInstaller(profile func() (*config.Profile, error), check func() string, done func()) fyne.CanvasObject {
+	t := u.t
+	password := widget.NewPasswordEntry()
+	password.SetPlaceHolder(t("destination.password"))
+	result := container.NewVBox()
+
+	var install *widget.Button
+	var run func(pin bool)
+	run = func(pin bool) {
+		result.RemoveAll()
+		if key := check(); key != "" {
+			result.Add(u.renderLine(testLine{key: key}))
+			return
+		}
+		install.Disable()
+		result.Add(widget.NewLabel(t("destination.installing_key")))
+		secret := password.Text
+		var (
+			outcome probe.InstallResult
+			err     error
+		)
+		async(func() {
+			var current *config.Profile
+			var params probe.Params
+			if current, err = profile(); err != nil {
+				return
+			}
+			if params, err = u.probeParams(current, pin); err != nil {
+				return
+			}
+			outcome, err = probe.InstallKey(context.Background(), params, secret)
+		}, func() {
+			install.Enable()
+			result.RemoveAll()
+			switch {
+			case errors.Is(err, probe.ErrHostKeyUnknown):
+				result.Add(u.renderLine(testLine{key: "destination.fix_host_unknown"}))
+				u.confirmPin(outcome.Fingerprint, func() { run(true) })
+			case errors.Is(err, probe.ErrHostKeyChanged):
+				result.Add(u.renderLine(testLine{key: "destination.fix_host_changed", detail: err.Error()}))
+			case errors.Is(err, probe.ErrPasswordRejected):
+				result.Add(u.renderLine(testLine{key: "destination.fix_password"}))
+			case err != nil:
+				result.Add(u.renderLine(testLine{key: "destination.fix_install_key", detail: err.Error()}))
+			default:
+				// Le mot de passe ne sert qu'une fois : il ne reste pas à
+				// l'écran.
+				password.SetText("")
+				key := "destination.key_installed"
+				if !outcome.Added {
+					key = "destination.key_already_installed"
+				}
+				result.Add(u.renderLine(testLine{ok: true, key: key}))
+				done()
+			}
+		})
+	}
+	install = widget.NewButtonWithIcon(t("destination.install_key"), theme.UploadIcon(), func() { run(false) })
+	install.Disable()
+	password.OnChanged = func(value string) {
+		if value == "" {
+			install.Disable()
+		} else {
+			install.Enable()
+		}
+	}
+	password.OnSubmitted = func(string) {
+		if !install.Disabled() {
+			run(false)
+		}
+	}
+
+	return container.NewVBox(
+		widget.NewLabelWithStyle(t("destination.install_title"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
+		u.wrapped(t("destination.install_text")),
+		container.NewBorder(nil, nil, nil, install, password),
+		result,
+	)
+}
+
+// wrapped est un paragraphe qui revient à la ligne.
+func (u *ui) wrapped(text string) *widget.Label {
+	label := widget.NewLabel(text)
+	label.Wrapping = fyne.TextWrapWord
+	return label
 }
 
 // isMissing indique une destination encore vide.
