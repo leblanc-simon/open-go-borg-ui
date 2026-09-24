@@ -73,7 +73,7 @@ func newDestinationScreen(u *ui) *destinationScreen {
 	d.results = container.NewVBox()
 	installer := u.keyInstaller(u.st.Profile, func() string { return "" }, func() { d.runTest(false) })
 
-	d.content = container.NewVScroll(container.NewPadded(container.NewVBox(
+	d.content = page(pageHeader(t("destination.title"), t("destination.subtitle")), container.NewVScroll(container.NewVBox(
 		form,
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle(t("destination.key"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),

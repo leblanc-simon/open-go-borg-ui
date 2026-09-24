@@ -83,7 +83,8 @@ func newBackupScreen(u *ui) *backupScreen {
 		container.NewHBox(b.start, b.cancel),
 		b.progress, b.phase, b.counters, b.path, b.result,
 	)
-	b.content = container.NewPadded(container.NewBorder(nil, actions, nil, nil, folders))
+	b.content = page(pageHeader(t("backup_screen.title"), t("backup_screen.subtitle")),
+		container.NewBorder(nil, actions, nil, nil, folders))
 	b.loadSources()
 	return b
 }

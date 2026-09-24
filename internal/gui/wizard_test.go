@@ -232,7 +232,7 @@ func TestAssistantComplet(t *testing.T) {
 	advance(t, w, wizard.StepFinish)
 
 	test.Tap(w.next)
-	if u.wizard != nil || u.tabs == nil {
+	if u.wizard != nil || u.shell == nil {
 		t.Fatal("la fin de l'assistant doit ouvrir l'application")
 	}
 	cfg, err := config.Load("")

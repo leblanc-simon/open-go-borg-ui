@@ -217,6 +217,6 @@ func (w *wizardView) complete() {
 	if scheduleErr != nil {
 		dialog.ShowError(fmt.Errorf("%s", w.u.t("wizard.finish.schedule_failed", map[string]any{"Message": scheduleErr.Error()})), w.u.win)
 	}
-	w.u.tabs.Select(w.u.backupTab)
+	w.u.shell.show(screenBackup)
 	w.u.backup.run()
 }

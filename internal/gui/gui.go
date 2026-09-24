@@ -43,8 +43,7 @@ type ui struct {
 	home        *homeScreen
 	backup      *backupScreen
 	destination *destinationScreen
-	tabs        *container.AppTabs
-	backupTab   *container.TabItem
+	shell       *shell
 	wizard      *wizardView
 }
 
@@ -59,7 +58,8 @@ func NewWindow(app fyne.App, deps Deps) fyne.Window {
 func newWindow(app fyne.App, deps Deps, u *ui) fyne.Window {
 	u.app, u.st, u.t = app, deps.Station, deps.T
 	u.win = app.NewWindow(u.t("window.title"))
-	u.win.Resize(fyne.NewSize(760, 560))
+	u.win.Resize(fyne.NewSize(1040, 700))
+	u.applyTheme()
 
 	// Un poste sans configuration ouvre l'assistant de premier lancement,
 	// repris là où il s'était arrêté s'il avait été interrompu (EF-10,
@@ -79,20 +79,12 @@ func (u *ui) showMain() {
 	u.backup = newBackupScreen(u)
 	u.destination = newDestinationScreen(u)
 
-	homeTab := container.NewTabItemWithIcon(u.t("tab.home"), theme.HomeIcon(), u.home.content)
-	u.backupTab = container.NewTabItemWithIcon(u.t("tab.backup"), theme.UploadIcon(), u.backup.content)
-	u.tabs = container.NewAppTabs(
-		homeTab,
-		u.backupTab,
-		container.NewTabItemWithIcon(u.t("tab.destination"), theme.StorageIcon(), u.destination.content),
-	)
-	u.tabs.OnSelected = func(item *container.TabItem) {
-		if item == homeTab {
-			u.home.refresh()
-		}
-	}
-	u.win.SetContent(u.tabs)
-	u.home.refresh()
+	u.shell = newShell(u, []entry{
+		{theme.HomeIcon(), u.t("tab.home"), u.home.content},
+		{theme.UploadIcon(), u.t("tab.backup"), u.backup.content},
+		{theme.StorageIcon(), u.t("tab.destination"), u.destination.content},
+	})
+	u.win.SetContent(u.shell.content)
 }
 
 // async exécute work hors du fil de l'interface, puis done dans ce fil.

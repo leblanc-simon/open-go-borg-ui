@@ -155,8 +155,8 @@ func TestSauvegardeDepuisLEcran(t *testing.T) {
 	if len(runs) != 1 || runs[0].Status != history.StatusSuccess || runs[0].RepositorySize != 8192 {
 		t.Errorf("historique: %+v", runs)
 	}
-	if !strings.Contains(u.home.details.Text, "8.0 Kio") {
-		t.Errorf("espace occupé absent de l'écran État:\n%s", u.home.details.Text)
+	if u.home.space.Text != "8.0 Kio" {
+		t.Errorf("espace occupé sur l'écran État: %q", u.home.space.Text)
 	}
 }
 
@@ -184,5 +184,39 @@ exit 0
 	runs, _ := store.Recent(context.Background(), "poste", 10)
 	if len(runs) != 1 || runs[0].Status != history.StatusCancelled {
 		t.Errorf("historique: %+v", runs)
+	}
+}
+
+// TestNavigation vérifie que la barre latérale affiche un écran à la fois et
+// surligne son entrée.
+func TestNavigation(t *testing.T) {
+	u, _, _ := open(t, poste(t, "exit 0", true))
+	u.shell.show(screenDestination)
+	for i, item := range u.shell.items {
+		visible := u.shell.screens[i].Visible()
+		if want := screen(i) == screenDestination; item.selected != want || visible != want {
+			t.Errorf("écran %d: sélectionné %v, visible %v, attendu %v", i, item.selected, visible, want)
+		}
+	}
+	test.Tap(u.shell.items[screenHome])
+	if u.shell.current != screenHome || !u.home.content.Visible() {
+		t.Error("l'entrée État n'affiche pas l'écran État")
+	}
+}
+
+// TestApparence vérifie que le choix d'apparence parcourt système, clair et
+// sombre, et qu'il est retenu.
+func TestApparence(t *testing.T) {
+	u, _, _ := open(t, poste(t, "exit 0", true))
+	if u.themeMode() != themeSystem {
+		t.Fatalf("apparence initiale: %s", u.themeMode())
+	}
+	for _, want := range []themeMode{themeLight, themeDark, themeSystem} {
+		if got := u.cycleTheme(); got != want || u.themeMode() != want {
+			t.Errorf("apparence: %s, attendu %s", got, want)
+		}
+		if applied := fyne.CurrentApp().Settings().Theme().(*borguiTheme); applied.mode != want {
+			t.Errorf("thème appliqué: %s, attendu %s", applied.mode, want)
+		}
 	}
 }
