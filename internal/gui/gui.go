@@ -43,6 +43,9 @@ type ui struct {
 	home        *homeScreen
 	backup      *backupScreen
 	destination *destinationScreen
+	tabs        *container.AppTabs
+	backupTab   *container.TabItem
+	wizard      *wizardView
 }
 
 // NewWindow construit la fenêtre principale : quatre écrans au plus — État,
@@ -58,37 +61,38 @@ func newWindow(app fyne.App, deps Deps, u *ui) fyne.Window {
 	u.win = app.NewWindow(u.t("window.title"))
 	u.win.Resize(fyne.NewSize(760, 560))
 
+	// Un poste sans configuration ouvre l'assistant de premier lancement,
+	// repris là où il s'était arrêté s'il avait été interrompu (EF-10,
+	// EF-11).
 	if _, err := u.st.Profile(); err != nil {
-		u.win.SetContent(u.welcome())
+		u.showWizard()
 		return u.win
 	}
+	u.showMain()
+	return u.win
+}
 
+// showMain affiche les écrans de l'application : quatre au plus — État,
+// Sauvegarde, Destination, et plus tard Réglages.
+func (u *ui) showMain() {
 	u.home = newHomeScreen(u)
 	u.backup = newBackupScreen(u)
 	u.destination = newDestinationScreen(u)
 
 	homeTab := container.NewTabItemWithIcon(u.t("tab.home"), theme.HomeIcon(), u.home.content)
-	tabs := container.NewAppTabs(
+	u.backupTab = container.NewTabItemWithIcon(u.t("tab.backup"), theme.UploadIcon(), u.backup.content)
+	u.tabs = container.NewAppTabs(
 		homeTab,
-		container.NewTabItemWithIcon(u.t("tab.backup"), theme.UploadIcon(), u.backup.content),
+		u.backupTab,
 		container.NewTabItemWithIcon(u.t("tab.destination"), theme.StorageIcon(), u.destination.content),
 	)
-	tabs.OnSelected = func(item *container.TabItem) {
+	u.tabs.OnSelected = func(item *container.TabItem) {
 		if item == homeTab {
 			u.home.refresh()
 		}
 	}
-	u.win.SetContent(tabs)
+	u.win.SetContent(u.tabs)
 	u.home.refresh()
-	return u.win
-}
-
-// welcome est l'écran d'un poste sans configuration.
-func (u *ui) welcome() fyne.CanvasObject {
-	title := widget.NewLabelWithStyle(u.t("welcome.title"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
-	text := widget.NewLabel(u.t("welcome.no_config"))
-	text.Wrapping = fyne.TextWrapWord
-	return container.NewPadded(container.NewVBox(title, text))
 }
 
 // async exécute work hors du fil de l'interface, puis done dans ce fil.

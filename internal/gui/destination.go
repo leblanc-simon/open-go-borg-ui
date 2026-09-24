@@ -141,56 +141,20 @@ func (d *destinationScreen) runTest(pin bool) {
 		d.test.Enable()
 		d.results.RemoveAll()
 		for _, line := range lines {
-			d.results.Add(d.renderLine(line))
+			d.results.Add(d.u.renderLine(line))
 		}
 		if unknownHost {
-			d.confirmPin(fingerprint)
+			d.u.confirmPin(fingerprint, func() { d.runTest(true) })
 		}
 	})
 }
 
-// diagnose exécute les étapes, hors du fil de l'interface.
+// diagnose exécute les étapes, puis la lecture de la destination par Borg,
+// hors du fil de l'interface.
 func (d *destinationScreen) diagnose(profile *config.Profile, pin bool) (lines []testLine, fingerprint string, unknownHost bool) {
-	repository, err := profile.Destination.RepositoryURL()
-	if err != nil {
-		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false
-	}
-	host, port := station.HostPort(repository)
-	user := station.SSHUser(repository)
-	keyPath, err := d.u.st.SSHKeyPath(profile)
-	if err != nil {
-		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false
-	}
-	knownHosts, err := config.KnownHostsPath()
-	if err != nil {
-		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false
-	}
-
-	outcomes := probe.Run(context.Background(), probe.Params{
-		Host: host, Port: port, User: user,
-		KeyPath: keyPath, KnownHostsPath: knownHosts, AllowPinning: pin,
-		RemotePath: profile.Destination.RemotePath, Timeout: probeTimeout,
-	})
-	for _, outcome := range outcomes {
-		line := testLine{ok: outcome.OK, key: outcome.Step.TranslationKey()}
-		if outcome.OK {
-			line.detail = outcome.Detail
-		} else {
-			if outcome.Step == probe.StepAuthenticate {
-				fingerprint = outcome.Detail
-			}
-			if errors.Is(outcome.Err, probe.ErrHostKeyUnknown) {
-				unknownHost = true
-			}
-			if outcome.Err != nil {
-				line.detail = outcome.Err.Error()
-			}
-		}
-		lines = append(lines, line)
-		if !outcome.OK {
-			lines = append(lines, testLine{key: fixKey(outcome.Step, outcome.Err)})
-			return lines, fingerprint, unknownHost
-		}
+	lines, fingerprint, unknownHost, ok := d.u.probeDestination(profile, pin)
+	if !ok {
+		return lines, fingerprint, unknownHost
 	}
 
 	// Dernière étape : la destination elle-même, lue par Borg avec les
@@ -216,6 +180,54 @@ func (d *destinationScreen) diagnose(profile *config.Profile, pin bool) (lines [
 		lines = append(lines, testLine{key: errorKey(err), detail: err.Error()})
 	}
 	return lines, "", false
+}
+
+// probeDestination déroule les étapes du diagnostic de connexion (EF-25) :
+// nom, port, clé, moteur sur la destination. ok indique qu'elles ont toutes
+// abouti ; sinon, la dernière ligne porte l'action corrective.
+func (u *ui) probeDestination(profile *config.Profile, pin bool) (lines []testLine, fingerprint string, unknownHost, ok bool) {
+	repository, err := profile.Destination.RepositoryURL()
+	if err != nil {
+		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
+	}
+	host, port := station.HostPort(repository)
+	user := station.SSHUser(repository)
+	keyPath, err := u.st.SSHKeyPath(profile)
+	if err != nil {
+		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
+	}
+	knownHosts, err := config.KnownHostsPath()
+	if err != nil {
+		return []testLine{{key: "error.unknown", detail: err.Error()}}, "", false, false
+	}
+
+	outcomes := probe.Run(context.Background(), probe.Params{
+		Host: host, Port: port, User: user,
+		KeyPath: keyPath, KnownHostsPath: knownHosts, AllowPinning: pin,
+		RemotePath: profile.Destination.RemotePath, Timeout: probeTimeout,
+	})
+	for _, outcome := range outcomes {
+		line := testLine{ok: outcome.OK, key: outcome.Step.TranslationKey()}
+		if outcome.OK {
+			line.detail = outcome.Detail
+		} else {
+			if outcome.Step == probe.StepAuthenticate {
+				fingerprint = outcome.Detail
+			}
+			if errors.Is(outcome.Err, probe.ErrHostKeyUnknown) {
+				unknownHost = true
+			}
+			if outcome.Err != nil {
+				line.detail = outcome.Err.Error()
+			}
+		}
+		lines = append(lines, line)
+		if !outcome.OK {
+			lines = append(lines, testLine{key: fixKey(outcome.Step, outcome.Err)})
+			return lines, fingerprint, unknownHost, false
+		}
+	}
+	return lines, fingerprint, unknownHost, true
 }
 
 // isMissing indique une destination encore vide.
@@ -245,12 +257,12 @@ func fixKey(step probe.Step, err error) string {
 }
 
 // renderLine affiche une ligne du compte rendu.
-func (d *destinationScreen) renderLine(line testLine) fyne.CanvasObject {
+func (u *ui) renderLine(line testLine) fyne.CanvasObject {
 	icon := theme.ErrorIcon()
 	if line.ok {
 		icon = theme.ConfirmIcon()
 	}
-	text := d.u.t(line.key, line.data)
+	text := u.t(line.key, line.data)
 	if line.ok && line.detail != "" {
 		text += " — " + line.detail
 		line.detail = ""
@@ -261,18 +273,18 @@ func (d *destinationScreen) renderLine(line testLine) fyne.CanvasObject {
 	if line.detail == "" {
 		return row
 	}
-	return container.NewVBox(row, d.u.details(line.detail))
+	return container.NewVBox(row, u.details(line.detail))
 }
 
 // confirmPin montre l'empreinte d'un serveur encore inconnu et ne
-// l'enregistre qu'avec l'accord de l'utilisateur (EF-26).
-func (d *destinationScreen) confirmPin(fingerprint string) {
-	t := d.u.t
-	dialog.ShowConfirm(t("destination.pin_title"),
-		t("destination.pin_question", map[string]any{"Fingerprint": fingerprint}),
+// l'enregistre qu'avec l'accord de l'utilisateur, en relançant alors le test
+// (EF-26).
+func (u *ui) confirmPin(fingerprint string, retry func()) {
+	dialog.ShowConfirm(u.t("destination.pin_title"),
+		u.t("destination.pin_question", map[string]any{"Fingerprint": fingerprint}),
 		func(accepted bool) {
 			if accepted {
-				d.runTest(true)
+				retry()
 			}
-		}, d.u.win)
+		}, u.win)
 }

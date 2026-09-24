@@ -105,7 +105,7 @@ internal/config/       configuration TOML et emplacements par plateforme
 internal/core/         cœur applicatif : enchaînements partagés par la CLI et l'interface
 internal/format/       tailles, durées et débits lisibles, partagés par la CLI et l'interface
 internal/fsperm/       fichiers sensibles réservés au propriétaire (DACL protégée sous Windows)
-internal/gui/          interface Fyne : écrans État, Sauvegarde, Destination
+internal/gui/          interface Fyne : assistant de premier lancement, écrans État, Sauvegarde, Destination
 internal/history/      historique des exécutions (HistoryStore), SQLite pur Go
 internal/i18n/         catalogue de traductions embarqué (locales/fr.yaml, en.yaml)
 internal/lock/         verrou local par destination (EF-57), libéré par le système à la mort du processus
@@ -114,6 +114,7 @@ internal/station/      le poste : configuration, moteur, environnement Borg, ser
 internal/statusfile/   fichier d'état du poste, déposé par SFTP dans son propre sous-compte
 internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
+internal/wizard/       état de l'assistant : enchaînement des étapes, reprise après interruption
 ```
 
 Les chemins calculés à l'exécution (fichiers à la demande) passent au Runner par `Command.ExcludePaths`, en forme native : c'est lui qui les traduit en motifs `pp:` dans un fichier `--exclude-from`.

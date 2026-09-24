@@ -106,15 +106,15 @@ func texts(objects ...fyne.CanvasObject) string {
 	return b.String()
 }
 
-// TestAccueilSansConfiguration vérifie qu'un poste vierge ouvre l'écran
-// d'accueil plutôt que des écrans vides.
+// TestAccueilSansConfiguration vérifie qu'un poste vierge ouvre l'assistant
+// plutôt que des écrans vides.
 func TestAccueilSansConfiguration(t *testing.T) {
 	u, win, tr := open(t, poste(t, "exit 0", false))
-	if u.home != nil {
-		t.Error("aucun écran ne doit être construit sans configuration")
+	if u.home != nil || u.wizard == nil {
+		t.Error("un poste vierge doit ouvrir l'assistant, et lui seul")
 	}
-	if !strings.Contains(texts(win.Content()), tr("welcome.no_config")) {
-		t.Errorf("écran d'accueil absent:\n%s", texts(win.Content()))
+	if !strings.Contains(texts(win.Content()), tr("wizard.welcome.text")) {
+		t.Errorf("accueil de l'assistant absent:\n%s", texts(win.Content()))
 	}
 }
 
