@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -60,9 +61,40 @@ func poste(t *testing.T, script string, configured bool) *station.Station {
 	return st
 }
 
+// uiMu tient lieu de fil de l'interface. Le test le détient en permanence,
+// comme la boucle principale d'une vraie application, et ne le lâche que
+// pendant ses attentes : les retours des travaux de fond (onUI) ne
+// touchent ainsi jamais aux widgets en même temps que lui.
+var (
+	uiMu   sync.Mutex
+	uiHeld bool
+)
+
+func init() {
+	onUI = func(f func()) {
+		uiMu.Lock()
+		defer uiMu.Unlock()
+		f()
+	}
+}
+
+// holdUI fait du test le fil de l'interface, jusqu'à sa fin.
+func holdUI(t *testing.T) {
+	if uiHeld {
+		return
+	}
+	uiMu.Lock()
+	uiHeld = true
+	t.Cleanup(func() {
+		uiHeld = false
+		uiMu.Unlock()
+	})
+}
+
 // open construit la fenêtre sur le pilote de test.
 func open(t *testing.T, st *station.Station) (*ui, fyne.Window, translate) {
 	t.Helper()
+	holdUI(t)
 	test.NewTempApp(t)
 	loc := i18n.MustLoad("fr")
 	u := &ui{}
@@ -82,8 +114,16 @@ func waitFor(t *testing.T, what string, cond func() bool) {
 		if time.Now().After(deadline) {
 			t.Fatalf("délai dépassé en attendant : %s", what)
 		}
-		time.Sleep(10 * time.Millisecond)
+		pause(10 * time.Millisecond)
 	}
+}
+
+// pause laisse s'écouler d du temps, fil de l'interface libéré : les
+// travaux de fond peuvent y rendre compte.
+func pause(d time.Duration) {
+	uiMu.Unlock()
+	time.Sleep(d)
+	uiMu.Lock()
 }
 
 // texts rassemble les textes des étiquettes d'un conteneur.
@@ -173,7 +213,7 @@ exit 0
 
 	test.Tap(u.backup.start)
 	waitFor(t, "le démarrage", func() bool { return !u.backup.cancel.Hidden && !u.backup.cancel.Disabled() })
-	time.Sleep(200 * time.Millisecond)
+	pause(200 * time.Millisecond)
 	test.Tap(u.backup.cancel)
 	waitFor(t, "l'annulation", func() bool {
 		return strings.Contains(texts(u.backup.result), tr("backup_screen.cancelled"))
@@ -218,5 +258,28 @@ func TestApparence(t *testing.T) {
 		if applied := fyne.CurrentApp().Settings().Theme().(*borguiTheme); applied.mode != want {
 			t.Errorf("thème appliqué: %s, attendu %s", applied.mode, want)
 		}
+	}
+}
+
+// TestExclusionsDepuisLEcran vérifie EF-42 : une case de l'écran Sauvegarde
+// ajoute ou retire les motifs de son préréglage dans la configuration.
+func TestExclusionsDepuisLEcran(t *testing.T) {
+	u, _, _ := open(t, poste(t, "exit 0", true))
+	preset := config.ExcludePresets[2]
+	check := u.backup.presets[2]
+	if check.Checked {
+		t.Fatal("préréglage coché d'avance")
+	}
+
+	test.Tap(check)
+	cfg, err := config.Load("")
+	if err != nil || !config.PresetEnabled(cfg.Profiles[0].Excludes, preset) {
+		t.Fatalf("préréglage non enregistré: %+v, %v", cfg.Profiles[0].Excludes, err)
+	}
+
+	test.Tap(check)
+	cfg, _ = config.Load("")
+	if config.PresetEnabled(cfg.Profiles[0].Excludes, preset) {
+		t.Errorf("préréglage non retiré: %+v", cfg.Profiles[0].Excludes)
 	}
 }

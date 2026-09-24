@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
@@ -73,9 +72,8 @@ func newHomeScreen(u *ui) *homeScreen {
 
 	body := container.NewBorder(
 		container.NewVBox(h.bannerCard(), spacer(4), h.tiles(), spacer(4)),
-		nil, nil,
-		h.activityCard(),
-		container.NewVBox(h.destinationCard()),
+		nil, nil, nil,
+		split(container.NewVBox(h.destinationCard()), h.activityCard(), activityWidth),
 	)
 	h.content = page(header, body)
 	return h
@@ -168,14 +166,12 @@ func (h *homeScreen) activityCard() fyne.CanvasObject {
 	empty := muted(t("home.activity_empty"))
 	h.empty = container.NewCenter(empty)
 
-	width := canvas.NewRectangle(color.Transparent)
-	width.SetMinSize(fyne.NewSize(activityWidth, 0))
 	title := container.NewHBox(widget.NewIcon(theme.HistoryIcon()),
 		newText(t("home.activity"), theme.SizeNameText, theme.ColorNameForeground, fyne.TextStyle{Bold: true}))
-	return container.NewStack(width, card(container.NewBorder(
+	return card(container.NewBorder(
 		container.NewVBox(title, spacer(4)), nil, nil, nil,
 		container.NewStack(h.list, h.empty),
-	)))
+	))
 }
 
 // activityRow est une exécution du fil d'activité : son issue, son

@@ -6,7 +6,7 @@
 // réelle est créée par l'exécutable, et ce paquet se teste sans affichage.
 //
 // Aucune opération ne bloque l'interface (EI-03) : tout travail — Borg,
-// réseau, disque — part dans une goroutine et revient par fyne.Do.
+// réseau, disque — part dans une goroutine et revient par onUI.
 package gui
 
 import (
@@ -87,11 +87,15 @@ func (u *ui) showMain() {
 	u.win.SetContent(u.shell.content)
 }
 
+// onUI exécute f dans le fil de l'interface. Les tests le remplacent : le
+// pilote de test de Fyne exécute f sur place, en concurrence avec le test.
+var onUI = fyne.Do
+
 // async exécute work hors du fil de l'interface, puis done dans ce fil.
 func async(work func(), done func()) {
 	go func() {
 		work()
-		fyne.Do(done)
+		onUI(done)
 	}()
 }
 

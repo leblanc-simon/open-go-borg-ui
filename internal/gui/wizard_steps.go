@@ -97,7 +97,7 @@ func (w *wizardView) runtimeInstaller(done func()) fyne.CanvasObject {
 			return manager.Install(ctx, func(downloaded, total int64) {
 				if total > 0 {
 					value := float64(downloaded) / float64(total)
-					fyne.Do(func() { progress.SetValue(value) })
+					onUI(func() { progress.SetValue(value) })
 				}
 			})
 		})
@@ -193,8 +193,6 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 	}
 
 	key := widget.NewLabel("")
-	key.Wrapping = fyne.TextWrapBreak
-	key.TextStyle = fyne.TextStyle{Monospace: true}
 	copyKey := widget.NewButtonWithIcon(t("destination.copy_key"), theme.ContentCopyIcon(), func() {
 		w.u.app.Clipboard().SetContent(key.Text)
 	})
@@ -290,7 +288,7 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 		kind, hetznerForm, sshForm,
 		widget.NewSeparator(),
 		widget.NewLabelWithStyle(t("destination.key"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
-		key, container.NewHBox(copyKey), w.paragraph("destination.hetzner_steps"),
+		codeBlock(key), container.NewHBox(copyKey), w.paragraph("destination.hetzner_steps"),
 		installer,
 		widget.NewSeparator(),
 		container.NewHBox(test), results,

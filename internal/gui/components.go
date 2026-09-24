@@ -300,6 +300,16 @@ func card(content fyne.CanvasObject) fyne.CanvasObject {
 	)
 }
 
+// codeBlock présente un texte technique à copier — une clé, une adresse —
+// en police à chasse fixe, dans un encart.
+func codeBlock(label *widget.Label) fyne.CanvasObject {
+	label.Wrapping = fyne.TextWrapBreak
+	label.TextStyle = fyne.TextStyle{Monospace: true}
+	back := newSurface(colorInset, colorCardBorder)
+	back.radius = 8
+	return container.NewStack(back, container.NewPadded(label))
+}
+
 // caption est un intitulé de section, en petites capitales atténuées.
 func caption(value string) *text {
 	c := newText(value, sizeSmall, colorMuted, fyne.TextStyle{Bold: true})
@@ -316,7 +326,15 @@ func muted(value string) *text {
 // droite ses actions principales.
 func pageHeader(title, subtitle string, actions ...fyne.CanvasObject) fyne.CanvasObject {
 	heading := newText(title, theme.SizeNameHeadingText, theme.ColorNameForeground, fyne.TextStyle{Bold: true})
-	left := container.NewVBox(heading, muted(subtitle))
+	// La phrase revient à la ligne plutôt que d'imposer sa largeur à la
+	// fenêtre.
+	explanation := widget.NewLabel(subtitle)
+	explanation.Wrapping = fyne.TextWrapWord
+	explanation.Importance = widget.LowImportance
+	// Le titre prend la marge intérieure de l'étiquette, pour s'aligner sur
+	// elle.
+	inset := theme.Size(theme.SizeNameInnerPadding)
+	left := container.NewVBox(container.New(layout.NewCustomPaddedLayout(0, 0, inset, 0), heading), explanation)
 	if len(actions) == 0 {
 		return left
 	}
@@ -328,6 +346,68 @@ func pageHeader(title, subtitle string, actions ...fyne.CanvasObject) fyne.Canva
 func page(header, body fyne.CanvasObject) fyne.CanvasObject {
 	return container.New(layout.NewCustomPaddedLayout(20, 16, 28, 28),
 		container.NewBorder(container.NewVBox(header, spacer(8)), nil, nil, nil, body))
+}
+
+// column empile des cartes dans une colonne qui défile, avec l'écart
+// qu'il faut entre elles et la marge qui garde leur bordure visible.
+func column(cards ...fyne.CanvasObject) fyne.CanvasObject {
+	stack := container.NewVBox()
+	for i, c := range cards {
+		if i > 0 {
+			stack.Add(spacer(6))
+		}
+		stack.Add(c)
+	}
+	return container.NewVScroll(container.New(layout.NewCustomPaddedLayout(0, 2, 0, 2), stack))
+}
+
+// split place side à droite de main quand la place le permet, et dessous
+// sinon : une page à deux colonnes reste ainsi utilisable dans une fenêtre
+// étroite ou agrandie à 150 % (EI-07), sans imposer sa largeur à la
+// fenêtre.
+func split(main, side fyne.CanvasObject, sideWidth float32) *fyne.Container {
+	return container.New(&splitLayout{side: sideWidth}, main, side)
+}
+
+// splitMainWidth est la largeur en deçà de laquelle la colonne principale
+// ne partage plus la ligne.
+const splitMainWidth = 380
+
+type splitLayout struct {
+	side float32
+	// stacked indique la disposition retenue au dernier placement.
+	stacked bool
+}
+
+func (l *splitLayout) gap() float32 { return 2 * theme.Padding() }
+
+func (l *splitLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
+	main, side := objects[0], objects[1]
+	sideWidth := max(l.side, side.MinSize().Width)
+	mainWidth := size.Width - sideWidth - l.gap()
+	l.stacked = mainWidth < max(splitMainWidth, main.MinSize().Width)
+	if !l.stacked {
+		main.Move(fyne.NewPos(0, 0))
+		main.Resize(fyne.NewSize(mainWidth, size.Height))
+		side.Move(fyne.NewPos(mainWidth+l.gap(), 0))
+		side.Resize(fyne.NewSize(sideWidth, size.Height))
+		return
+	}
+	// Empilées : la colonne principale garde sa hauteur naturelle, la
+	// colonne secondaire — qui défile — prend le reste.
+	mainHeight := main.MinSize().Height
+	sideHeight := max(0, size.Height-mainHeight-l.gap())
+	main.Move(fyne.NewPos(0, 0))
+	main.Resize(fyne.NewSize(size.Width, mainHeight))
+	side.Move(fyne.NewPos(0, mainHeight+l.gap()))
+	side.Resize(fyne.NewSize(size.Width, sideHeight))
+}
+
+func (l *splitLayout) MinSize(objects []fyne.CanvasObject) fyne.Size {
+	// La hauteur minimale est celle de la disposition côte à côte : une
+	// fois empilée, la colonne secondaire défile dans ce qui reste.
+	main, side := objects[0].MinSize(), objects[1].MinSize()
+	return fyne.NewSize(max(main.Width, side.Width), max(main.Height, side.Height))
 }
 
 // spacer est un espace vertical fixe.

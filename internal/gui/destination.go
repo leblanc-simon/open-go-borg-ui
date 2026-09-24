@@ -3,11 +3,13 @@ package gui
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
@@ -21,13 +23,16 @@ import (
 // probeTimeout borne chaque étape du test de connexion.
 const probeTimeout = 20 * time.Second
 
-// destinationScreen est l'écran Destination (EF-20 à EF-26, EF-33).
+// destinationScreen est l'écran Destination (EF-20 à EF-26, EF-33) : où
+// partent les sauvegardes, la clé de ce poste, et le test de connexion.
 type destinationScreen struct {
 	u *ui
 
 	key     *widget.Label
 	test    *widget.Button
+	status  *badge
 	results *fyne.Container
+	report  fyne.CanvasObject
 
 	content fyne.CanvasObject
 }
@@ -42,48 +47,99 @@ func newDestinationScreen(u *ui) *destinationScreen {
 		return d
 	}
 
+	d.test = widget.NewButtonWithIcon(t("destination.test"), theme.MediaPlayIcon(), func() { d.runTest(false) })
+	d.test.Importance = widget.HighImportance
+
+	d.content = page(pageHeader(t("destination.title"), t("destination.subtitle"), d.test), column(
+		d.summaryCard(profile),
+		d.reportCard(),
+		d.keyCard(),
+	))
+	d.loadKey(profile)
+	return d
+}
+
+// summaryCard décrit la destination. Rien n'y est modifiable : le mode de
+// chiffrement est figé à la création (EF-32, EF-33).
+func (d *destinationScreen) summaryCard(profile *config.Profile) fyne.CanvasObject {
+	t := d.u.t
 	kind := t("destination.kind_hetzner")
 	if profile.Destination.Kind == config.KindSSH {
 		kind = t("destination.kind_ssh")
 	}
-	encryption := t("encryption.none")
-	if profile.Encryption.Encrypted() {
-		encryption = t("encryption.encrypted")
+	title := newText(kind, theme.SizeNameSubHeadingText, theme.ColorNameForeground, fyne.TextStyle{Bold: true})
+	title.truncate = true
+	address := newText("", sizeSmall, colorMuted, fyne.TextStyle{Monospace: true})
+	address.truncate = true
+	if url, err := profile.Destination.RepositoryURL(); err == nil {
+		address.SetText(url)
 	}
-	form := widget.NewForm(
-		widget.NewFormItem(t("destination.kind"), widget.NewLabel(kind)),
-		widget.NewFormItem(t("destination.account"), widget.NewLabel(profile.Destination.User)),
-		widget.NewFormItem(t("destination.name"), widget.NewLabel(profile.Destination.Repo)),
-		widget.NewFormItem(t("destination.engine"), widget.NewLabel(profile.Destination.RemotePath)),
-		// Le mode est affiché, jamais modifiable ici : il est figé à la
-		// création de la destination (EF-32, EF-33).
-		widget.NewFormItem(t("destination.encryption"), widget.NewLabel(t("destination.encryption_fixed", map[string]any{"Mode": encryption}))),
-	)
 
+	encryption := newBadge(strings.ToUpper(t("encryption.none")), toneWarning)
+	if profile.Encryption.Encrypted() {
+		encryption.Set(strings.ToUpper(t("encryption.encrypted")), toneSuccess)
+	}
+	d.status = newBadge(strings.ToUpper(t("destination.status_unknown")), toneNeutral)
+
+	fact := func(label, value string) fyne.CanvasObject {
+		v := newText(value, theme.SizeNameText, theme.ColorNameForeground, fyne.TextStyle{Bold: true})
+		v.truncate = true
+		return container.NewVBox(caption(strings.ToUpper(label)), v)
+	}
+	facts := container.NewGridWithColumns(3)
+	if profile.Destination.Kind == config.KindHetzner {
+		facts.Add(fact(t("destination.account"), profile.Destination.User))
+		facts.Add(fact(t("destination.name"), profile.Destination.Repo))
+	}
+	facts.Add(fact(t("destination.engine"), profile.Destination.RemotePath))
+
+	encryptionNote := widget.NewLabel(t("destination.encryption_note"))
+	encryptionNote.Wrapping = fyne.TextWrapWord
+	encryptionNote.Importance = widget.LowImportance
+
+	return card(container.NewVBox(
+		container.NewBorder(nil, nil,
+			container.NewCenter(newBubble(theme.StorageIcon(), toneInfo, 44)),
+			container.NewVBox(container.NewHBox(d.status, encryption), layout.NewSpacer()),
+			container.NewVBox(title, address)),
+		spacer(4), widget.NewSeparator(), spacer(4),
+		facts,
+		encryptionNote,
+	))
+}
+
+// reportCard accueille le compte rendu du test de connexion. Elle reste
+// masquée tant qu'aucun test n'a été lancé.
+func (d *destinationScreen) reportCard() fyne.CanvasObject {
+	d.results = container.NewVBox()
+	d.report = card(container.NewVBox(
+		caption(strings.ToUpper(d.u.t("destination.report"))), d.results))
+	d.report.Hide()
+	return d.report
+}
+
+// keyCard montre la clé de ce poste et les deux façons de l'autoriser sur
+// la destination : la déposer avec le mot de passe du compte, ou la coller
+// soi-même dans la console Hetzner (EF-23, EF-24).
+func (d *destinationScreen) keyCard() fyne.CanvasObject {
+	t := d.u.t
 	d.key = widget.NewLabel("")
-	d.key.Wrapping = fyne.TextWrapBreak
-	d.key.TextStyle = fyne.TextStyle{Monospace: true}
 	copyKey := widget.NewButtonWithIcon(t("destination.copy_key"), theme.ContentCopyIcon(), func() {
-		u.app.Clipboard().SetContent(d.key.Text)
+		d.u.app.Clipboard().SetContent(d.key.Text)
 	})
+	copyKey.Importance = widget.LowImportance
 	steps := widget.NewLabel(t("destination.hetzner_steps"))
 	steps.Wrapping = fyne.TextWrapWord
+	steps.Importance = widget.LowImportance
+	installer := d.u.keyInstaller(d.u.st.Profile, func() string { return "" }, func() { d.runTest(false) })
 
-	d.test = widget.NewButtonWithIcon(t("destination.test"), theme.MediaPlayIcon(), func() { d.runTest(false) })
-	d.results = container.NewVBox()
-	installer := u.keyInstaller(u.st.Profile, func() string { return "" }, func() { d.runTest(false) })
-
-	d.content = page(pageHeader(t("destination.title"), t("destination.subtitle")), container.NewVScroll(container.NewVBox(
-		form,
+	return card(container.NewVBox(
+		container.NewBorder(nil, nil, container.NewCenter(caption(strings.ToUpper(t("destination.key")))), copyKey),
+		codeBlock(d.key),
+		steps,
 		widget.NewSeparator(),
-		widget.NewLabelWithStyle(t("destination.key"), fyne.TextAlignLeading, fyne.TextStyle{Bold: true}),
-		d.key, container.NewHBox(copyKey), steps,
 		installer,
-		widget.NewSeparator(),
-		container.NewHBox(d.test), d.results,
-	)))
-	d.loadKey(profile)
-	return d
+	))
 }
 
 // loadKey affiche la clé publique, en la créant au besoin (EF-23).
@@ -124,8 +180,11 @@ type testLine struct {
 func (d *destinationScreen) runTest(pin bool) {
 	t := d.u.t
 	d.test.Disable()
+	d.report.Show()
+	d.content.Refresh()
 	d.results.RemoveAll()
 	d.results.Add(widget.NewLabel(t("destination.testing")))
+	d.status.Set(strings.ToUpper(t("destination.status_testing")), toneInfo)
 
 	var (
 		lines       []testLine
@@ -142,9 +201,17 @@ func (d *destinationScreen) runTest(pin bool) {
 	}, func() {
 		d.test.Enable()
 		d.results.RemoveAll()
+		reachable := len(lines) > 0
 		for _, line := range lines {
 			d.results.Add(d.u.renderLine(line))
+			reachable = reachable && line.ok
 		}
+		if reachable {
+			d.status.Set(strings.ToUpper(t("destination.status_ok")), toneSuccess)
+		} else {
+			d.status.Set(strings.ToUpper(t("destination.status_failed")), toneError)
+		}
+		d.content.Refresh()
 		if unknownHost {
 			d.u.confirmPin(fingerprint, func() { d.runTest(true) })
 		}
