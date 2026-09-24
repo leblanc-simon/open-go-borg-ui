@@ -38,6 +38,14 @@ type Environment struct {
 
 	// UploadRateLimit borne le débit montant en kio/s, 0 pour illimité.
 	UploadRateLimit int
+
+	// Probe interroge une destination sans connaître son chiffrement : Borg
+	// reçoit une passphrase explicitement vide plutôt qu'aucune. Sans elle,
+	// Borg la demanderait sur le terminal s'il en trouve un, et l'appel
+	// resterait suspendu. Une destination chiffrée répond alors
+	// « passphrase refusée », ce qui suffit à la reconnaître (EF-34). Une
+	// passphrase vide n'est pas un secret : SEC-05 est respecté.
+	Probe bool
 }
 
 // environ construit l'environnement du processus Borg. translate convertit un
@@ -59,7 +67,10 @@ func (e Environment) environ(translate func(string) string, wrapNative func(stri
 		set("BORG_BASE_DIR", translate(e.BaseDir))
 	}
 
-	if e.Encrypted {
+	if e.Probe {
+		env = append(env, "BORG_PASSPHRASE=")
+		set("BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK", "yes")
+	} else if e.Encrypted {
 		command := e.passCommand(translate)
 		if command != "" && wrapNative != nil {
 			command = wrapNative(command)

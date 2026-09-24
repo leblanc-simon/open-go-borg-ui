@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/schedule"
@@ -92,7 +90,7 @@ func (a *app) applySchedule(ctx context.Context, profile *config.Profile) (int, 
 		return exitSuccess, nil
 	}
 
-	task, err := a.scheduledTask(profile)
+	task, err := a.ScheduledTask(profile, a.T("schedule.task_description", map[string]any{"Profile": profile.Name}))
 	if err != nil {
 		return exitError, err
 	}
@@ -101,36 +99,6 @@ func (a *app) applySchedule(ctx context.Context, profile *config.Profile) (int, 
 	}
 	fmt.Println(a.T("schedule.installed", map[string]any{"Plan": a.describePlan(plan)}))
 	return exitSuccess, nil
-}
-
-// scheduledTask décrit ce que l'ordonnanceur doit lancer : cet exécutable, en
-// mode « --run <profil> » (EF-63), avec la configuration en cours si elle
-// n'est pas à son emplacement standard.
-func (a *app) scheduledTask(profile *config.Profile) (schedule.Task, error) {
-	executable, err := os.Executable()
-	if err != nil {
-		return schedule.Task{}, err
-	}
-	if resolved, err := filepath.EvalSymlinks(executable); err == nil {
-		executable = resolved
-	}
-
-	var args []string
-	if a.ConfigPath != "" {
-		path, err := filepath.Abs(a.ConfigPath)
-		if err != nil {
-			return schedule.Task{}, err
-		}
-		args = append(args, "--config", path)
-	}
-	args = append(args, "--run", profile.Name)
-
-	return schedule.Task{
-		Name:        config.SafeName(profile.Name),
-		Description: a.T("schedule.task_description", map[string]any{"Profile": profile.Name}),
-		Executable:  executable,
-		Args:        args,
-	}, nil
 }
 
 // scheduleStatus affiche la planification enregistrée et l'état de la tâche.

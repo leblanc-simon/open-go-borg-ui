@@ -5,10 +5,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"os/exec"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/borgruntime"
+	"leblanc.io/open-go-borg-ui/internal/station"
 )
 
 // commandRuntime installe ou inspecte le moteur de sauvegarde.
@@ -70,7 +70,7 @@ func (a *app) reportMissingEngine(err error) (int, error) {
 	// commande d'installation plutôt que de télécharger quoi que ce soit
 	// (EF-08).
 	return exitError, fmt.Errorf("%s", a.T("runtime.missing_linux", map[string]any{
-		"Command": installHint(),
+		"Command": station.InstallHint(),
 	}))
 }
 
@@ -86,7 +86,7 @@ func (a *app) runtimeInstall(ctx context.Context, args []string) (int, error) {
 
 	if !isWindows() {
 		return exitError, fmt.Errorf("%s", a.T("runtime.install_linux", map[string]any{
-			"Command": installHint(),
+			"Command": station.InstallHint(),
 		}))
 	}
 
@@ -150,25 +150,4 @@ func (a *app) progressBar() func(downloaded, total int64) {
 			"Downloaded": formatSize(downloaded),
 		}))
 	}
-}
-
-// installHint retourne la commande d'installation de Borg propre à la
-// distribution détectée.
-func installHint() string {
-	managers := []struct {
-		binary  string
-		command string
-	}{
-		{"apt", "sudo apt install borgbackup"},
-		{"dnf", "sudo dnf install borgbackup"},
-		{"zypper", "sudo zypper install borgbackup"},
-		{"pacman", "sudo pacman -S borg"},
-		{"apk", "sudo apk add borgbackup"},
-	}
-	for _, manager := range managers {
-		if _, err := exec.LookPath(manager.binary); err == nil {
-			return manager.command
-		}
-	}
-	return "borgbackup"
 }

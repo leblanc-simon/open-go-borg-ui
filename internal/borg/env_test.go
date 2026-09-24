@@ -190,3 +190,21 @@ func TestPassphraseNative(t *testing.T) {
 		t.Errorf("BORG_PASSCOMMAND = %q", value)
 	}
 }
+
+// TestSonde vérifie l'interrogation d'une destination au chiffrement
+// inconnu : une passphrase explicitement vide, jamais de commande de
+// passphrase, et l'accès sans question à une destination non chiffrée.
+func TestSonde(t *testing.T) {
+	t.Setenv("BORG_PASSPHRASE", "héritée-du-shell")
+	env := Environment{Probe: true, Encrypted: true, PassCommandExe: "/usr/local/bin/borgui"}.environ(nativePath, nil)
+
+	if value, ok := lookup(env, "BORG_PASSPHRASE"); !ok || value != "" {
+		t.Errorf("BORG_PASSPHRASE = %q, attendue vide", value)
+	}
+	if _, ok := lookup(env, "BORG_PASSCOMMAND"); ok {
+		t.Error("une sonde ne doit pas demander la passphrase à l'application")
+	}
+	if value, _ := lookup(env, "BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK"); value != "yes" {
+		t.Error("une destination non chiffrée doit répondre sans question")
+	}
+}

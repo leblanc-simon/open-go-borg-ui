@@ -148,22 +148,17 @@ func (a *app) repositoryExportKey(ctx context.Context) (int, error) {
 		return exitError, err
 	}
 
-	result, err := runner.Run(ctx, borg.Command{
-		Name:    "key",
-		Flags:   []string{"export", "--paper"},
-		Env:     env,
-		LogJSON: true,
-	})
+	key, result, err := borg.KeyExportPaper(ctx, runner, env)
 	if err != nil {
+		if result != nil {
+			return exitError, a.borgFailure(result)
+		}
 		return exitError, err
-	}
-	if result.Status == borg.StatusError {
-		return exitError, a.borgFailure(result)
 	}
 
 	fmt.Println(a.T("repository.key_intro"))
 	fmt.Println()
-	fmt.Print(string(result.Stdout))
+	fmt.Print(key)
 	fmt.Println()
 	fmt.Println(a.T("repository.key_warning"))
 	return exitSuccess, nil

@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -258,4 +259,57 @@ func SSHUser(repository string) string {
 		return ""
 	}
 	return parsed.User.Username()
+}
+
+// InstallHint retourne la commande d'installation de Borg propre à la
+// distribution Linux détectée : sous Linux, le moteur vient de la
+// distribution, l'application ne télécharge rien (EF-08).
+func InstallHint() string {
+	managers := []struct {
+		binary  string
+		command string
+	}{
+		{"apt", "sudo apt install borgbackup"},
+		{"dnf", "sudo dnf install borgbackup"},
+		{"zypper", "sudo zypper install borgbackup"},
+		{"pacman", "sudo pacman -S borg"},
+		{"apk", "sudo apk add borgbackup"},
+	}
+	for _, manager := range managers {
+		if _, err := exec.LookPath(manager.binary); err == nil {
+			return manager.command
+		}
+	}
+	return "borgbackup"
+}
+
+// ScheduledTask décrit ce que l'ordonnanceur doit lancer : cet exécutable, en
+// mode « --run <profil> » (EF-63), avec la configuration en cours si elle
+// n'est pas à son emplacement standard. description est le libellé, déjà
+// traduit, que montre l'ordonnanceur.
+func (s *Station) ScheduledTask(profile *config.Profile, description string) (schedule.Task, error) {
+	executable, err := os.Executable()
+	if err != nil {
+		return schedule.Task{}, err
+	}
+	if resolved, err := filepath.EvalSymlinks(executable); err == nil {
+		executable = resolved
+	}
+
+	var args []string
+	if s.ConfigPath != "" {
+		path, err := filepath.Abs(s.ConfigPath)
+		if err != nil {
+			return schedule.Task{}, err
+		}
+		args = append(args, "--config", path)
+	}
+	args = append(args, "--run", profile.Name)
+
+	return schedule.Task{
+		Name:        config.SafeName(profile.Name),
+		Description: description,
+		Executable:  executable,
+		Args:        args,
+	}, nil
 }

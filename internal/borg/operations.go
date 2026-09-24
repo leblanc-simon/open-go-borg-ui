@@ -261,3 +261,23 @@ func failure(result *Result, name string) error {
 	diagnosis, _ := result.Diagnose()
 	return &CommandError{Name: name, ExitCode: result.ExitCode, Diagnosis: diagnosis, Messages: result.Messages}
 }
+
+// KeyExportPaper retourne la clé de secours de la destination, sous la forme
+// imprimable de « borg key export --paper ». Avec la passphrase, c'est la
+// seule façon de relire les sauvegardes si la destination perd sa copie de la
+// clé : son export est obligatoire avant la première sauvegarde (EF-35).
+func KeyExportPaper(ctx context.Context, runner Runner, env Environment) (string, *Result, error) {
+	result, err := runner.Run(ctx, Command{
+		Name:    "key",
+		Flags:   []string{"export", "--paper"},
+		Env:     env,
+		LogJSON: true,
+	})
+	if err != nil {
+		return "", nil, err
+	}
+	if result.Status == StatusError {
+		return "", result, failure(result, "key export")
+	}
+	return string(result.Stdout), result, nil
+}
