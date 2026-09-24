@@ -58,6 +58,9 @@ func NewWindow(app fyne.App, deps Deps) fyne.Window {
 // les écrans.
 func newWindow(app fyne.App, deps Deps, u *ui) fyne.Window {
 	u.app, u.st, u.t = app, deps.Station, deps.T
+	// L'icône de l'application vaut pour toutes ses fenêtres, restauration
+	// comprise.
+	app.SetIcon(logoResource)
 	u.win = app.NewWindow(u.t("window.title"))
 	u.win.Resize(fyne.NewSize(1040, 700))
 	u.applyTheme()

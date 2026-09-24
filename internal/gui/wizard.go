@@ -166,6 +166,7 @@ func (w *wizardView) welcomeStep() fyne.CanvasObject {
 		}, w.u.win)
 	})
 	return container.NewVBox(
+		container.NewCenter(logo(128)),
 		w.paragraph("wizard.welcome.text"),
 		widget.NewSeparator(),
 		w.paragraph("wizard.welcome.import_text"),

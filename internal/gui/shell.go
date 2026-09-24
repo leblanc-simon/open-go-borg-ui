@@ -63,8 +63,7 @@ func newShell(u *ui, entries []entry) *shell {
 func (s *shell) sidebar(menu fyne.CanvasObject) fyne.CanvasObject {
 	t := s.u.t
 
-	logo := newBubble(theme.StorageIcon(), toneInfo, 40)
-	brand := container.NewHBox(logo, container.NewVBox(
+	brand := container.NewHBox(logo(44), container.NewVBox(
 		layout.NewSpacer(),
 		newText(t("window.title"), theme.SizeNameSubHeadingText, theme.ColorNameForeground, fyne.TextStyle{Bold: true}),
 		newText(t("sidebar.tagline"), sizeSmall, colorMuted, fyne.TextStyle{Bold: true}),

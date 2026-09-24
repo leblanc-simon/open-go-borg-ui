@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## État du dépôt
 
-Le projet (nom de travail : **BorgUI**) est une application desktop Go/Fyne de configuration et de supervision de sauvegardes BorgBackup vers une Hetzner Storage Box.
+Le projet, **OpenGoBorgUI**, est une application desktop Go/Fyne de configuration et de supervision de sauvegardes BorgBackup vers une Hetzner Storage Box.
+
+Le nom affiché est OpenGoBorgUI ; les identifiants techniques gardent l'ancien nom de travail et **ne se renomment pas** : exécutable `borgui`, dossiers `borgui` de configuration et de runtime, identifiant d'application `io.leblanc.borgui`, unités systemd `borgui-<profil>`, tâche Windows `BorgUI-<profil>`. Les changer rendrait orphelines la configuration et les tâches planifiées des postes déjà installés.
 
 La **v0.1** — la ligne de commande, sans interface — a été **validée sur matériel réel le 24 septembre 2026** : runtime Cygwin sous Windows, vraie Storage Box, restauration fidèle par le `borg` 1.4 officiel d'une machine Linux (recette `docs/recette-v0.1.md`). L'interface Fyne peut commencer. Les couches sans interface des jalons suivants (historique, planification, verrou, fichier d'état, fichiers à la demande) sont déjà en place.
 

@@ -1,7 +1,7 @@
 # Cahier des charges
 
 **Projet :** application desktop de configuration et de supervision de sauvegardes BorgBackup
-**Nom de travail :** BorgUI
+**Nom :** OpenGoBorgUI (nom de travail initial : BorgUI)
 **Version du document :** 1.0 — 3 septembre 2026
 **Statut :** à valider
 
