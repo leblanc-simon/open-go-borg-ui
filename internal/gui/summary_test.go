@@ -47,3 +47,24 @@ func TestSynthese(t *testing.T) {
 		t.Errorf("ancienneté: %v", s.Data)
 	}
 }
+
+// TestSyntheseVerification vérifie qu'une vérification de restauration en
+// échec fait passer au orange un état vert, et seulement lui.
+func TestSyntheseVerification(t *testing.T) {
+	failed := history.RestoreCheck{Outcome: history.OutcomeFailed}
+	green := Summarize([]history.Run{run(history.StatusSuccess, time.Hour)}, now)
+
+	if got := green.WithRestoreCheck(failed, true); got.Indicator != IndicatorOrange || got.Key != "home.verify_failed" {
+		t.Errorf("vérification en échec: %+v", got)
+	}
+	if got := green.WithRestoreCheck(history.RestoreCheck{Outcome: history.OutcomeIdentical}, true); got.Indicator != IndicatorGreen {
+		t.Errorf("vérification réussie: %+v", got)
+	}
+	if got := green.WithRestoreCheck(history.RestoreCheck{}, false); got.Indicator != IndicatorGreen {
+		t.Errorf("jamais vérifiée: %+v", got)
+	}
+	red := Summarize([]history.Run{run(history.StatusError, time.Hour)}, now)
+	if got := red.WithRestoreCheck(failed, true); got.Indicator != IndicatorRed || got.Key != "home.failed" {
+		t.Errorf("un état rouge garde sa phrase: %+v", got)
+	}
+}

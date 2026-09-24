@@ -157,6 +157,7 @@ func TestMigrationDepuisVersion1(t *testing.T) {
 	// Ramène la base à la version 1, comme l'aurait laissée l'application
 	// précédente.
 	for _, statement := range []string{
+		"DROP TABLE restore_checks",
 		"DROP TABLE catalog_entries",
 		"DROP TABLE catalogs",
 		"ALTER TABLE runs DROP COLUMN repository_size",

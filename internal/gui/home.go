@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"errors"
 	"image/color"
 	"strings"
 	"time"
@@ -13,6 +14,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"leblanc.io/open-go-borg-ui/internal/config"
+	"leblanc.io/open-go-borg-ui/internal/core"
 	"leblanc.io/open-go-borg-ui/internal/format"
 	"leblanc.io/open-go-borg-ui/internal/history"
 	"leblanc.io/open-go-borg-ui/internal/station"
@@ -50,6 +52,14 @@ type homeScreen struct {
 	protectedOf *text
 	added       *text
 
+	// Vérification de restauration (EF-99).
+	verifyBadge  *badge
+	verifyWhen   *text
+	verifyText   *widget.Label
+	verifyDetail *fyne.Container
+	verifyButton *widget.Button
+	verifyPanel  *fyne.Container
+
 	// Activité récente.
 	list  *widget.List
 	empty fyne.CanvasObject
@@ -75,7 +85,9 @@ func newHomeScreen(u *ui) *homeScreen {
 	body := container.NewBorder(
 		container.NewVBox(h.bannerCard(), spacer(4), h.tiles(), spacer(4)),
 		nil, nil, nil,
-		split(container.NewVBox(h.destinationCard()), h.activityCard(), activityWidth),
+		// La carte de la destination défile au besoin : sa hauteur ne doit
+		// pas s'imposer à la fenêtre.
+		split(column(h.destinationCard()), h.activityCard(), activityWidth),
 	)
 	h.content = page(header, body)
 	return h
@@ -150,7 +162,119 @@ func (h *homeScreen) destinationCard() fyne.CanvasObject {
 		spacer(6),
 		caption(strings.ToUpper(t("home.last_added"))),
 		h.added,
+		spacer(6),
+		widget.NewSeparator(),
+		spacer(6),
+		h.verificationSection(),
 	))
+}
+
+// verificationSection montre la dernière vérification de restauration :
+// un fichier tiré au hasard, extrait et comparé à l'original, une fois par
+// mois (EF-99).
+func (h *homeScreen) verificationSection() fyne.CanvasObject {
+	t := h.u.t
+	h.verifyBadge = newBadge("", toneNeutral)
+	h.verifyWhen = newText("", theme.SizeNameText, theme.ColorNameForeground, fyne.TextStyle{Bold: true}).abbreviated()
+	h.verifyText = widget.NewLabel("")
+	h.verifyText.Wrapping = fyne.TextWrapWord
+	h.verifyText.Importance = widget.LowImportance
+	h.verifyDetail = container.NewVBox()
+	h.verifyButton = widget.NewButtonWithIcon(t("verify.now"), theme.ConfirmIcon(), h.verifyNow)
+	h.verifyButton.Importance = widget.LowImportance
+	h.verifyPanel = container.NewVBox(
+		container.NewBorder(nil, nil, caption(strings.ToUpper(t("verify.title"))), container.NewCenter(h.verifyBadge)),
+		h.verifyWhen,
+		h.verifyText,
+		h.verifyDetail,
+		container.NewHBox(h.verifyButton),
+	)
+	return h.verifyPanel
+}
+
+// relayoutVerification remet la section en page : la pastille change de
+// largeur avec son texte, et le dépliant « Détails » apparaît ou disparaît.
+func (h *homeScreen) relayoutVerification() {
+	h.verifyPanel.Refresh()
+}
+
+// showVerification affiche la dernière vérification, ou son absence.
+func (h *homeScreen) showVerification(check history.RestoreCheck, ok bool) {
+	t := h.u.t
+	h.verifyDetail.RemoveAll()
+	if !ok {
+		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_never")), toneNeutral)
+		h.verifyWhen.SetText(t("verify.never_title"))
+		h.verifyText.SetText(t("verify.never"))
+		h.relayoutVerification()
+		return
+	}
+	date := map[string]any{"Date": check.Checked.Local().Format("2006-01-02")}
+	switch check.Outcome {
+	case history.OutcomeIdentical:
+		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_identical")), toneSuccess)
+		h.verifyWhen.SetText(t("verify.checked_on", date))
+	case history.OutcomeExtracted:
+		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_extracted")), toneInfo)
+		h.verifyWhen.SetText(t("verify.checked_on", date))
+	default:
+		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_failed")), toneError)
+		h.verifyWhen.SetText(t("verify.failed_on", date))
+	}
+	h.verifyText.SetText(t(check.Reason, map[string]any{"Path": check.Native}))
+	if check.Detail != "" {
+		h.verifyDetail.Add(h.u.details(check.Detail))
+	}
+	h.relayoutVerification()
+}
+
+// verifyNow vérifie une restauration sans attendre l'échéance mensuelle,
+// sur la sauvegarde la plus récente.
+func (h *homeScreen) verifyNow() {
+	t := h.u.t
+	h.verifyButton.Disable()
+	h.verifyBadge.Set(strings.ToUpper(t("verify.badge_running")), toneInfo)
+	h.verifyText.SetText(t("verify.running"))
+	h.verifyDetail.RemoveAll()
+	h.relayoutVerification()
+	var err error
+	async(func() {
+		var profile *config.Profile
+		if profile, err = h.u.st.Profile(); err != nil {
+			return
+		}
+		runner, runnerErr := h.u.st.Runner()
+		if err = runnerErr; err != nil {
+			return
+		}
+		env, envErr := h.u.st.Environment(profile)
+		if err = envErr; err != nil {
+			return
+		}
+		store, storeErr := h.u.st.History()
+		if err = storeErr; err != nil {
+			return
+		}
+		defer store.Close()
+		_, err = core.VerifyLatest(backgroundContext(), runner, env, store, profile.Name, h.u.st.LockDir(), time.Now())
+	}, func() {
+		h.verifyButton.Enable()
+		if err != nil {
+			key := errorKey(err)
+			if errors.Is(err, core.ErrNothingToVerify) {
+				key = "verify.nothing"
+			}
+			h.verifyBadge.Set(strings.ToUpper(t("verify.badge_impossible")), toneWarning)
+			h.verifyText.SetText(t(key))
+			h.verifyDetail.RemoveAll()
+			if !errors.Is(err, core.ErrNothingToVerify) {
+				h.verifyDetail.Add(h.u.details(err.Error()))
+			}
+			h.relayoutVerification()
+			return
+		}
+		h.refresh()
+	})
 }
 
 // activityCard est le fil des dernières exécutions.
@@ -219,6 +343,9 @@ func (h *homeScreen) fillActivity(run history.Run, item fyne.CanvasObject) {
 	row.when.SetText(format.Ago(t, run.Started, h.now))
 	row.title.SetText(t("home.activity_" + string(run.Status)))
 	row.summary.SetText(h.runSummary(run))
+	// La pastille et l'ancienneté changent de largeur : la ligne se remet
+	// en page.
+	row.content.Refresh()
 }
 
 // runSummary résume une exécution en une ligne.
@@ -269,6 +396,8 @@ func (h *homeScreen) refresh() {
 		profile *config.Profile
 		runs    []history.Run
 		next    time.Time
+		check   history.RestoreCheck
+		checked bool
 		loadErr error
 	)
 	async(func() {
@@ -284,7 +413,10 @@ func (h *homeScreen) refresh() {
 			return
 		}
 		defer store.Close()
-		runs, loadErr = store.Recent(backgroundContext(), profile.Name, historyDepth)
+		if runs, loadErr = store.Recent(backgroundContext(), profile.Name, historyDepth); loadErr != nil {
+			return
+		}
+		check, checked, loadErr = store.LastRestoreCheck(backgroundContext(), profile.Name)
 	}, func() {
 		if generation != h.generation {
 			return
@@ -295,12 +427,14 @@ func (h *homeScreen) refresh() {
 			h.details.SetText(loadErr.Error())
 			return
 		}
-		h.show(profile, runs, next, time.Now())
+		h.show(profile, runs, next, time.Now(), check, checked)
+		h.showVerification(check, checked)
 	})
 }
 
 // show affiche l'historique relu.
-func (h *homeScreen) show(profile *config.Profile, runs []history.Run, next time.Time, now time.Time) {
+func (h *homeScreen) show(profile *config.Profile, runs []history.Run, next time.Time, now time.Time,
+	check history.RestoreCheck, checked bool) {
 	t := h.u.t
 	h.runs, h.now = runs, now
 	h.list.Refresh()
@@ -310,7 +444,7 @@ func (h *homeScreen) show(profile *config.Profile, runs []history.Run, next time
 		h.empty.Hide()
 	}
 
-	summary := Summarize(runs, now)
+	summary := Summarize(runs, now).WithRestoreCheck(check, checked)
 	switch summary.Indicator {
 	case IndicatorGreen:
 		h.setTone(toneSuccess, theme.ConfirmIcon())

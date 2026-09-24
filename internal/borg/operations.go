@@ -56,6 +56,7 @@ type ArchiveList struct {
 type CreateStats struct {
 	Archive struct {
 		Name     string  `json:"name"`
+		ID       string  `json:"id"`
 		Duration float64 `json:"duration"`
 		Stats    struct {
 			OriginalSize     int64 `json:"original_size"`

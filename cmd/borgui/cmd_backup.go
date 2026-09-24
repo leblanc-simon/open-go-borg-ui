@@ -65,6 +65,8 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 				progressLine(a.T("backup.pruning"))
 			case core.PhaseCompact:
 				progressLine(a.T("backup.compacting"))
+			case core.PhaseVerify:
+				progressLine(a.T("backup.verifying"))
 			}
 		},
 		OnEvent: a.backupProgress(),
@@ -107,6 +109,16 @@ func (a *app) commandBackup(ctx context.Context, args []string) (int, error) {
 	}
 	if stats.Archive.Name != "" {
 		fmt.Println(a.T("backup.archive_name", map[string]any{"Name": stats.Archive.Name}))
+	}
+
+	if check := report.Verification; check != nil {
+		// La vérification mensuelle a eu lieu : son issue est rapportée,
+		// sans changer celle de la sauvegarde, déjà faite (EF-99).
+		fmt.Println(a.T(check.Reason, map[string]any{"Path": check.Native}))
+	}
+	if report.VerifyErr != nil {
+		notice(a.T("verify.impossible"))
+		notice(a.T("cli.details", map[string]any{"Message": report.VerifyErr.Error()}))
 	}
 
 	code := exitSuccess

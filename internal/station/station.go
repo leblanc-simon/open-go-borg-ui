@@ -220,6 +220,9 @@ func (s *Station) BackupService(profile *config.Profile, runner borg.Runner, sto
 		Publish:  s.StatePublisher(profile),
 		Hostname: Hostname(),
 		NextRun:  NextRun(profile),
+		// La vérification mensuelle d'une restauration suit la sauvegarde,
+		// planifiée ou non : l'application n'a pas de démon (EF-99).
+		VerifyRestores: true,
 	}
 }
 

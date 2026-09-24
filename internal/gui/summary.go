@@ -76,3 +76,16 @@ func Summarize(runs []history.Run, now time.Time) Summary {
 	}
 	return summary
 }
+
+// WithRestoreCheck tient compte de la dernière vérification de
+// restauration (EF-99) : une vérification en échec signale une sauvegarde
+// qui ne se relit pas, et fait passer au orange un état qui serait vert.
+// Un état déjà orange ou rouge garde sa phrase : elle dit ce qu'il y a de
+// plus urgent.
+func (s Summary) WithRestoreCheck(check history.RestoreCheck, ok bool) Summary {
+	if !ok || check.Outcome != history.OutcomeFailed || s.Indicator != IndicatorGreen {
+		return s
+	}
+	s.Indicator, s.Key, s.Data = IndicatorOrange, "home.verify_failed", nil
+	return s
+}

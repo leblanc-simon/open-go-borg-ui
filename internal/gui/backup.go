@@ -417,6 +417,7 @@ func (b *backupScreen) showPhase(phase core.Phase) {
 		core.PhaseBackup:    "backup_screen.running",
 		core.PhasePrune:     "backup.pruning",
 		core.PhaseCompact:   "backup.compacting",
+		core.PhaseVerify:    "backup.verifying",
 	}
 	b.phase.SetText(b.u.t(keys[phase]))
 }
@@ -471,6 +472,18 @@ func (b *backupScreen) showReport(report *core.BackupReport, err error) {
 	}
 	if len(report.CloudSkipped) > 0 {
 		b.showMessage("backup.cloud_skipped", map[string]any{"Count": len(report.CloudSkipped)})
+	}
+	if check := report.Verification; check != nil {
+		// La vérification mensuelle a suivi la sauvegarde (EF-99).
+		b.result.Add(b.u.renderLine(testLine{
+			ok:     check.Outcome != history.OutcomeFailed,
+			key:    check.Reason,
+			data:   map[string]any{"Path": check.Native},
+			detail: check.Detail,
+		}))
+	}
+	if report.VerifyErr != nil {
+		b.result.Add(b.u.explanation("verify.impossible", nil, report.VerifyErr.Error()))
 	}
 	if report.MaintenanceErr != nil {
 		b.result.Add(b.u.explanation(core.ErrorKeyMaintenance, nil, report.MaintenanceErr.Error()))

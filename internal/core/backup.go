@@ -26,6 +26,8 @@ const (
 	PhasePrune
 	// PhaseCompact : récupération de l'espace libéré.
 	PhaseCompact
+	// PhaseVerify : vérification mensuelle d'une restauration (EF-99).
+	PhaseVerify
 )
 
 // Clés de diagnostic propres au cœur, sous la racine transverse des erreurs.
@@ -57,6 +59,10 @@ type Backup struct {
 	Hostname string
 	// NextRun donne la prochaine exécution planifiée, zéro si aucune.
 	NextRun func() time.Time
+	// VerifyRestores vérifie une restauration après la sauvegarde, quand la
+	// dernière date de plus d'un mois (EF-99). Faux dans les tests qui ne
+	// portent pas sur elle.
+	VerifyRestores bool
 }
 
 // BackupRequest décrit une sauvegarde à exécuter.
@@ -86,6 +92,11 @@ type BackupReport struct {
 	// MaintenanceErr signale l'échec de la conservation ou de la
 	// récupération d'espace, après une sauvegarde réussie.
 	MaintenanceErr error
+	// Verification est la vérification de restauration menée après la
+	// sauvegarde, nil si aucune n'était due ; VerifyErr, ce qui l'a
+	// empêchée. Ni l'une ni l'autre n'affecte la sauvegarde, déjà faite.
+	Verification *history.RestoreCheck
+	VerifyErr    error
 	// PublishErr signale un état qui n'a pas pu être déposé. Comme
 	// l'historique, il n'affecte pas la sauvegarde.
 	PublishErr error
@@ -150,6 +161,7 @@ func (b *Backup) Run(ctx context.Context, req BackupRequest) (*BackupReport, err
 			report.Run.RepositorySize = info.Cache.Stats.UniqueCSize
 			report.Encryption = info.Encryption.Mode
 		}
+		b.verify(ctx, req, report, phase, now)
 	}
 
 	report.Run.Finished = now()
@@ -263,6 +275,38 @@ func (b *Backup) maintain(ctx context.Context, req BackupRequest, phase func(Pha
 	phase(PhaseCompact)
 	_, err = borg.Compact(ctx, b.Runner, req.Env)
 	return err
+}
+
+// verify vérifie une restauration dans la sauvegarde qui vient d'être
+// faite, si la dernière vérification date de plus d'un mois (EF-99). Sans
+// planificateur résident, c'est la sauvegarde — planifiée ou non — qui la
+// déclenche ; elle a lieu sous le même verrou.
+func (b *Backup) verify(ctx context.Context, req BackupRequest, report *BackupReport, phase func(Phase), clock func() time.Time) {
+	if !b.VerifyRestores || b.History == nil || report.Stats == nil || ctx.Err() != nil {
+		return
+	}
+	now := clock()
+	due, err := VerifyDue(ctx, b.History, req.Profile.Name, now)
+	if err != nil || !due {
+		report.VerifyErr = err
+		return
+	}
+	archive := borg.Archive{Name: report.Stats.Archive.Name, ID: report.Stats.Archive.ID}
+	if archive.ID == "" {
+		// Le catalogue est indexé par identifiant ; à défaut, le nom, unique
+		// lui aussi dans une destination, en tient lieu.
+		archive.ID = archive.Name
+	}
+	phase(PhaseVerify)
+	check, err := VerifyRestore(ctx, b.Runner, req.Env, b.History, req.Profile.Name, archive, now)
+	if errors.Is(err, ErrNothingToVerify) {
+		return
+	}
+	if err != nil {
+		report.VerifyErr = err
+		return
+	}
+	report.Verification = &check
 }
 
 // classify fixe le statut consigné de l'exécution.

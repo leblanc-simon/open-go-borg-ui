@@ -150,6 +150,18 @@ var migrations = []string{
 		PRIMARY KEY (archive, path)
 	) WITHOUT ROWID;
 	CREATE INDEX catalog_entries_parent ON catalog_entries (archive, parent);`,
+	`CREATE TABLE restore_checks (
+		id      INTEGER PRIMARY KEY,
+		profile TEXT    NOT NULL,
+		checked INTEGER NOT NULL,
+		archive TEXT    NOT NULL,
+		path    TEXT    NOT NULL,
+		native  TEXT    NOT NULL,
+		outcome TEXT    NOT NULL,
+		reason  TEXT    NOT NULL DEFAULT '',
+		detail  TEXT    NOT NULL DEFAULT ''
+	);
+	CREATE INDEX restore_checks_profile_checked ON restore_checks (profile, checked DESC);`,
 }
 
 // migrate met la base au schéma courant.
