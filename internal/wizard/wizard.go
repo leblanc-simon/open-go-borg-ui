@@ -58,6 +58,73 @@ type State struct {
 	// KeyConfirmed : l'utilisateur a confirmé avoir mis la clé de secours à
 	// l'abri (EF-35).
 	KeyConfirmed bool `json:"key_confirmed,omitempty"`
+	// Reconfigure distingue une reprise de l'assistant, depuis les réglages
+	// d'un poste déjà configuré, du premier lancement.
+	Reconfigure Reconfiguration `json:"reconfigure,omitempty"`
+	// NewKey : la reconfiguration crée une nouvelle clé de connexion plutôt
+	// que de garder celle du poste.
+	NewKey bool `json:"new_key,omitempty"`
+}
+
+// Reconfiguration est la raison d'une reprise de l'assistant.
+type Reconfiguration string
+
+const (
+	// FirstRun : premier lancement, le poste n'est pas encore configuré.
+	FirstRun Reconfiguration = ""
+	// ChangeDestination : le poste change de destination ; ses dossiers et
+	// sa planification restent.
+	ChangeDestination Reconfiguration = "destination"
+	// ImportConfig : la configuration d'un autre poste remplace celle-ci
+	// (EF-101).
+	ImportConfig Reconfiguration = "import"
+)
+
+// pendingSuffix distingue le mot de passe d'une destination en cours de
+// préparation de celui de la destination en service.
+const pendingSuffix = ".pending"
+
+// ForDestination prépare le changement de destination d'un poste configuré.
+// Le profil courant est repris tel quel — dossiers, exclusions,
+// planification — et seule la destination est redemandée. Le chiffrement
+// recommandé est présélectionné, comme au premier lancement (PA-04).
+func ForDestination(current config.Profile, newKey bool) *State {
+	s := &State{Profile: current, Reconfigure: ChangeDestination, NewKey: newKey}
+	s.Profile.Encryption = config.EncryptionRepokey
+	s.Step = s.first()
+	return s
+}
+
+// ForImport prépare le remplacement de la configuration du poste par celle
+// d'un autre (EF-101) : seuls le sous-compte et, le cas échéant, le mot de
+// passe restent à fournir, puis les dossiers se vérifient, puisqu'ils
+// viennent d'un autre poste.
+func ForImport(imported config.Profile, newKey bool) *State {
+	s := &State{Profile: imported, Imported: true, Reconfigure: ImportConfig, NewKey: newKey}
+	s.Step = s.first()
+	return s
+}
+
+// first retourne la première étape qui a lieu d'être.
+func (s *State) first() Step {
+	for _, step := range order {
+		if !s.skipped(step) {
+			return step
+		}
+	}
+	return StepFinish
+}
+
+// SecretName est le nom sous lequel le mot de passe de la destination en
+// préparation est rangé. Au premier lancement, c'est celui du profil. En
+// reconfiguration, c'est un nom provisoire : le mot de passe de la
+// destination en service reste intact jusqu'à la validation, et les
+// sauvegardes planifiées continuent d'y accéder si l'utilisateur abandonne.
+func (s *State) SecretName() string {
+	if s.Reconfigure == FirstRun {
+		return s.Profile.Name
+	}
+	return s.Profile.Name + pendingSuffix
 }
 
 // New commence un assistant, avec le profil recommandé : chiffré (PA-04),
@@ -71,6 +138,17 @@ func New(hostname string) *State {
 
 // skipped indique si une étape n'a pas lieu d'être.
 func (s *State) skipped(step Step) bool {
+	if s.Reconfigure != FirstRun {
+		switch step {
+		case StepWelcome, StepEngine:
+			// Le poste est configuré : son moteur est en place.
+			return true
+		case StepFolders, StepSchedule:
+			// Changer de destination ne touche ni aux dossiers ni à la
+			// planification ; une configuration importée, si.
+			return s.Reconfigure == ChangeDestination
+		}
+	}
 	switch step {
 	case StepEncryption:
 		// Une destination existante non chiffrée n'a ni mode à choisir
@@ -130,6 +208,11 @@ func (s *State) Position() (current, total int) {
 
 // Path retourne le fichier de l'assistant dans le dossier d'état.
 func Path(stateDir string) string { return filepath.Join(stateDir, "wizard.json") }
+
+// ReconfigurePath retourne le fichier d'une reconfiguration en cours. Il est
+// distinct de celui du premier lancement : une reconfiguration interrompue
+// ne se reprend pas, le poste restant configuré comme avant.
+func ReconfigurePath(stateDir string) string { return filepath.Join(stateDir, "reconfigure.json") }
 
 // Load relit l'assistant en cours, nil s'il n'y en a pas.
 func Load(path string) (*State, error) {

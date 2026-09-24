@@ -178,8 +178,12 @@ func (b *backupScreen) scheduleCard() fyne.CanvasObject {
 	b.catchUp = widget.NewLabel(t("backup_screen.catch_up"))
 	b.catchUp.Wrapping = fyne.TextWrapWord
 	b.catchUp.Importance = widget.LowImportance
+	edit := widget.NewButtonWithIcon(t("backup_screen.schedule_edit"), theme.SettingsIcon(), func() {
+		b.u.shell.show(screenSettings)
+	})
+	edit.Importance = widget.LowImportance
 	return card(container.NewVBox(
-		caption(strings.ToUpper(t("backup_screen.schedule"))),
+		container.NewBorder(nil, nil, container.NewCenter(caption(strings.ToUpper(t("backup_screen.schedule")))), edit),
 		container.NewBorder(nil, nil, container.NewCenter(newBubble(theme.CalendarIcon(), toneInfo, 36)), nil,
 			container.NewVBox(b.plan, b.nextRun)),
 		b.catchUp,

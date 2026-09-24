@@ -252,7 +252,7 @@ func (w *wizardView) destinationStep() fyne.CanvasObject {
 			if runner, inspectErr = w.u.st.Runner(); inspectErr != nil {
 				return
 			}
-			if env, inspectErr = w.u.st.Environment(profile); inspectErr != nil {
+			if env, inspectErr = w.environment(); inspectErr != nil {
 				return
 			}
 			state, inspectErr = core.InspectDestination(context.Background(), runner, env)
@@ -421,7 +421,7 @@ func (w *wizardView) withPassphrase(passphrase string, result *fyne.Container,
 		if profile.Encryption.Encrypted() {
 			// Le trousseau du système garde la passphrase (EF-36) : elle
 			// n'est jamais écrite dans l'état de l'assistant.
-			if fallback, err = w.u.st.Secrets().Set(profile.Name, passphrase); err != nil {
+			if fallback, err = w.u.st.Secrets().Set(w.state.SecretName(), passphrase); err != nil {
 				return
 			}
 		}
@@ -430,7 +430,7 @@ func (w *wizardView) withPassphrase(passphrase string, result *fyne.Container,
 		if runner, err = w.u.st.Runner(); err != nil {
 			return
 		}
-		if env, err = w.u.st.Environment(profile); err != nil {
+		if env, err = w.environment(); err != nil {
 			return
 		}
 		err = action(context.Background(), runner, env)
@@ -534,13 +534,35 @@ func presetKey(preset config.ExcludePreset) string { return "exclude." + preset.
 
 // scheduleStep choisit la fréquence des sauvegardes automatiques (EF-61).
 func (w *wizardView) scheduleStep() fyne.CanvasObject {
-	t := w.u.t
-	s := &w.state.Profile.Schedule
+	status := w.paragraph("")
+	editor := w.u.scheduleEditor(&w.state.Profile.Schedule, func(plan schedule.Plan, err error) {
+		if err != nil {
+			status.SetText(w.u.t("schedule.invalid"))
+			w.setReady(false)
+			return
+		}
+		status.SetText(w.u.describePlan(plan))
+		w.setReady(true)
+		w.save()
+	})
+	return container.NewVBox(
+		w.paragraph("wizard.schedule.text"),
+		editor,
+		status,
+		w.paragraph("wizard.schedule.catch_up"),
+	)
+}
+
+// scheduleEditor règle une planification : fréquence, heure et jour
+// (EF-61). Le rattrapage des exécutions manquées est toujours actif
+// (EF-62). changed reçoit la planification après chaque modification, ou
+// l'erreur qui la rend invalide.
+func (u *ui) scheduleEditor(s *config.Schedule, changed func(schedule.Plan, error)) fyne.CanvasObject {
+	t := u.t
 	s.CatchUpIfMissed = true
 	if s.At == "" {
 		s.At = "12:30"
 	}
-	status := w.paragraph("")
 
 	days := []string{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"}
 	dayLabels := make([]string, len(days))
@@ -549,17 +571,7 @@ func (w *wizardView) scheduleStep() fyne.CanvasObject {
 		dayLabels[i] = t(schedule.DayKey(weekday))
 	}
 
-	validate := func() {
-		plan, err := schedule.FromConfig(*s)
-		if err != nil {
-			status.SetText(t("schedule.invalid"))
-			w.setReady(false)
-			return
-		}
-		status.SetText(w.u.describePlan(plan))
-		w.setReady(true)
-		w.save()
-	}
+	validate := func() { changed(schedule.FromConfig(*s)) }
 
 	at := widget.NewEntry()
 	at.SetText(s.At)
@@ -609,14 +621,11 @@ func (w *wizardView) scheduleStep() fyne.CanvasObject {
 	}
 
 	return container.NewVBox(
-		w.paragraph("wizard.schedule.text"),
 		frequency,
 		widget.NewForm(
 			widget.NewFormItem(t("wizard.schedule.at"), at),
 			widget.NewFormItem(t("wizard.schedule.day"), day),
 		),
-		status,
-		w.paragraph("wizard.schedule.catch_up"),
 	)
 }
 
@@ -624,7 +633,6 @@ func (w *wizardView) scheduleStep() fyne.CanvasObject {
 // et non contournable en mode chiffré (EF-35).
 func (w *wizardView) recoveryKeyStep() fyne.CanvasObject {
 	t := w.u.t
-	profile := &w.state.Profile
 	key := widget.NewLabel("")
 	key.TextStyle = fyne.TextStyle{Monospace: true}
 	key.Wrapping = fyne.TextWrapOff
@@ -649,7 +657,7 @@ func (w *wizardView) recoveryKeyStep() fyne.CanvasObject {
 			if runner, err = w.u.st.Runner(); err != nil {
 				return
 			}
-			if env, err = w.u.st.Environment(profile); err != nil {
+			if env, err = w.environment(); err != nil {
 				return
 			}
 			text, _, err = borg.KeyExportPaper(context.Background(), runner, env)
@@ -724,6 +732,28 @@ func (u *ui) describePlan(plan schedule.Plan) string {
 		text += u.t("schedule.catch_up")
 	}
 	return text
+}
+
+// applySchedule met la tâche planifiée en accord avec le profil : installée
+// pour une sauvegarde automatique, retirée pour une sauvegarde manuelle
+// (EF-60).
+func applySchedule(st *station.Station, profile *config.Profile, t format.Translate) error {
+	plan, err := schedule.FromConfig(profile.Schedule)
+	if err != nil {
+		return err
+	}
+	if plan.Frequency != schedule.Manual {
+		return installSchedule(st, profile, plan, t)
+	}
+	scheduler, err := newScheduler()
+	if err != nil {
+		return err
+	}
+	task, err := st.ScheduledTask(profile, t("schedule.task_description", map[string]any{"Profile": profile.Name}))
+	if err != nil {
+		return err
+	}
+	return scheduler.Remove(context.Background(), task.Name)
 }
 
 // installSchedule installe la tâche planifiée du profil.

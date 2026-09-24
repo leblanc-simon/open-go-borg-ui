@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"leblanc.io/open-go-borg-ui/internal/station"
+	"leblanc.io/open-go-borg-ui/internal/version"
 )
 
 // screen désigne un écran de la fenêtre principale (EI-01).
@@ -17,6 +18,7 @@ const (
 	screenHome screen = iota
 	screenBackup
 	screenDestination
+	screenSettings
 )
 
 // sidebarWidth est la largeur de la barre latérale.
@@ -39,28 +41,35 @@ type entry struct {
 	icon    fyne.Resource
 	label   string
 	content fyne.CanvasObject
+	// system range l'entrée en bas de la barre, avec l'apparence : les
+	// réglages ne servent qu'occasionnellement (EI-05).
+	system bool
 }
 
 func newShell(u *ui, entries []entry) *shell {
 	s := &shell{u: u}
-	menu := container.NewVBox()
+	menu, system := container.NewVBox(), container.NewVBox()
 	for i, e := range entries {
 		index := screen(i)
 		item := newNavItem(e.icon, e.label, func() { s.show(index) })
 		s.items = append(s.items, item)
 		s.screens = append(s.screens, e.content)
-		menu.Add(item)
+		if e.system {
+			system.Add(item)
+		} else {
+			menu.Add(item)
+		}
 	}
 	stack := container.NewStack(s.screens...)
 
-	s.content = container.NewBorder(nil, nil, s.sidebar(menu), nil, stack)
+	s.content = container.NewBorder(nil, nil, s.sidebar(menu, system), nil, stack)
 	s.show(screenHome)
 	return s
 }
 
 // sidebar construit la barre latérale : l'application, le menu, puis en bas
 // le poste et le choix d'apparence.
-func (s *shell) sidebar(menu fyne.CanvasObject) fyne.CanvasObject {
+func (s *shell) sidebar(menu, system fyne.CanvasObject) fyne.CanvasObject {
 	t := s.u.t
 
 	brand := container.NewHBox(logo(44), container.NewVBox(
@@ -83,8 +92,13 @@ func (s *shell) sidebar(menu fyne.CanvasObject) fyne.CanvasObject {
 	top := container.NewVBox(brand, spacer(18), container.NewPadded(caption(t("sidebar.section"))), menu,
 		spacer(10), container.NewPadded(caption(t("sidebar.recover"))), restore)
 	bottom := container.NewVBox(
+		system,
 		widget.NewSeparator(),
-		container.NewPadded(container.NewVBox(caption(t("sidebar.computer")), muted(station.Hostname()))),
+		container.NewPadded(container.NewVBox(
+			caption(t("sidebar.computer")),
+			muted(station.Hostname()),
+			newText(t("settings.version", map[string]any{"Version": version.String()}), sizeSmall, colorMuted, fyne.TextStyle{}),
+		)),
 		appearance,
 	)
 

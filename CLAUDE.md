@@ -116,7 +116,8 @@ internal/station/      le poste : configuration, moteur, environnement Borg, ser
 internal/statusfile/   fichier d'état du poste, déposé par SFTP dans son propre sous-compte
 internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
-internal/wizard/       état de l'assistant : enchaînement des étapes, reprise après interruption
+internal/version/      version de l'exécutable : tag injecté par le Makefile, sinon commit enregistré par Go
+internal/wizard/       état de l'assistant : premier lancement, changement de destination, import ; reprise après interruption
 ```
 
 Les chemins calculés à l'exécution (fichiers à la demande) passent au Runner par `Command.ExcludePaths`, en forme native : c'est lui qui les traduit en motifs `pp:` dans un fichier `--exclude-from`.
@@ -128,6 +129,9 @@ Le module est `leblanc.io/open-go-borg-ui`. L'i18n s'appuie sur `leblanc.io/open
 ## Développement
 
 ```bash
+make build                                # exécutable publié, version injectée (dist/borgui)
+make build-nogui | build-windows          # ligne de commande seule, Linux ou Windows
+make version                              # version qui sera injectée
 go build ./...
 go test ./...
 go test ./internal/borg -run TestScriptSauvegarde -v   # un test isolé
@@ -135,6 +139,8 @@ go vet ./...
 go test -tags nogui ./...                 # sans Fyne : ni CGO ni bibliothèques graphiques
 GOOS=windows go build -tags nogui ./...   # ligne de commande Windows, depuis Linux
 ```
+
+La version affichée (Réglages, barre latérale, `borgui version`) est le **tag** du commit quand il en porte un, sinon l'**identifiant du commit**, suivi de `-dirty` s'il reste des modifications non commitées. Le `Makefile` l'injecte par `-ldflags -X` ; un simple `go build` affiche le commit, que Go enregistre de lui-même. Publier une version revient donc à poser un tag puis lancer `make build`.
 
 L'exécutable ouvre l'interface Fyne quand il est lancé sans commande (AR-03) : `cmd/borgui` exige donc CGO et, sous Linux, les paquets de développement X11/OpenGL (dont `libxxf86vm-dev`). L'étiquette `nogui` l'en dispense et produit la ligne de commande seule. `internal/gui` ne dépend que des widgets de Fyne, en Go pur : il se teste sans affichage, par le pilote de test de Fyne.
 

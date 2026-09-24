@@ -43,13 +43,14 @@ type ui struct {
 	home        *homeScreen
 	backup      *backupScreen
 	destination *destinationScreen
+	settings    *settingsScreen
 	shell       *shell
 	restore     *restoreView
 	wizard      *wizardView
 }
 
-// NewWindow construit la fenêtre principale : quatre écrans au plus — État,
-// Sauvegarde, Destination, et plus tard Réglages.
+// NewWindow construit la fenêtre principale : quatre écrans — État,
+// Sauvegarde, Destination, Réglages (EI-01).
 func NewWindow(app fyne.App, deps Deps) fyne.Window {
 	return newWindow(app, deps, &ui{})
 }
@@ -76,17 +77,19 @@ func newWindow(app fyne.App, deps Deps, u *ui) fyne.Window {
 	return u.win
 }
 
-// showMain affiche les écrans de l'application : quatre au plus — État,
-// Sauvegarde, Destination, et plus tard Réglages.
+// showMain affiche les écrans de l'application : État, Sauvegarde,
+// Destination, Réglages (EI-01).
 func (u *ui) showMain() {
 	u.home = newHomeScreen(u)
 	u.backup = newBackupScreen(u)
 	u.destination = newDestinationScreen(u)
+	u.settings = newSettingsScreen(u)
 
 	u.shell = newShell(u, []entry{
-		{theme.HomeIcon(), u.t("tab.home"), u.home.content},
-		{theme.UploadIcon(), u.t("tab.backup"), u.backup.content},
-		{theme.StorageIcon(), u.t("tab.destination"), u.destination.content},
+		{theme.HomeIcon(), u.t("tab.home"), u.home.content, false},
+		{theme.UploadIcon(), u.t("tab.backup"), u.backup.content, false},
+		{theme.StorageIcon(), u.t("tab.destination"), u.destination.content, false},
+		{theme.SettingsIcon(), u.t("tab.settings"), u.settings.content, true},
 	})
 	u.win.SetContent(u.shell.content)
 }

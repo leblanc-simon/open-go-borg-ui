@@ -399,9 +399,11 @@ func (l *splitLayout) Layout(objects []fyne.CanvasObject, size fyne.Size) {
 		side.Resize(fyne.NewSize(sideWidth, size.Height))
 		return
 	}
-	// Empilées : la colonne principale garde sa hauteur naturelle, la
-	// colonne secondaire — qui défile — prend le reste.
-	mainHeight := main.MinSize().Height
+	// Empilées : la colonne principale prend au moins la moitié de la
+	// hauteur — davantage si son contenu l'exige —, la secondaire le reste.
+	// Une colonne qui défile n'a presque pas de hauteur minimale : sans ce
+	// partage, elle disparaîtrait.
+	mainHeight := max(main.MinSize().Height, (size.Height-l.gap())/2)
 	sideHeight := max(0, size.Height-mainHeight-l.gap())
 	main.Move(fyne.NewPos(0, 0))
 	main.Resize(fyne.NewSize(size.Width, mainHeight))

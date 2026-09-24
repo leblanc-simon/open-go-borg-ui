@@ -19,6 +19,7 @@ import (
 	"os/signal"
 
 	"leblanc.io/open-go-borg-ui/internal/i18n"
+	"leblanc.io/open-go-borg-ui/internal/version"
 )
 
 // Codes de sortie, alignés sur ceux de Borg : une exécution terminée avec des
@@ -146,6 +147,9 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandState(ctx, args)
 	case "retention":
 		return a.commandRetention(ctx, args)
+	case "version", "--version":
+		fmt.Println(a.T("cli.version", map[string]any{"Version": version.String()}))
+		return exitSuccess, nil
 	case "help", "--help", "-h":
 		fmt.Println(a.T("cli.usage"))
 		return exitSuccess, nil

@@ -112,3 +112,43 @@ func TestFichierAbime(t *testing.T) {
 		t.Errorf("fichier abîmé: %v, %v", state, err)
 	}
 }
+
+// TestChangementDeDestination vérifie qu'un changement de destination ne
+// redemande que la destination, le chiffrement et la clé de secours, et
+// garde tout le reste du profil.
+func TestChangementDeDestination(t *testing.T) {
+	current := config.Default("poste")
+	current.Encryption = config.EncryptionNone
+	current.Sources = []string{"/home/marc/Documents"}
+	s := ForDestination(current, true)
+
+	got := walk(s)
+	if got != "destination encryption recovery_key finish" {
+		t.Errorf("étapes: %s", got)
+	}
+	s.Step = StepDestination
+	if current, total := s.Position(); current != 1 || total != 4 {
+		t.Errorf("position: %d sur %d", current, total)
+	}
+	if s.Profile.Encryption != config.EncryptionRepokey || len(s.Profile.Sources) != 1 || !s.NewKey {
+		t.Errorf("profil repris: %+v", s)
+	}
+	if s.SecretName() != "poste.pending" {
+		t.Errorf("mot de passe provisoire: %q", s.SecretName())
+	}
+}
+
+// TestImportDepuisLesReglages vérifie qu'une configuration importée repasse
+// par les dossiers et la planification, qui viennent d'un autre poste.
+func TestImportDepuisLesReglages(t *testing.T) {
+	s := ForImport(config.Default("poste"), false)
+	if got := walk(s); got != "destination encryption folders schedule recovery_key finish" {
+		t.Errorf("étapes: %s", got)
+	}
+	if !s.Imported {
+		t.Error("un import ne redemande que le sous-compte (EF-101)")
+	}
+	if first := New("poste"); first.SecretName() != "poste" {
+		t.Errorf("premier lancement: %q", first.SecretName())
+	}
+}

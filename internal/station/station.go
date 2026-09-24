@@ -107,6 +107,14 @@ func (s *Station) SSHKeyPath(profile *config.Profile) (string, error) {
 
 // Environment construit l'environnement d'exécution de Borg pour ce profil.
 func (s *Station) Environment(profile *config.Profile) (borg.Environment, error) {
+	return s.EnvironmentWithSecret(profile, profile.Name)
+}
+
+// EnvironmentWithSecret construit l'environnement de Borg en lisant le mot
+// de passe sous secretName plutôt que sous le nom du profil : une
+// destination en cours de préparation a le sien, qui ne remplace celui de
+// la destination en service qu'à la validation.
+func (s *Station) EnvironmentWithSecret(profile *config.Profile, secretName string) (borg.Environment, error) {
 	repository, err := profile.Destination.RepositoryURL()
 	if err != nil {
 		return borg.Environment{}, err
@@ -146,7 +154,7 @@ func (s *Station) Environment(profile *config.Profile) (borg.Environment, error)
 		// Borg rappelle l'application pour obtenir la passphrase : elle ne
 		// figure ni dans l'environnement, ni dans une ligne de commande.
 		PassCommandExe:  executable,
-		PassCommandArgs: []string{"--print-passphrase", profile.Name},
+		PassCommandArgs: []string{"--print-passphrase", secretName},
 		BaseDir:         filepath.Join(s.StateDir, "borg"),
 		UploadRateLimit: profile.Destination.UploadRateLimit,
 	}, nil
