@@ -84,7 +84,7 @@ func (d *destinationScreen) summaryCard(profile *config.Profile) fyne.CanvasObje
 	fact := func(label, value string) fyne.CanvasObject {
 		v := newText(value, theme.SizeNameText, theme.ColorNameForeground, fyne.TextStyle{Bold: true})
 		v.truncate = true
-		return container.NewVBox(caption(strings.ToUpper(label)), v)
+		return container.NewVBox(caption(strings.ToUpper(label)).abbreviated(), v)
 	}
 	facts := container.NewGridWithColumns(3)
 	if profile.Destination.Kind == config.KindHetzner {

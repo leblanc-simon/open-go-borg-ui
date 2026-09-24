@@ -132,6 +132,24 @@ var migrations = []string{
 	);
 	CREATE INDEX runs_profile_started ON runs (profile, started DESC);`,
 	`ALTER TABLE runs ADD COLUMN repository_size INTEGER NOT NULL DEFAULT 0;`,
+	`CREATE TABLE catalogs (
+		archive TEXT    PRIMARY KEY,
+		files   INTEGER NOT NULL,
+		size    INTEGER NOT NULL,
+		cached  INTEGER NOT NULL
+	);
+	CREATE TABLE catalog_entries (
+		archive  TEXT    NOT NULL,
+		path     TEXT    NOT NULL,
+		parent   TEXT    NOT NULL,
+		name     TEXT    NOT NULL,
+		folded   TEXT    NOT NULL,
+		dir      INTEGER NOT NULL,
+		size     INTEGER NOT NULL,
+		modified INTEGER NOT NULL,
+		PRIMARY KEY (archive, path)
+	) WITHOUT ROWID;
+	CREATE INDEX catalog_entries_parent ON catalog_entries (archive, parent);`,
 }
 
 // migrate met la base au schéma courant.

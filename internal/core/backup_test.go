@@ -47,6 +47,9 @@ func (f *fakeRunner) Run(ctx context.Context, cmd borg.Command) (*borg.Result, e
 }
 func (f *fakeRunner) Version(context.Context) (string, error) { return "1.4.5", nil }
 func (f *fakeRunner) Executable() string                      { return "borg" }
+func (f *fakeRunner) Origin(path string) (string, string, error) {
+	return "/" + path, "/", nil
+}
 
 // statsJSON est la sortie de « borg create --json » d'une sauvegarde réussie.
 const statsJSON = `{"archive":{"name":"poste-2026-09-23T22:00:00","stats":{"nfiles":42,"original_size":1048576,"deduplicated_size":4096}}}`

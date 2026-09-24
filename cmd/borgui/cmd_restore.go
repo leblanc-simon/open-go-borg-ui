@@ -5,12 +5,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"leblanc.io/open-go-borg-ui/internal/borg"
+	"leblanc.io/open-go-borg-ui/internal/core"
 )
 
 // commandRestore restaure une sauvegarde dans un dossier neuf.
@@ -73,8 +73,8 @@ func (a *app) commandRestore(ctx context.Context, args []string) (int, error) {
 	if err != nil {
 		return exitError, err
 	}
-	if err := prepareDestination(destination); err != nil {
-		if errors.Is(err, errNotEmpty) {
+	if err := core.PrepareDestination(destination); err != nil {
+		if errors.Is(err, core.ErrDestinationNotEmpty) {
 			return exitError, fmt.Errorf("%s", a.T("restore.not_empty", map[string]any{"Path": destination}))
 		}
 		return exitError, err
@@ -108,24 +108,6 @@ func (a *app) commandRestore(ctx context.Context, args []string) (int, error) {
 		return exitWarning, nil
 	}
 	return exitSuccess, nil
-}
-
-// errNotEmpty signale une destination de restauration déjà occupée.
-var errNotEmpty = errors.New("destination non vide")
-
-// prepareDestination crée la destination, ou vérifie qu'elle est vide.
-func prepareDestination(path string) error {
-	entries, err := os.ReadDir(path)
-	if errors.Is(err, os.ErrNotExist) {
-		return os.MkdirAll(path, 0o700)
-	}
-	if err != nil {
-		return err
-	}
-	if len(entries) > 0 {
-		return errNotEmpty
-	}
-	return nil
 }
 
 // latest retourne la sauvegarde la plus récente. Borg les liste dans l'ordre

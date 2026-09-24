@@ -19,8 +19,9 @@ func (r *scriptedRunner) Run(_ context.Context, cmd borg.Command) (*borg.Result,
 	r.env, r.name = cmd.Env, cmd.Name
 	return r.result, nil
 }
-func (r *scriptedRunner) Version(context.Context) (string, error) { return "1.4.5", nil }
-func (r *scriptedRunner) Executable() string                      { return "borg" }
+func (r *scriptedRunner) Version(context.Context) (string, error)    { return "1.4.5", nil }
+func (r *scriptedRunner) Executable() string                         { return "borg" }
+func (r *scriptedRunner) Origin(path string) (string, string, error) { return "/" + path, "/", nil }
 
 // failed construit un échec de Borg portant un identifiant de message.
 func failed(msgid string) *borg.Result {

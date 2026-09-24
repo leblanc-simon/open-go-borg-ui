@@ -312,9 +312,15 @@ func codeBlock(label *widget.Label) fyne.CanvasObject {
 
 // caption est un intitulé de section, en petites capitales atténuées.
 func caption(value string) *text {
-	c := newText(value, sizeSmall, colorMuted, fyne.TextStyle{Bold: true})
-	c.truncate = true
-	return c
+	return newText(value, sizeSmall, colorMuted, fyne.TextStyle{Bold: true})
+}
+
+// abbreviated rend le texte abrégeable, pour une colonne étroite. Un texte
+// abrégeable n'a plus de largeur minimale : il ne convient qu'à une place
+// dont la largeur est imposée, pas au côté d'une bordure ni à une ligne.
+func (t *text) abbreviated() *text {
+	t.truncate = true
+	return t
 }
 
 // muted est une ligne de texte atténuée.

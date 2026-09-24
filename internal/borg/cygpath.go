@@ -107,3 +107,16 @@ func stripLongPathPrefix(path string) string {
 	}
 	return path
 }
+
+// fromDriveRelative traduit un chemin d'archive, lettre de lecteur en
+// première composante, en chemin Windows absolu : c/Users/marc devient
+// C:\Users\marc. Il retourne aussi la racine du lecteur, d'où l'extraire.
+func fromDriveRelative(archivePath string) (native, root string, err error) {
+	segments := strings.Split(strings.Trim(archivePath, "/"), "/")
+	drive := segments[0]
+	if len(drive) != 1 || !unicode.IsLetter(rune(drive[0])) {
+		return "", "", fmt.Errorf("borg: chemin d'archive sans lettre de lecteur: %s", archivePath)
+	}
+	root = driveRoot(drive)
+	return root + strings.Join(segments[1:], `\`), root, nil
+}

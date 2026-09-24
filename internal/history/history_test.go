@@ -146,7 +146,8 @@ func TestBasePlusRecente(t *testing.T) {
 }
 
 // TestMigrationDepuisVersion1 vérifie qu'une base créée par la première
-// version du schéma gagne la nouvelle colonne sans perdre ses exécutions.
+// version du schéma gagne la nouvelle colonne et le catalogue sans perdre
+// ses exécutions.
 func TestMigrationDepuisVersion1(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "historique.db")
 	store, err := Open(path)
@@ -155,8 +156,14 @@ func TestMigrationDepuisVersion1(t *testing.T) {
 	}
 	// Ramène la base à la version 1, comme l'aurait laissée l'application
 	// précédente.
-	if _, err := store.db.Exec("ALTER TABLE runs DROP COLUMN repository_size"); err != nil {
-		t.Fatal(err)
+	for _, statement := range []string{
+		"DROP TABLE catalog_entries",
+		"DROP TABLE catalogs",
+		"ALTER TABLE runs DROP COLUMN repository_size",
+	} {
+		if _, err := store.db.Exec(statement); err != nil {
+			t.Fatal(err)
+		}
 	}
 	if _, err := store.db.Exec("PRAGMA user_version = 1"); err != nil {
 		t.Fatal(err)

@@ -45,6 +45,7 @@ type homeScreen struct {
 	destKind    *text
 	destAddress *text
 	encryption  *badge
+	destTitle   *fyne.Container
 	protected   *text
 	protectedOf *text
 	added       *text
@@ -68,7 +69,8 @@ func newHomeScreen(u *ui) *homeScreen {
 
 	start := widget.NewButtonWithIcon(t("backup_screen.start"), theme.UploadIcon(), h.startBackup)
 	start.Importance = widget.HighImportance
-	header := pageHeader(t("home.title"), t("home.subtitle"), start)
+	restore := widget.NewButtonWithIcon(t("home.restore"), theme.DownloadIcon(), u.openRestore)
+	header := pageHeader(t("home.title"), t("home.subtitle"), restore, start)
 
 	body := container.NewBorder(
 		container.NewVBox(h.bannerCard(), spacer(4), h.tiles(), spacer(4)),
@@ -101,7 +103,7 @@ func (h *homeScreen) tiles() fyne.CanvasObject {
 	tile := func(icon fyne.Resource, value *text, label string) fyne.CanvasObject {
 		return card(container.NewBorder(nil, nil,
 			container.NewCenter(newBubble(icon, toneInfo, 42)), nil,
-			container.NewVBox(value, caption(strings.ToUpper(label))),
+			container.NewVBox(value, caption(strings.ToUpper(label)).abbreviated()),
 		))
 	}
 	display := func() *text {
@@ -130,7 +132,7 @@ func (h *homeScreen) destinationCard() fyne.CanvasObject {
 	h.protectedOf = muted("")
 	h.added = muted("")
 
-	title := container.NewBorder(nil, nil,
+	h.destTitle = container.NewBorder(nil, nil,
 		container.NewCenter(newBubble(theme.StorageIcon(), toneInfo, 42)),
 		container.NewVBox(h.encryption, layout.NewSpacer()),
 		container.NewVBox(h.destKind, h.destAddress),
@@ -138,7 +140,7 @@ func (h *homeScreen) destinationCard() fyne.CanvasObject {
 	return card(container.NewVBox(
 		caption(strings.ToUpper(t("home.destination"))),
 		spacer(2),
-		title,
+		h.destTitle,
 		spacer(6),
 		widget.NewSeparator(),
 		spacer(6),
@@ -376,6 +378,9 @@ func (h *homeScreen) showDestination(profile *config.Profile) {
 	} else {
 		h.encryption.Set(strings.ToUpper(t("encryption.none")), toneWarning)
 	}
+	// La pastille change de largeur avec son texte : la ligne se remet en
+	// page.
+	h.destTitle.Refresh()
 }
 
 // setTone colore le bandeau de synthèse.

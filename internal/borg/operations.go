@@ -1,6 +1,8 @@
 package borg
 
 import (
+	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -229,18 +231,62 @@ type ExtractOptions struct {
 	// par défaut de l'application est un dossier neuf, jamais l'emplacement
 	// d'origine (EF-95).
 	Destination string
+	// InPlace rend chaque chemin à son emplacement d'origine, en écrasant ce
+	// qui s'y trouve ; Destination est alors ignorée. L'interface ne le
+	// propose que derrière une confirmation explicite (EF-96).
+	InPlace bool
 	// OnEvent reçoit la progression.
 	OnEvent func(Event)
 }
 
 // Extract restaure tout ou partie d'une archive.
+//
+// À l'emplacement d'origine, les chemins sont regroupés par racine
+// d'extraction : sous Windows, une extraction par lecteur.
 func Extract(ctx context.Context, runner Runner, opts ExtractOptions) (*Result, error) {
+	if !opts.InPlace {
+		return extractInto(ctx, runner, opts, opts.Destination, opts.Paths)
+	}
+	if len(opts.Paths) == 0 {
+		return nil, fmt.Errorf("borg: une restauration à l'emplacement d'origine désigne ses chemins")
+	}
+
+	var roots []string
+	groups := map[string][]string{}
+	for _, path := range opts.Paths {
+		_, root, err := runner.Origin(path)
+		if err != nil {
+			return nil, err
+		}
+		if _, seen := groups[root]; !seen {
+			roots = append(roots, root)
+		}
+		groups[root] = append(groups[root], path)
+	}
+
+	var last *Result
+	for _, root := range roots {
+		result, err := extractInto(ctx, runner, opts, root, groups[root])
+		if err != nil {
+			return result, err
+		}
+		// Un avertissement sur un lecteur ne doit pas être effacé par le
+		// succès du suivant.
+		if last == nil || result.Status > last.Status {
+			last = result
+		}
+	}
+	return last, nil
+}
+
+// extractInto extrait paths dans dir.
+func extractInto(ctx context.Context, runner Runner, opts ExtractOptions, dir string, paths []string) (*Result, error) {
 	result, err := runner.Run(ctx, Command{
 		Name:     "extract",
 		Flags:    []string{"--progress"},
 		Target:   "::" + opts.Archive,
-		Sources:  opts.Paths,
-		Dir:      opts.Destination,
+		Sources:  paths,
+		Dir:      dir,
 		PathMode: PathExtract,
 		Env:      opts.Env,
 		LogJSON:  true,
@@ -253,6 +299,58 @@ func Extract(ctx context.Context, runner Runner, opts ExtractOptions) (*Result, 
 		return result, failure(result, "extract")
 	}
 	return result, nil
+}
+
+// Item est une entrée du contenu d'une archive.
+type Item struct {
+	// Type vaut « d » pour un dossier, « - » pour un fichier, « l » pour un
+	// lien symbolique.
+	Type  string    `json:"type"`
+	Path  string    `json:"path"`
+	Size  int64     `json:"size"`
+	Mtime Timestamp `json:"mtime"`
+}
+
+// Dir indique un dossier.
+func (i Item) Dir() bool { return i.Type == "d" }
+
+// ListContents énumère le contenu d'une archive (EF-91). La réponse peut
+// compter des centaines de milliers d'entrées : l'application la garde en
+// cache et ne la redemande jamais (EF-93).
+func ListContents(ctx context.Context, runner Runner, env Environment, archive string) ([]Item, *Result, error) {
+	result, err := runner.Run(ctx, Command{
+		Name:    "list",
+		Flags:   []string{"--json-lines"},
+		Target:  "::" + archive,
+		Env:     env,
+		LogJSON: true,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	if result.Status == StatusError {
+		return nil, result, failure(result, "list")
+	}
+
+	var items []Item
+	scanner := bufio.NewScanner(bytes.NewReader(result.Stdout))
+	// Un chemin très profond dépasse la taille de ligne par défaut.
+	scanner.Buffer(make([]byte, 0, 64*1024), 4*1024*1024)
+	for scanner.Scan() {
+		line := bytes.TrimSpace(scanner.Bytes())
+		if len(line) == 0 {
+			continue
+		}
+		var item Item
+		if err := json.Unmarshal(line, &item); err != nil {
+			return nil, result, fmt.Errorf("borg: contenu de l'archive illisible: %w", err)
+		}
+		items = append(items, item)
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, result, fmt.Errorf("borg: contenu de l'archive illisible: %w", err)
+	}
+	return items, result, nil
 }
 
 // failure construit l'erreur d'une commande en échec, en y attachant le

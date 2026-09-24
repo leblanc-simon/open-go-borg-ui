@@ -15,8 +15,9 @@ func (r *recorder) Run(_ context.Context, cmd Command) (*Result, error) {
 	r.cmd = cmd
 	return &Result{Status: StatusSuccess}, nil
 }
-func (r *recorder) Version(context.Context) (string, error) { return "1.4.5", nil }
-func (r *recorder) Executable() string                      { return "borg" }
+func (r *recorder) Version(context.Context) (string, error)    { return "1.4.5", nil }
+func (r *recorder) Executable() string                         { return "borg" }
+func (r *recorder) Origin(path string) (string, string, error) { return "/" + path, "/", nil }
 
 // TestRotation vérifie les règles transmises, et la restriction aux
 // sauvegardes du poste.

@@ -78,7 +78,11 @@ func (s *shell) sidebar(menu fyne.CanvasObject) fyne.CanvasObject {
 		appearance.SetText(t("theme." + string(s.u.cycleTheme())))
 	}
 
-	top := container.NewVBox(brand, spacer(18), container.NewPadded(caption(t("sidebar.section"))), menu)
+	// La restauration est une fenêtre à part (EI-01) : son entrée l'ouvre
+	// sans quitter l'écran affiché.
+	restore := newNavItem(theme.DownloadIcon(), t("sidebar.restore"), s.u.openRestore)
+	top := container.NewVBox(brand, spacer(18), container.NewPadded(caption(t("sidebar.section"))), menu,
+		spacer(10), container.NewPadded(caption(t("sidebar.recover"))), restore)
 	bottom := container.NewVBox(
 		widget.NewSeparator(),
 		container.NewPadded(container.NewVBox(caption(t("sidebar.computer")), muted(station.Hostname()))),

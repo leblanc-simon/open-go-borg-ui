@@ -19,8 +19,9 @@ func (r *pruneRunner) Run(_ context.Context, cmd borg.Command) (*borg.Result, er
 	r.calls = append(r.calls, cmd.Name+" "+strings.Join(cmd.Flags, " "))
 	return &borg.Result{Status: borg.StatusSuccess, Messages: r.messages}, nil
 }
-func (r *pruneRunner) Version(context.Context) (string, error) { return "1.4.5", nil }
-func (r *pruneRunner) Executable() string                      { return "borg" }
+func (r *pruneRunner) Version(context.Context) (string, error)    { return "1.4.5", nil }
+func (r *pruneRunner) Executable() string                         { return "borg" }
+func (r *pruneRunner) Origin(path string) (string, string, error) { return "/" + path, "/", nil }
 
 // TestApercuConservation vérifie que l'aperçu ne supprime rien et rend la
 // liste de ce qui partirait.

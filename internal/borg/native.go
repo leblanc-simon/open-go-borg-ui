@@ -86,3 +86,13 @@ func nativeArchivePath(path string) (string, error) {
 	}
 	return strings.TrimPrefix(filepath.ToSlash(filepath.Clean(path)), "/"), nil
 }
+
+// Origin rend son « / » initial à un chemin d'archive ; l'extraction à
+// l'emplacement d'origine part de la racine du système.
+func (r *NativeRunner) Origin(archivePath string) (native, root string, err error) {
+	clean := strings.Trim(archivePath, "/")
+	if clean == "" {
+		return "", "", fmt.Errorf("borg: chemin d'archive vide")
+	}
+	return "/" + clean, "/", nil
+}

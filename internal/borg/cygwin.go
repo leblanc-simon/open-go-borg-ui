@@ -224,3 +224,9 @@ func cygwinNativeCommand(command string) string {
 func (r *CygwinRunner) binDir() string {
 	return filepath.Join(r.root, "bin")
 }
+
+// Origin traduit un chemin d'archive, qui commence par la lettre de lecteur,
+// en chemin Windows ; l'extraction part de la racine de ce lecteur (EF-97).
+func (r *CygwinRunner) Origin(archivePath string) (native, root string, err error) {
+	return fromDriveRelative(archivePath)
+}

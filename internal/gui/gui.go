@@ -44,6 +44,7 @@ type ui struct {
 	backup      *backupScreen
 	destination *destinationScreen
 	shell       *shell
+	restore     *restoreView
 	wizard      *wizardView
 }
 

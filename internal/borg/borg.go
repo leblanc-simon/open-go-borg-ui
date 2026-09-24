@@ -127,4 +127,9 @@ type Runner interface {
 	// Executable retourne le chemin de l'exécutable utilisé, pour le
 	// diagnostic.
 	Executable() string
+	// Origin traduit un chemin tel qu'il figure dans une archive en chemin
+	// natif du poste — l'emplacement d'où il a été sauvegardé — et donne le
+	// répertoire depuis lequel l'extraire pour qu'il y retourne. La
+	// convention de chemins reste ainsi l'affaire du seul Runner (AR-02).
+	Origin(archivePath string) (native, root string, err error)
 }
