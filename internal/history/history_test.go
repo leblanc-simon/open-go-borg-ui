@@ -206,4 +206,16 @@ func TestOuverturesSimultanees(t *testing.T) {
 			t.Errorf("ouverture concurrente: %v", err)
 		}
 	}
+
+	// Le journal WAL, qui laisse lire pendant qu'un autre processus écrit,
+	// est bien en place.
+	store, err := Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	var mode string
+	if err := store.db.QueryRow("PRAGMA journal_mode").Scan(&mode); err != nil || mode != "wal" {
+		t.Errorf("journal: %q, %v", mode, err)
+	}
 }

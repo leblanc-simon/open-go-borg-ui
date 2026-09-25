@@ -20,7 +20,8 @@ import (
 	"path/filepath"
 	"time"
 
-	_ "modernc.org/sqlite"
+	"modernc.org/sqlite"
+	sqlite3 "modernc.org/sqlite/lib"
 )
 
 // Status est l'issue d'une exécution, telle qu'elle est enregistrée.
@@ -92,7 +93,7 @@ func Open(path string) (*Store, error) {
 		return nil, fmt.Errorf("historique: %w", err)
 	}
 	dsn := "file:" + filepath.ToSlash(path) +
-		"?_pragma=busy_timeout(5000)&_pragma=journal_mode(WAL)&_pragma=foreign_keys(1)"
+		fmt.Sprintf("?_pragma=busy_timeout(%d)&_pragma=foreign_keys(1)", busyTimeout.Milliseconds())
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("historique: %w", err)
@@ -102,11 +103,48 @@ func Open(path string) (*Store, error) {
 	db.SetMaxOpenConns(1)
 
 	store := &Store{db: db}
+	if err := store.enableWAL(context.Background()); err != nil {
+		db.Close()
+		return nil, err
+	}
 	if err := store.migrate(context.Background()); err != nil {
 		db.Close()
 		return nil, err
 	}
 	return store, nil
+}
+
+// busyTimeout borne l'attente d'un verrou tenu par un autre processus :
+// l'interface et une sauvegarde planifiée écrivent dans la même base.
+const busyTimeout = 5 * time.Second
+
+// enableWAL passe la base en journal WAL, qui laisse lire pendant qu'un autre
+// processus écrit. Le mode est enregistré dans le fichier : il ne se règle
+// vraiment qu'une fois, à la création.
+//
+// Ce réglage demande un verrou exclusif, et SQLite n'attend pas qu'il se
+// libère : busy_timeout ne s'applique pas. Deux processus qui ouvrent une
+// base neuve au même instant — l'interface et une sauvegarde planifiée — se
+// heurtent donc aussitôt. Le perdant réessaie, dans la limite du même délai
+// que pour les autres verrous.
+func (s *Store) enableWAL(ctx context.Context) error {
+	deadline := time.Now().Add(busyTimeout)
+	for delay := 5 * time.Millisecond; ; delay = min(2*delay, 100*time.Millisecond) {
+		_, err := s.db.ExecContext(ctx, "PRAGMA journal_mode=WAL")
+		if err == nil {
+			return nil
+		}
+		if !isBusy(err) || time.Now().After(deadline) {
+			return fmt.Errorf("historique: passage en journal WAL: %w", err)
+		}
+		time.Sleep(delay)
+	}
+}
+
+// isBusy reconnaît un verrou tenu par une autre connexion.
+func isBusy(err error) bool {
+	var sqliteErr *sqlite.Error
+	return errors.As(err, &sqliteErr) && sqliteErr.Code()&0xff == sqlite3.SQLITE_BUSY
 }
 
 // Close ferme la base.
