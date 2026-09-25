@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=OpenGoBorgUI
+GenericName=Backup
+GenericName[fr]=Sauvegarde
+Comment=Back up this computer to a Hetzner Storage Box, and restore it
+Comment[fr]=Sauvegarder ce poste vers une Storage Box Hetzner, et le restaurer
+Exec=borgui
+Icon=io.leblanc.borgui
+Terminal=false
+Categories=Utility;Archiving;
+Keywords=backup;restore;borg;storage box;
+Keywords[fr]=sauvegarde;restauration;borg;storage box;

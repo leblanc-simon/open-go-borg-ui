@@ -31,6 +31,11 @@ const (
 )
 
 func main() {
+	if len(os.Args) > 1 {
+		// Une commande : sous Windows, écrire dans la console qui l'a
+		// lancée. Sans commande, c'est l'interface, sans console.
+		attachConsole()
+	}
 	os.Exit(run(os.Args[1:]))
 }
 

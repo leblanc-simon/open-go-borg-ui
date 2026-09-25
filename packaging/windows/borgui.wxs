@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paquet MSI d'OpenGoBorgUI (LI-02), construit par wixl (msitools) :
+  packaging/build-msi.sh. Schéma WiX 3, que wixl comprend.
+
+  L'installation se fait pour l'utilisateur seul, dans
+  %LOCALAPPDATA%\Programs\OpenGoBorgUI, sans droits d'administrateur
+  (ENF-08). Le moteur de sauvegarde n'y est pas : il est téléchargé au
+  premier lancement (EF-02), jamais embarqué.
+
+  L'UpgradeCode ne change jamais : c'est lui qui fait qu'une version
+  remplace la précédente.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="OpenGoBorgUI" Language="1036" Codepage="1252"
+           Version="$(var.Version)" Manufacturer="Simon Leblanc"
+           UpgradeCode="fcc3596e-223f-4a43-be48-33caae3e9445">
+
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser"
+             SummaryCodepage="1252"
+             Description="OpenGoBorgUI $(var.Version)"
+             Comments="Sauvegardes BorgBackup vers une Storage Box Hetzner" />
+
+    <!-- Les textes sont convertis en Windows-1252 par wixl, qui ne déclare
+         pourtant pas cette page de codes : build-msi.sh l'inscrit après
+         coup, pour que les accents ne dépendent pas de la langue du
+         système. -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="Une version plus récente d'OpenGoBorgUI est déjà installée." />
+    <Media Id="1" Cabinet="borgui.cab" EmbedCab="yes" />
+
+    <Icon Id="borgui.ico" SourceFile="$(var.Icon)" />
+    <Property Id="ARPPRODUCTICON" Value="borgui.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/leblanc-simon/open-go-borg-ui" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="ProgramsFolder" Name="Programs">
+          <Directory Id="INSTALLDIR" Name="OpenGoBorgUI">
+            <!-- Une installation par utilisateur repose sur une clé du
+                 registre de l'utilisateur, pas sur le fichier. -->
+            <Component Id="Executable" Guid="77af693c-6831-4e1c-9077-1f1e52214bed">
+              <File Id="BorguiExe" Name="borgui.exe" Source="$(var.Exe)" />
+              <RegistryValue Root="HKCU" Key="Software\OpenGoBorgUI" Name="Executable"
+                             Type="string" Value="[INSTALLDIR]borgui.exe" KeyPath="yes" />
+              <RemoveFolder Id="RemoveInstallDir" On="uninstall" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder">
+        <Component Id="StartMenuShortcut" Guid="b5c17e41-6ee9-46a8-9d3f-d92a3791cf23">
+          <Shortcut Id="BorguiShortcut" Name="OpenGoBorgUI"
+                    Description="Sauvegarder ce poste, et le restaurer"
+                    Target="[INSTALLDIR]borgui.exe" WorkingDirectory="INSTALLDIR" Icon="borgui.ico" />
+          <RegistryValue Root="HKCU" Key="Software\OpenGoBorgUI" Name="Shortcut"
+                         Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete" Title="OpenGoBorgUI" Level="1">
+      <ComponentRef Id="Executable" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+  </Product>
+</Wix>

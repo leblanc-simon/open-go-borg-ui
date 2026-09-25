@@ -11,6 +11,9 @@
 *.out
 coverage.*
 
+# Ressource Windows (icône, version), régénérée à chaque construction
+cmd/borgui/rsrc_windows_*.syso
+
 # Répertoires de construction
 /dist/
 

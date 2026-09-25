@@ -96,6 +96,7 @@ Puis v0.2 (MVP : écrans État/Sauvegarde/Destination, assistant, voie hors lign
 ## Organisation du code
 
 ```
+.github/workflows/     CI : exécutables Linux et Windows, .deb, MSI, release GitHub sur un tag v* (LI-04)
 build/runtime/         recette de construction du runtime Cygwin livré aux postes Windows
 cmd/borgui/            ligne de commande v0.1 (une commande par fichier cmd_*.go)
 cmd/borgui-recette/    outil de recette : jeu de données piégé, manifeste d'empreintes, comparaison
@@ -117,6 +118,7 @@ internal/statusfile/   fichier d'état du poste, déposé par SFTP dans son prop
 internal/schedule/     tâche planifiée : timer systemd utilisateur, Planificateur de tâches (XML)
 internal/secret/       passphrase : trousseau du système, repli fichier
 internal/version/      version de l'exécutable : tag injecté par le Makefile, sinon commit enregistré par Go
+packaging/             paquets : .deb (dpkg-deb), MSI (wixl), icônes générées depuis specs/logo.png
 internal/wizard/       état de l'assistant : premier lancement, changement de destination, import ; reprise après interruption
 ```
 
@@ -132,6 +134,9 @@ Le module est `leblanc.io/open-go-borg-ui`. L'i18n s'appuie sur `leblanc.io/open
 make build                                # exécutable publié, version injectée (dist/borgui)
 make check-size                           # échoue si l'exécutable publié dépasse 30 Mo
 make build-nogui | build-windows          # ligne de commande seule, Linux ou Windows
+make deb                                  # paquet .deb (dist/opengoborgui_<version>_amd64.deb)
+make build-windows-gui                    # exécutable Windows avec interface — sous Windows (MinGW-w64)
+make msi                                  # MSI depuis dist/borgui.exe, avec wixl — sous Linux
 make version                              # version qui sera injectée
 go build ./...
 go test ./...
@@ -160,6 +165,8 @@ Ce qu'aucun test local ne couvre : la connexion à une vraie Storage Box, l'exé
 **Fyne dépend de CGO** : pas de compilation croisée. La CI doit avoir deux exécuteurs, `windows-latest` et `ubuntu-latest` (LI-04). Les couches non graphiques (`BorgRunner`, stores, scheduler) doivent rester testables sans Fyne.
 
 L'exécutable publié se compile avec l'étiquette **`no_emoji`** : elle écarte la police d'émojis que Fyne embarque par défaut (4,2 Mo), que l'interface n'utilise pas — ses caractères sont tous couverts par Inter. Sans elle, l'exécutable dépasse 30 Mo (32,0 Mo contre 27,8). Toute compilation publiée de l'interface, sous Windows comme sous Linux, doit la reprendre ; `make check-size` le vérifie.
+
+**Paquets.** Le `.deb` s'appelle `opengoborgui` mais installe `/usr/bin/borgui` (lien `opengoborgui`) ; il dépend de `borgbackup (>= 1.2)`, celui des distributions, et ses dépendances de bibliothèques sont calculées par `dpkg-shlibdeps`. Il se construit sur **Ubuntu 22.04**, la plus ancienne cible : l'exécutable est lié à la glibc de la machine de construction. Le MSI s'installe **pour l'utilisateur seul**, dans `%LOCALAPPDATA%\Programs\OpenGoBorgUI`, sans élévation (ENF-08) ; son `UpgradeCode` ne change jamais. `wixl` convertit ses textes en Windows-1252 sans déclarer cette page de codes : `build-msi.sh` l'inscrit après coup (`msibuild`, table `_ForceCodepage`) et le vérifie, sans quoi les accents dépendraient de la langue du système. Attention : `msiinfo export` rend déjà de l'UTF-8, il ne faut pas le reconvertir pour lire les textes. L'exécutable Windows est compilé en application graphique (`-H=windowsgui`) : sans commande, pas de console ; avec une commande, il s'attache à la console qui l'a lancé (`cmd/borgui/console_windows.go`). Son icône, sa version et son manifeste (`asInvoker`, mise à l'échelle par écran) viennent de `make winres`. Désinstaller l'un ou l'autre paquet laisse en place la configuration et la tâche planifiée de chaque utilisateur. La signature (SEC-02) attend un certificat (PA-02).
 
 Contraintes vérifiables : exécutable ≤ 30 Mo, démarrage < 2 s, aucune opération bloquante > 100 ms, mémoire au repos < 150 Mo.
 

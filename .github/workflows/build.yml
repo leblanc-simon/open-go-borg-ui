@@ -1,0 +1,117 @@
+# Construction et publication d'OpenGoBorgUI (LI-04).
+#
+# Fyne exige CGO : pas de compilation croisée de l'interface. L'exécutable
+# Linux se construit sur Linux, l'exécutable Windows sur Windows ; le MSI,
+# lui, s'assemble sous Linux avec wixl à partir de l'exécutable Windows.
+# Sur un tag v*, les paquets sont joints à une release GitHub.
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    # La plus ancienne distribution visée (ENF-06) : l'exécutable est lié à
+    # sa glibc, et tourne donc aussi sur les plus récentes.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Tags et historique complets : la version en dépend.
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Bibliothèques de développement de Fyne
+        run: sudo apt-get update && sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev libxxf86vm-dev
+      - run: go vet ./...
+      - run: go test ./...
+      - run: go test -tags nogui ./...
+      - name: Exécutable publié, sous 30 Mo (ENF-01)
+        run: make check-size
+      - run: make deb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: |
+            dist/borgui
+            dist/*.deb
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Compilateur C et make (MinGW-w64)
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          # Garde le Go installé ci-dessus dans le PATH.
+          path-type: inherit
+          install: make mingw-w64-x86_64-gcc
+      - run: go vet -tags nogui ./...
+      - run: go test -tags nogui ./...
+      # SEC-02 : l'exécutable devra être signé ici, avant d'être empaqueté,
+      # dès qu'un certificat de signature de code sera disponible (PA-02).
+      - run: make build-windows-gui
+      - name: Exécutable publié, sous 30 Mo (ENF-01)
+        run: |
+          size=$(wc -c < dist/borgui.exe)
+          echo "dist/borgui.exe : $size octets"
+          test "$size" -le 30000000
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/borgui.exe
+
+  msi:
+    needs: windows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows
+          path: dist
+      - name: wixl et msibuild (msitools)
+        run: sudo apt-get update && sudo apt-get install -y wixl msitools
+      # SEC-02 : le paquet devra être signé à son tour (PA-02).
+      - run: make msi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: msi
+          path: dist/*.msi
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows, msi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Release GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+            --title "OpenGoBorgUI $GITHUB_REF_NAME" --generate-notes \
+            dist/*.deb dist/*.msi dist/borgui.exe
