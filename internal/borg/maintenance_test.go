@@ -80,3 +80,34 @@ func TestListeRotation(t *testing.T) {
 		t.Errorf("supprimées: %s", pruned)
 	}
 }
+
+// TestCheck vérifie la commande de contrôle : dépôt seul, progression, et
+// des anomalies lues comme un résultat plutôt que comme une erreur.
+func TestCheck(t *testing.T) {
+	runner := &recorder{}
+	if _, err := Check(context.Background(), runner, Environment{}, nil); err != nil {
+		t.Fatal(err)
+	}
+	if runner.cmd.Name != "check" || strings.Join(runner.cmd.Flags, " ") != "--repository-only --progress" {
+		t.Errorf("commande: %+v", runner.cmd)
+	}
+
+	problems := &statusRunner{status: StatusWarning}
+	if result, err := Check(context.Background(), problems, Environment{}, nil); err != nil || result.Status != StatusWarning {
+		t.Errorf("anomalies: %v, %v", result, err)
+	}
+	broken := &statusRunner{status: StatusError}
+	if _, err := Check(context.Background(), broken, Environment{}, nil); err == nil {
+		t.Error("un contrôle impossible doit être une erreur")
+	}
+}
+
+// statusRunner répond par le statut donné.
+type statusRunner struct {
+	recorder
+	status Status
+}
+
+func (r *statusRunner) Run(context.Context, Command) (*Result, error) {
+	return &Result{Status: r.status}, nil
+}

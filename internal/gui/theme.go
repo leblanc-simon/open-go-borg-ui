@@ -88,7 +88,7 @@ var darkPalette = palette{
 	theme.ColorNameMenuBackground:      hex(0x1e293b),
 	theme.ColorNameOverlayBackground:   hex(0x1e293b),
 	theme.ColorNameHeaderBackground:    hex(0x1e293b),
-	theme.ColorNameSeparator:           hex(0x1e293b),
+	theme.ColorNameSeparator:           hex(0x2c3a50),
 	theme.ColorNameScrollBar:           alpha(hex(0x94a3b8), 0x60),
 	theme.ColorNameShadow:              alpha(hex(0x000000), 0x66),
 	theme.ColorNameSuccess:             hex(0x22c55e),

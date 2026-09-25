@@ -152,3 +152,29 @@ func ParsePruneList(messages []Message) PrunePlan {
 	}
 	return plan
 }
+
+// Check contrôle l'intégrité de la destination, sans relire les sauvegardes
+// elles-mêmes : « --repository-only » vérifie les segments côté serveur,
+// sans les faire transiter (EF-87). Borg y conserve des sommes de contrôle
+// même sans chiffrement ; en mode non chiffré, seule la corruption
+// accidentelle se détecte, pas une altération malveillante (addendum §3).
+//
+// Le code de retour 1 signale des anomalies trouvées : ce n'est pas une
+// erreur d'exécution, le résultat se lit dans Result.Status. Seul un
+// contrôle qui n'a pas pu se dérouler retourne une erreur.
+func Check(ctx context.Context, runner Runner, env Environment, onEvent func(Event)) (*Result, error) {
+	result, err := runner.Run(ctx, Command{
+		Name:    "check",
+		Flags:   []string{"--repository-only", "--progress"},
+		Env:     env,
+		LogJSON: true,
+		OnEvent: onEvent,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if result.Status == StatusError {
+		return result, failure(result, "check")
+	}
+	return result, nil
+}

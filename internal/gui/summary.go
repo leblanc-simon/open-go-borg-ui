@@ -89,3 +89,14 @@ func (s Summary) WithRestoreCheck(check history.RestoreCheck, ok bool) Summary {
 	s.Indicator, s.Key, s.Data = IndicatorOrange, "home.verify_failed", nil
 	return s
 }
+
+// WithRepositoryCheck tient compte du dernier contrôle de la destination
+// (EF-87) : des anomalies trouvées font passer au orange un état qui serait
+// vert. Un état déjà orange ou rouge garde sa phrase.
+func (s Summary) WithRepositoryCheck(check history.RepositoryCheck, ok bool) Summary {
+	if !ok || check.Healthy || s.Indicator != IndicatorGreen {
+		return s
+	}
+	s.Indicator, s.Key, s.Data = IndicatorOrange, "home.check_failed", nil
+	return s
+}

@@ -418,6 +418,7 @@ func (b *backupScreen) showPhase(phase core.Phase) {
 		core.PhasePrune:     "backup.pruning",
 		core.PhaseCompact:   "backup.compacting",
 		core.PhaseVerify:    "backup.verifying",
+		core.PhaseCheck:     "backup.checking",
 	}
 	b.phase.SetText(b.u.t(keys[phase]))
 }
@@ -481,6 +482,19 @@ func (b *backupScreen) showReport(report *core.BackupReport, err error) {
 			data:   map[string]any{"Path": check.Native},
 			detail: check.Detail,
 		}))
+	}
+	if check := report.RepositoryCheck; check != nil {
+		// Le contrôle mensuel de la destination a suivi la sauvegarde
+		// (EF-87).
+		data := map[string]any{"Duration": format.Duration(t, check.Duration)}
+		if check.Healthy {
+			b.result.Add(b.u.renderLine(testLine{ok: true, key: "check.healthy", data: data}))
+		} else {
+			b.result.Add(b.u.renderLine(testLine{key: "check.problems_text", detail: check.Detail}))
+		}
+	}
+	if report.CheckErr != nil {
+		b.result.Add(b.u.explanation("check.impossible", nil, report.CheckErr.Error()))
 	}
 	if report.VerifyErr != nil {
 		b.result.Add(b.u.explanation("verify.impossible", nil, report.VerifyErr.Error()))

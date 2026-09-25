@@ -28,6 +28,8 @@ const (
 	PhaseCompact
 	// PhaseVerify : vérification mensuelle d'une restauration (EF-99).
 	PhaseVerify
+	// PhaseCheck : contrôle mensuel de la destination (EF-87).
+	PhaseCheck
 )
 
 // Clés de diagnostic propres au cœur, sous la racine transverse des erreurs.
@@ -63,6 +65,9 @@ type Backup struct {
 	// dernière date de plus d'un mois (EF-99). Faux dans les tests qui ne
 	// portent pas sur elle.
 	VerifyRestores bool
+	// CheckRepositories contrôle la destination après la sauvegarde, quand
+	// le dernier contrôle date de plus d'un mois (EF-87).
+	CheckRepositories bool
 }
 
 // BackupRequest décrit une sauvegarde à exécuter.
@@ -97,6 +102,10 @@ type BackupReport struct {
 	// empêchée. Ni l'une ni l'autre n'affecte la sauvegarde, déjà faite.
 	Verification *history.RestoreCheck
 	VerifyErr    error
+	// RepositoryCheck est le contrôle de la destination mené après la
+	// sauvegarde, nil si aucun n'était dû ; CheckErr, ce qui l'a empêché.
+	RepositoryCheck *history.RepositoryCheck
+	CheckErr        error
 	// PublishErr signale un état qui n'a pas pu être déposé. Comme
 	// l'historique, il n'affecte pas la sauvegarde.
 	PublishErr error
@@ -162,6 +171,7 @@ func (b *Backup) Run(ctx context.Context, req BackupRequest) (*BackupReport, err
 			report.Encryption = info.Encryption.Mode
 		}
 		b.verify(ctx, req, report, phase, now)
+		b.check(ctx, req, report, phase, now)
 	}
 
 	report.Run.Finished = now()
@@ -307,6 +317,27 @@ func (b *Backup) verify(ctx context.Context, req BackupRequest, report *BackupRe
 		return
 	}
 	report.Verification = &check
+}
+
+// check contrôle la destination si le dernier contrôle date de plus d'un
+// mois (EF-87). Comme la vérification de restauration, il suit la
+// sauvegarde, sous le même verrou, et n'en change pas l'issue.
+func (b *Backup) check(ctx context.Context, req BackupRequest, report *BackupReport, phase func(Phase), clock func() time.Time) {
+	if !b.CheckRepositories || b.History == nil || ctx.Err() != nil {
+		return
+	}
+	due, err := CheckDue(ctx, b.History, req.Profile.Name, clock())
+	if err != nil || !due {
+		report.CheckErr = err
+		return
+	}
+	phase(PhaseCheck)
+	check, err := CheckRepository(ctx, b.Runner, req.Env, b.History, req.Profile.Name, clock, req.OnEvent)
+	if err != nil {
+		report.CheckErr = err
+		return
+	}
+	report.RepositoryCheck = &check
 }
 
 // classify fixe le statut consigné de l'exécution.

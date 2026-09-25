@@ -223,6 +223,8 @@ func (s *Station) BackupService(profile *config.Profile, runner borg.Runner, sto
 		// La vérification mensuelle d'une restauration suit la sauvegarde,
 		// planifiée ou non : l'application n'a pas de démon (EF-99).
 		VerifyRestores: true,
+		// Le contrôle mensuel de la destination aussi (EF-87).
+		CheckRepositories: true,
 	}
 }
 

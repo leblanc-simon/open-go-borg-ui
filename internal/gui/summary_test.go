@@ -68,3 +68,18 @@ func TestSyntheseVerification(t *testing.T) {
 		t.Errorf("un état rouge garde sa phrase: %+v", got)
 	}
 }
+
+// TestSyntheseControle vérifie que des anomalies trouvées sur la
+// destination font passer au orange un état vert, et seulement lui.
+func TestSyntheseControle(t *testing.T) {
+	green := Summarize([]history.Run{run(history.StatusSuccess, time.Hour)}, now)
+	if got := green.WithRepositoryCheck(history.RepositoryCheck{Healthy: false}, true); got.Indicator != IndicatorOrange || got.Key != "home.check_failed" {
+		t.Errorf("anomalies: %+v", got)
+	}
+	if got := green.WithRepositoryCheck(history.RepositoryCheck{Healthy: true}, true); got.Indicator != IndicatorGreen {
+		t.Errorf("destination saine: %+v", got)
+	}
+	if got := green.WithRepositoryCheck(history.RepositoryCheck{}, false); got.Indicator != IndicatorGreen {
+		t.Errorf("jamais contrôlée: %+v", got)
+	}
+}

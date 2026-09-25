@@ -48,3 +48,22 @@ func TestTirageAuHasard(t *testing.T) {
 		t.Error("aucun fichier assez petit : rien ne doit être tiré")
 	}
 }
+
+// TestControlesDeLaDestination vérifie la consignation des contrôles et la
+// lecture du plus récent.
+func TestControlesDeLaDestination(t *testing.T) {
+	store := openCatalog(t)
+	ctx := context.Background()
+	if _, ok, err := store.LastRepositoryCheck(ctx, "poste"); ok || err != nil {
+		t.Fatalf("aucun contrôle attendu: %v, %v", ok, err)
+	}
+	earlier := time.Date(2026, 8, 26, 22, 0, 0, 0, time.Local)
+	store.AddRepositoryCheck(ctx, RepositoryCheck{Profile: "poste", Checked: earlier, Healthy: true})
+	store.AddRepositoryCheck(ctx, RepositoryCheck{Profile: "poste", Checked: earlier.AddDate(0, 1, 0),
+		Healthy: false, Duration: 90 * time.Second, Detail: "segment 12 corrompu"})
+
+	last, ok, err := store.LastRepositoryCheck(ctx, "poste")
+	if err != nil || !ok || last.Healthy || last.Duration != 90*time.Second || last.Detail != "segment 12 corrompu" {
+		t.Errorf("dernier contrôle: %+v, %v, %v", last, ok, err)
+	}
+}

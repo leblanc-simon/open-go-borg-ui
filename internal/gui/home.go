@@ -1,7 +1,9 @@
 package gui
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"image/color"
 	"strings"
 	"time"
@@ -13,6 +15,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
+	"leblanc.io/open-go-borg-ui/internal/borg"
 	"leblanc.io/open-go-borg-ui/internal/config"
 	"leblanc.io/open-go-borg-ui/internal/core"
 	"leblanc.io/open-go-borg-ui/internal/format"
@@ -52,13 +55,12 @@ type homeScreen struct {
 	protectedOf *text
 	added       *text
 
-	// Vérification de restauration (EF-99).
-	verifyBadge  *badge
-	verifyWhen   *text
-	verifyText   *widget.Label
-	verifyDetail *fyne.Container
-	verifyButton *widget.Button
-	verifyPanel  *fyne.Container
+	// Contrôles périodiques : vérification de restauration (EF-99) et
+	// contrôle de la destination (EF-87).
+	verification *checkPanel
+	control      *checkPanel
+	// stopCheck interrompt le contrôle de la destination en cours.
+	stopCheck context.CancelFunc
 
 	// Activité récente.
 	list  *widget.List
@@ -87,7 +89,7 @@ func newHomeScreen(u *ui) *homeScreen {
 		nil, nil, nil,
 		// La carte de la destination défile au besoin : sa hauteur ne doit
 		// pas s'imposer à la fenêtre.
-		split(column(h.destinationCard()), h.activityCard(), activityWidth),
+		split(h.destinationColumn(), h.activityCard(), activityWidth),
 	)
 	h.content = page(header, body)
 	return h
@@ -166,7 +168,22 @@ func (h *homeScreen) destinationCard() fyne.CanvasObject {
 		widget.NewSeparator(),
 		spacer(6),
 		h.verificationSection(),
+		spacer(6),
+		widget.NewSeparator(),
+		spacer(6),
+		h.controlSection(),
 	))
+}
+
+// destinationColumn place la carte de la destination dans une colonne qui
+// défile ; ses sections de contrôle la remettent en page quand elles
+// changent de hauteur.
+func (h *homeScreen) destinationColumn() fyne.CanvasObject {
+	scroll := column(h.destinationCard())
+	relayout := func() { scroll.Refresh() }
+	h.verification.relayout = relayout
+	h.control.relayout = relayout
+	return scroll
 }
 
 // verificationSection montre la dernière vérification de restauration :
@@ -174,107 +191,164 @@ func (h *homeScreen) destinationCard() fyne.CanvasObject {
 // mois (EF-99).
 func (h *homeScreen) verificationSection() fyne.CanvasObject {
 	t := h.u.t
-	h.verifyBadge = newBadge("", toneNeutral)
-	h.verifyWhen = newText("", theme.SizeNameText, theme.ColorNameForeground, fyne.TextStyle{Bold: true}).abbreviated()
-	h.verifyText = widget.NewLabel("")
-	h.verifyText.Wrapping = fyne.TextWrapWord
-	h.verifyText.Importance = widget.LowImportance
-	h.verifyDetail = container.NewVBox()
-	h.verifyButton = widget.NewButtonWithIcon(t("verify.now"), theme.ConfirmIcon(), h.verifyNow)
-	h.verifyButton.Importance = widget.LowImportance
-	h.verifyPanel = container.NewVBox(
-		container.NewBorder(nil, nil, caption(strings.ToUpper(t("verify.title"))), container.NewCenter(h.verifyBadge)),
-		h.verifyWhen,
-		h.verifyText,
-		h.verifyDetail,
-		container.NewHBox(h.verifyButton),
-	)
-	return h.verifyPanel
-}
-
-// relayoutVerification remet la section en page : la pastille change de
-// largeur avec son texte, et le dépliant « Détails » apparaît ou disparaît.
-func (h *homeScreen) relayoutVerification() {
-	h.verifyPanel.Refresh()
+	h.verification = newCheckPanel(h.u, t("verify.title"), t("verify.now"), h.verifyNow)
+	return h.verification.content
 }
 
 // showVerification affiche la dernière vérification, ou son absence.
 func (h *homeScreen) showVerification(check history.RestoreCheck, ok bool) {
 	t := h.u.t
-	h.verifyDetail.RemoveAll()
 	if !ok {
-		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_never")), toneNeutral)
-		h.verifyWhen.SetText(t("verify.never_title"))
-		h.verifyText.SetText(t("verify.never"))
-		h.relayoutVerification()
+		h.verification.show(t("verify.badge_never"), toneNeutral, t("verify.never_title"), t("verify.never"), "")
 		return
 	}
 	date := map[string]any{"Date": check.Checked.Local().Format("2006-01-02")}
+	message := t(check.Reason, map[string]any{"Path": check.Native})
 	switch check.Outcome {
 	case history.OutcomeIdentical:
-		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_identical")), toneSuccess)
-		h.verifyWhen.SetText(t("verify.checked_on", date))
+		h.verification.show(t("verify.badge_identical"), toneSuccess, t("verify.checked_on", date), message, check.Detail)
 	case history.OutcomeExtracted:
-		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_extracted")), toneInfo)
-		h.verifyWhen.SetText(t("verify.checked_on", date))
+		h.verification.show(t("verify.badge_extracted"), toneInfo, t("verify.checked_on", date), message, check.Detail)
 	default:
-		h.verifyBadge.Set(strings.ToUpper(t("verify.badge_failed")), toneError)
-		h.verifyWhen.SetText(t("verify.failed_on", date))
+		h.verification.show(t("verify.badge_failed"), toneError, t("verify.failed_on", date), message, check.Detail)
 	}
-	h.verifyText.SetText(t(check.Reason, map[string]any{"Path": check.Native}))
-	if check.Detail != "" {
-		h.verifyDetail.Add(h.u.details(check.Detail))
-	}
-	h.relayoutVerification()
 }
 
 // verifyNow vérifie une restauration sans attendre l'échéance mensuelle,
 // sur la sauvegarde la plus récente.
 func (h *homeScreen) verifyNow() {
 	t := h.u.t
-	h.verifyButton.Disable()
-	h.verifyBadge.Set(strings.ToUpper(t("verify.badge_running")), toneInfo)
-	h.verifyText.SetText(t("verify.running"))
-	h.verifyDetail.RemoveAll()
-	h.relayoutVerification()
+	panel := h.verification
+	panel.button.Disable()
+	panel.show(t("verify.badge_running"), toneInfo, panel.when.Text, t("verify.running"), "")
 	var err error
-	async(func() {
-		var profile *config.Profile
-		if profile, err = h.u.st.Profile(); err != nil {
+	h.withDestination(func(ctx context.Context, env destinationEnv) {
+		_, err = core.VerifyLatest(ctx, env.runner, env.env, env.store, env.profile.Name, h.u.st.LockDir(), time.Now())
+	}, func(setupErr error) {
+		panel.button.Enable()
+		if setupErr != nil {
+			err = setupErr
+		}
+		if err == nil {
+			h.refresh()
 			return
 		}
-		runner, runnerErr := h.u.st.Runner()
-		if err = runnerErr; err != nil {
+		if errors.Is(err, core.ErrNothingToVerify) {
+			panel.show(t("verify.badge_impossible"), toneWarning, panel.when.Text, t("verify.nothing"), "")
 			return
 		}
-		env, envErr := h.u.st.Environment(profile)
-		if err = envErr; err != nil {
-			return
-		}
-		store, storeErr := h.u.st.History()
-		if err = storeErr; err != nil {
-			return
-		}
-		defer store.Close()
-		_, err = core.VerifyLatest(backgroundContext(), runner, env, store, profile.Name, h.u.st.LockDir(), time.Now())
-	}, func() {
-		h.verifyButton.Enable()
-		if err != nil {
-			key := errorKey(err)
-			if errors.Is(err, core.ErrNothingToVerify) {
-				key = "verify.nothing"
-			}
-			h.verifyBadge.Set(strings.ToUpper(t("verify.badge_impossible")), toneWarning)
-			h.verifyText.SetText(t(key))
-			h.verifyDetail.RemoveAll()
-			if !errors.Is(err, core.ErrNothingToVerify) {
-				h.verifyDetail.Add(h.u.details(err.Error()))
-			}
-			h.relayoutVerification()
-			return
-		}
-		h.refresh()
+		panel.show(t("verify.badge_impossible"), toneWarning, panel.when.Text, t(errorKey(err)), err.Error())
 	})
+}
+
+// controlSection montre le dernier contrôle de la destination, mené une fois
+// par mois (EF-87).
+func (h *homeScreen) controlSection() fyne.CanvasObject {
+	t := h.u.t
+	h.control = newCheckPanel(h.u, t("check.title"), t("check.now"), h.checkNow)
+	return h.control.content
+}
+
+// showControl affiche le dernier contrôle de la destination, ou son absence.
+func (h *homeScreen) showControl(check history.RepositoryCheck, ok bool) {
+	t := h.u.t
+	if !ok {
+		h.control.show(t("check.badge_never"), toneNeutral, t("check.never_title"), t("check.never"), "")
+		return
+	}
+	data := map[string]any{
+		"Date":     check.Checked.Local().Format("2006-01-02"),
+		"Duration": format.Duration(t, check.Duration),
+	}
+	if check.Healthy {
+		h.control.show(t("check.badge_healthy"), toneSuccess, t("check.checked_on", data), t("check.healthy_text", data), "")
+		return
+	}
+	h.control.show(t("check.badge_problems"), toneError, t("check.problems_on", data), t("check.problems_text"), check.Detail)
+}
+
+// checkNow contrôle la destination sans attendre l'échéance mensuelle. Le
+// contrôle peut durer : le bouton devient « Arrêter » le temps qu'il
+// s'achève.
+func (h *homeScreen) checkNow() {
+	t := h.u.t
+	panel := h.control
+	if h.stopCheck != nil {
+		panel.button.Disable()
+		h.stopCheck()
+		return
+	}
+	ctx, stop := context.WithCancel(context.Background())
+	h.stopCheck = stop
+	cancelled := false
+	panel.button.SetText(t("check.stop"))
+	panel.button.SetIcon(theme.CancelIcon())
+	panel.show(t("check.badge_running"), toneInfo, panel.when.Text, t("check.running"), "")
+
+	var err error
+	h.withDestination(func(_ context.Context, env destinationEnv) {
+		var last time.Time
+		_, err = core.CheckNow(ctx, env.runner, env.env, env.store, env.profile.Name, h.u.st.LockDir(), time.Now,
+			func(event borg.Event) {
+				percent, ok := event.Percent()
+				if event.Kind != borg.EventProgressPercent || !ok || time.Since(last) < progressInterval {
+					return
+				}
+				last = time.Now()
+				message := t("check.progress_text", map[string]any{"Percent": fmt.Sprintf("%.0f", percent)})
+				onUI(func() { panel.setMessage(message) })
+			})
+		cancelled = ctx.Err() != nil
+	}, func(setupErr error) {
+		stop()
+		h.stopCheck = nil
+		panel.button.SetText(t("check.now"))
+		panel.button.SetIcon(theme.ConfirmIcon())
+		panel.button.Enable()
+		if setupErr != nil {
+			err = setupErr
+		}
+		switch {
+		case cancelled:
+			panel.show(t("check.badge_impossible"), toneWarning, panel.when.Text, t("check.cancelled"), "")
+		case err != nil:
+			panel.show(t("check.badge_impossible"), toneWarning, panel.when.Text, t(errorKey(err)), err.Error())
+		default:
+			h.refresh()
+		}
+	})
+}
+
+// destinationEnv rassemble ce qu'il faut pour agir sur la destination.
+type destinationEnv struct {
+	profile *config.Profile
+	runner  borg.Runner
+	env     borg.Environment
+	store   *history.Store
+}
+
+// withDestination prépare l'accès à la destination hors du fil de
+// l'interface, y exécute work, puis rend compte dans ce fil : done reçoit
+// l'erreur de préparation, s'il y en a une.
+func (h *homeScreen) withDestination(work func(context.Context, destinationEnv), done func(error)) {
+	var setupErr error
+	async(func() {
+		var env destinationEnv
+		if env.profile, setupErr = h.u.st.Profile(); setupErr != nil {
+			return
+		}
+		if env.runner, setupErr = h.u.st.Runner(); setupErr != nil {
+			return
+		}
+		if env.env, setupErr = h.u.st.Environment(env.profile); setupErr != nil {
+			return
+		}
+		if env.store, setupErr = h.u.st.History(); setupErr != nil {
+			return
+		}
+		defer env.store.Close()
+		work(backgroundContext(), env)
+	}, func() { done(setupErr) })
 }
 
 // activityCard est le fil des dernières exécutions.
@@ -393,12 +467,14 @@ func (h *homeScreen) refresh() {
 	h.generation++
 	generation := h.generation
 	var (
-		profile *config.Profile
-		runs    []history.Run
-		next    time.Time
-		check   history.RestoreCheck
-		checked bool
-		loadErr error
+		profile    *config.Profile
+		runs       []history.Run
+		next       time.Time
+		check      history.RestoreCheck
+		checked    bool
+		control    history.RepositoryCheck
+		controlled bool
+		loadErr    error
 	)
 	async(func() {
 		var err error
@@ -416,7 +492,10 @@ func (h *homeScreen) refresh() {
 		if runs, loadErr = store.Recent(backgroundContext(), profile.Name, historyDepth); loadErr != nil {
 			return
 		}
-		check, checked, loadErr = store.LastRestoreCheck(backgroundContext(), profile.Name)
+		if check, checked, loadErr = store.LastRestoreCheck(backgroundContext(), profile.Name); loadErr != nil {
+			return
+		}
+		control, controlled, loadErr = store.LastRepositoryCheck(backgroundContext(), profile.Name)
 	}, func() {
 		if generation != h.generation {
 			return
@@ -427,14 +506,15 @@ func (h *homeScreen) refresh() {
 			h.details.SetText(loadErr.Error())
 			return
 		}
-		h.show(profile, runs, next, time.Now(), check, checked)
+		h.show(profile, runs, next, time.Now(), check, checked, control, controlled)
 		h.showVerification(check, checked)
+		h.showControl(control, controlled)
 	})
 }
 
 // show affiche l'historique relu.
 func (h *homeScreen) show(profile *config.Profile, runs []history.Run, next time.Time, now time.Time,
-	check history.RestoreCheck, checked bool) {
+	check history.RestoreCheck, checked bool, control history.RepositoryCheck, controlled bool) {
 	t := h.u.t
 	h.runs, h.now = runs, now
 	h.list.Refresh()
@@ -444,7 +524,7 @@ func (h *homeScreen) show(profile *config.Profile, runs []history.Run, next time
 		h.empty.Hide()
 	}
 
-	summary := Summarize(runs, now).WithRestoreCheck(check, checked)
+	summary := Summarize(runs, now).WithRestoreCheck(check, checked).WithRepositoryCheck(control, controlled)
 	switch summary.Indicator {
 	case IndicatorGreen:
 		h.setTone(toneSuccess, theme.ConfirmIcon())

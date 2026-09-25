@@ -506,3 +506,45 @@ func horsReseau(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// TestControleDeLaDestination vérifie le mode « --check <profil> » (AR-03) :
+// la commande envoyée au moteur, et le code de sortie selon l'issue — 0
+// destination saine, 1 anomalies trouvées (EF-87).
+func TestControleDeLaDestination(t *testing.T) {
+	journal := poste(t, `
+case "$*" in
+*check*)
+  if [ -f "$HOME/anomalies" ]; then
+    echo '{"type":"log_message","levelname":"ERROR","message":"segment 12: checksum mismatch"}' >&2
+    exit 1
+  fi ;;
+esac
+exit 0
+`, "--clear")
+
+	if code := run([]string{"--check", "poste"}); code != exitSuccess {
+		t.Fatalf("destination saine : code %d", code)
+	}
+	if appels := lireJournal(t, journal); !strings.Contains(appels, "check") || !strings.Contains(appels, "--repository-only") {
+		t.Errorf("commande envoyée :\n%s", appels)
+	}
+
+	os.WriteFile(filepath.Join(os.Getenv("HOME"), "anomalies"), nil, 0o600)
+	if code := run([]string{"check"}); code != exitWarning {
+		t.Fatalf("anomalies : code %d, attendu %d", code, exitWarning)
+	}
+
+	path, err := config.HistoryPath()
+	if err != nil {
+		t.Fatal(err)
+	}
+	store, err := history.Open(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	last, ok, _ := store.LastRepositoryCheck(context.Background(), "poste")
+	if !ok || last.Healthy || last.Detail != "segment 12: checksum mismatch" {
+		t.Errorf("contrôle consigné : %+v", last)
+	}
+}

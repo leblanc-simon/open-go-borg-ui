@@ -200,6 +200,15 @@ var migrations = []string{
 		detail  TEXT    NOT NULL DEFAULT ''
 	);
 	CREATE INDEX restore_checks_profile_checked ON restore_checks (profile, checked DESC);`,
+	`CREATE TABLE repository_checks (
+		id       INTEGER PRIMARY KEY,
+		profile  TEXT    NOT NULL,
+		checked  INTEGER NOT NULL,
+		healthy  INTEGER NOT NULL,
+		duration INTEGER NOT NULL,
+		detail   TEXT    NOT NULL DEFAULT ''
+	);
+	CREATE INDEX repository_checks_profile_checked ON repository_checks (profile, checked DESC);`,
 }
 
 // migrate met la base au schéma courant.

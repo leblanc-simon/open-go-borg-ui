@@ -43,6 +43,7 @@ func run(args []string) int {
 		passphrase  string
 		scheduled   string
 		install     string
+		check       string
 	)
 
 	flags := flag.NewFlagSet("borgui", flag.ContinueOnError)
@@ -54,6 +55,8 @@ func run(args []string) int {
 		"écrit la passphrase du profil sur la sortie standard, pour BORG_PASSCOMMAND")
 	flags.StringVar(&scheduled, "run", "",
 		"exécute la sauvegarde planifiée du profil, sans interface")
+	flags.StringVar(&check, "check", "",
+		"contrôle l'intégrité de la destination du profil, sans interface")
 	flags.StringVar(&install, "install-schedule", "",
 		"installe la tâche planifiée du profil selon sa configuration")
 	flags.Usage = func() {}
@@ -74,6 +77,9 @@ func run(args []string) int {
 	if install != "" {
 		profileName = install
 	}
+	if check != "" {
+		profileName = check
+	}
 	application, err := newApp(loc, configPath, profileName)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -91,6 +97,13 @@ func run(args []string) int {
 
 	if scheduled != "" {
 		return application.runScheduled(ctx)
+	}
+	if check != "" {
+		code, err := application.commandCheck(ctx)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, loc.T("cli.error", map[string]any{"Message": application.describeError(err)}))
+		}
+		return code
 	}
 	if install != "" {
 		code, err := application.installSchedule(ctx)
@@ -147,6 +160,8 @@ func (a *app) dispatch(ctx context.Context, command string, args []string) (int,
 		return a.commandState(ctx, args)
 	case "retention":
 		return a.commandRetention(ctx, args)
+	case "check":
+		return a.commandCheck(ctx)
 	case "version", "--version":
 		fmt.Println(a.T("cli.version", map[string]any{"Version": version.String()}))
 		return exitSuccess, nil

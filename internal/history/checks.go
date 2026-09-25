@@ -100,3 +100,45 @@ func (s *Store) RandomFile(ctx context.Context, archive string, maxSize int64) (
 	}
 	return e, true, nil
 }
+
+// RepositoryCheck est un contrôle d'intégrité de la destination (EF-87).
+type RepositoryCheck struct {
+	ID      int64
+	Profile string
+	Checked time.Time
+	// Healthy : aucune anomalie trouvée.
+	Healthy  bool
+	Duration time.Duration
+	// Detail rassemble ce que Borg a signalé, pour le dépliant « Détails ».
+	Detail string
+}
+
+// AddRepositoryCheck consigne un contrôle de la destination.
+func (s *Store) AddRepositoryCheck(ctx context.Context, check RepositoryCheck) (int64, error) {
+	result, err := s.db.ExecContext(ctx, `INSERT INTO repository_checks
+		(profile, checked, healthy, duration, detail) VALUES (?, ?, ?, ?, ?)`,
+		check.Profile, check.Checked.Unix(), check.Healthy, int64(check.Duration/time.Second), check.Detail)
+	if err != nil {
+		return 0, fmt.Errorf("historique: contrôle: %w", err)
+	}
+	return result.LastInsertId()
+}
+
+// LastRepositoryCheck retourne le dernier contrôle de la destination du
+// profil, et false s'il n'y en a encore aucun.
+func (s *Store) LastRepositoryCheck(ctx context.Context, profile string) (RepositoryCheck, bool, error) {
+	var check RepositoryCheck
+	var checked, seconds int64
+	err := s.db.QueryRowContext(ctx, `SELECT id, profile, checked, healthy, duration, detail
+		FROM repository_checks WHERE profile = ? ORDER BY checked DESC, id DESC LIMIT 1`, profile,
+	).Scan(&check.ID, &check.Profile, &checked, &check.Healthy, &seconds, &check.Detail)
+	if errors.Is(err, sql.ErrNoRows) {
+		return RepositoryCheck{}, false, nil
+	}
+	if err != nil {
+		return RepositoryCheck{}, false, fmt.Errorf("historique: contrôle: %w", err)
+	}
+	check.Checked = time.Unix(checked, 0)
+	check.Duration = time.Duration(seconds) * time.Second
+	return check, true, nil
+}
