@@ -7,6 +7,7 @@
 #   make build          interface et ligne de commande (CGO, bibliothèques graphiques)
 #   make build-nogui    ligne de commande seule, sans CGO
 #   make build-windows  ligne de commande Windows, compilée depuis Linux
+#   make check-size     vérifie que l'exécutable publié tient sous 30 Mo
 #   make test | vet | version | clean
 
 MODULE  := leblanc.io/open-go-borg-ui
@@ -22,10 +23,25 @@ DIST    := dist
 LDFLAGS := -s -w -X $(MODULE)/internal/version.Version=$(VERSION)
 GOFLAGS := -trimpath -ldflags "$(LDFLAGS)"
 
-.PHONY: build build-nogui build-windows test vet version clean
+# no_emoji écarte la police d'émojis que Fyne embarque par défaut (4,2 Mo) :
+# l'interface n'en affiche aucun, et tous ses caractères sont couverts par
+# Inter, la police principale. Sans elle, l'exécutable dépasse 30 Mo.
+GUI_TAGS := no_emoji
+
+# MAX_SIZE est le plafond de l'exécutable publié, en octets (30 Mo).
+MAX_SIZE := 30000000
+
+.PHONY: build build-nogui build-windows check-size test vet version clean
 
 build:
-	go build $(GOFLAGS) -o $(DIST)/borgui ./cmd/borgui
+	go build $(GOFLAGS) -tags "$(GUI_TAGS)" -o $(DIST)/borgui ./cmd/borgui
+
+check-size: build
+	@size=$$(wc -c < $(DIST)/borgui); \
+	if [ $$size -gt $(MAX_SIZE) ]; then \
+		echo "$(DIST)/borgui : $$size octets, au-delà du plafond de $(MAX_SIZE)"; exit 1; \
+	fi; \
+	echo "$(DIST)/borgui : $$size octets, sous le plafond de $(MAX_SIZE)"
 
 build-nogui:
 	CGO_ENABLED=0 go build $(GOFLAGS) -tags nogui -o $(DIST)/borgui-nogui ./cmd/borgui

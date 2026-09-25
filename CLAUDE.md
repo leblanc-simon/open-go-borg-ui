@@ -130,6 +130,7 @@ Le module est `leblanc.io/open-go-borg-ui`. L'i18n s'appuie sur `leblanc.io/open
 
 ```bash
 make build                                # exécutable publié, version injectée (dist/borgui)
+make check-size                           # échoue si l'exécutable publié dépasse 30 Mo
 make build-nogui | build-windows          # ligne de commande seule, Linux ou Windows
 make version                              # version qui sera injectée
 go build ./...
@@ -157,6 +158,8 @@ Un hook (`.claude/hooks/guard-delete.sh`) refuse toute suppression hors du proje
 Ce qu'aucun test local ne couvre : la connexion à une vraie Storage Box, l'exécution du runtime Cygwin sous Windows, et la relecture par un `borg` 1.4 officiel sous Linux d'une archive créée sous Windows (TR-01 à TR-04). La recette `docs/recette-v0.1.md` les éprouve sur matériel réel ; elle est à rejouer à chaque nouvelle version du runtime.
 
 **Fyne dépend de CGO** : pas de compilation croisée. La CI doit avoir deux exécuteurs, `windows-latest` et `ubuntu-latest` (LI-04). Les couches non graphiques (`BorgRunner`, stores, scheduler) doivent rester testables sans Fyne.
+
+L'exécutable publié se compile avec l'étiquette **`no_emoji`** : elle écarte la police d'émojis que Fyne embarque par défaut (4,2 Mo), que l'interface n'utilise pas — ses caractères sont tous couverts par Inter. Sans elle, l'exécutable dépasse 30 Mo (32,0 Mo contre 27,8). Toute compilation publiée de l'interface, sous Windows comme sous Linux, doit la reprendre ; `make check-size` le vérifie.
 
 Contraintes vérifiables : exécutable ≤ 30 Mo, démarrage < 2 s, aucune opération bloquante > 100 ms, mémoire au repos < 150 Mo.
 
