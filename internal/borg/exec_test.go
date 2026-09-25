@@ -195,3 +195,37 @@ func TestVersion(t *testing.T) {
 		t.Errorf("Version = %q, attendu 1.4.5", version)
 	}
 }
+
+// TestDerniersMessagesConserves vérifie que les messages écrits juste avant
+// la fin du processus ne sont jamais perdus : ce sont eux qui expliquent un
+// échec. Répété, car la perte dépendait de l'ordonnancement.
+func TestDerniersMessagesConserves(t *testing.T) {
+	runner := fakeBorg(t, `
+echo '{"type":"log_message","levelname":"ERROR","msgid":"LockTimeout","message":"Failed to create/acquire the lock"}' >&2
+exit 2
+`)
+	for i := 0; i < 200; i++ {
+		result, err := runner.Run(context.Background(), Command{Name: "create", LogJSON: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if diagnosis, ok := result.Diagnose(); !ok || diagnosis != FailureRepositoryLocked {
+			t.Fatalf("exécution %d : diagnostic %v, messages %v", i, diagnosis, result.Messages)
+		}
+	}
+}
+
+// TestLignesDecoupees vérifie le découpage de la sortie d'erreur : lignes
+// reçues en morceaux, fins de ligne Windows, dernière ligne sans saut de
+// ligne, et ligne trop longue écartée sans perdre les suivantes.
+func TestLignesDecoupees(t *testing.T) {
+	var lines []string
+	w := &lineWriter{max: 10, line: func(line []byte) { lines = append(lines, string(line)) }}
+	for _, part := range []string{"un", "e\r\ndeux\n", strings.Repeat("x", 25), "\ntrois\nquat", "re"} {
+		w.Write([]byte(part))
+	}
+	w.flush()
+	if got := strings.Join(lines, "|"); got != "une|deux|trois|quatre" {
+		t.Errorf("lignes : %q", got)
+	}
+}

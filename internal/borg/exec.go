@@ -1,7 +1,6 @@
 package borg
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"errors"
@@ -53,10 +52,34 @@ func run(ctx context.Context, inv invocation, onEvent func(Event)) (*Result, err
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
 
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, fmt.Errorf("borg: sortie d'erreur: %w", err)
-	}
+	// La sortie d'erreur porte les événements de « --log-json », une ligne
+	// chacun. Elle est confiée à exec plutôt que lue par un tube : Wait
+	// n'est alors rendu qu'une fois tout recopié. Lue par un tube, elle
+	// pouvait perdre ses dernières lignes — celles qui expliquent un échec —,
+	// Wait fermant le tube dès la fin du processus.
+	var (
+		mu       sync.Mutex
+		messages []Message
+	)
+	events := &lineWriter{max: maxLineSize, line: func(line []byte) {
+		event, ok := parseEvent(line)
+		if !ok {
+			return
+		}
+		if event.Kind == EventLog && event.Message != "" {
+			mu.Lock()
+			messages = append(messages, Message{
+				Level: event.Level,
+				MsgID: event.MsgID,
+				Text:  event.Message,
+			})
+			mu.Unlock()
+		}
+		if onEvent != nil {
+			onEvent(event)
+		}
+	}}
+	cmd.Stderr = events
 
 	// Une annulation demande d'abord poliment l'arrêt : Borg relâche alors son
 	// verrou et laisse le dépôt utilisable, là où un processus tué impose un
@@ -70,48 +93,26 @@ func run(ctx context.Context, inv invocation, onEvent func(Event)) (*Result, err
 		return nil, fmt.Errorf("borg: lancement de %s: %w", inv.Path, err)
 	}
 
-	var (
-		wg       sync.WaitGroup
-		mu       sync.Mutex
-		messages []Message
-	)
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		scanner := bufio.NewScanner(stderr)
-		scanner.Buffer(make([]byte, 0, 64*1024), maxLineSize)
-		for scanner.Scan() {
-			event, ok := parseEvent(scanner.Bytes())
-			if !ok {
-				continue
-			}
-			if event.Kind == EventLog && event.Message != "" {
-				mu.Lock()
-				messages = append(messages, Message{
-					Level: event.Level,
-					MsgID: event.MsgID,
-					Text:  event.Message,
-				})
-				mu.Unlock()
-			}
-			if onEvent != nil {
-				onEvent(event)
-			}
-		}
-	}()
-
 	waitErr := cmd.Wait()
-	wg.Wait()
+	// Une dernière ligne sans saut de ligne final est aussi un événement.
+	events.flush()
 
+	mu.Lock()
+	collected := messages
+	mu.Unlock()
 	result := &Result{
 		Stdout:      stdout.Bytes(),
-		Messages:    messages,
+		Messages:    collected,
 		Duration:    time.Since(started),
 		CommandLine: inv.Display,
 	}
 
 	switch {
-	case waitErr == nil:
+	case waitErr == nil || errors.Is(waitErr, exec.ErrWaitDelay):
+		// ErrWaitDelay : Borg a réussi, mais un processus qu'il a lancé —
+		// ssh — gardait sa sortie d'erreur ouverte au-delà du délai de
+		// grâce. Wait l'a refermée ; un code de retour non nul aurait été
+		// rapporté, lui, par une ExitError.
 		result.ExitCode = 0
 	default:
 		var exitErr *exec.ExitError
@@ -152,4 +153,54 @@ func joinMessages(messages []Message) string {
 		texts = append(texts, m.Text)
 	}
 	return strings.Join(texts, " / ")
+}
+
+// lineWriter découpe en lignes ce qu'on lui écrit, et les transmet une à une.
+// exec l'alimente depuis une seule goroutine. Une ligne plus longue que max
+// est écartée plutôt que de faire grossir la mémoire sans limite.
+type lineWriter struct {
+	max     int
+	line    func([]byte)
+	pending []byte
+	// overflow : la ligne en cours a dépassé max, son reste est ignoré
+	// jusqu'au prochain saut de ligne.
+	overflow bool
+}
+
+func (w *lineWriter) Write(data []byte) (int, error) {
+	written := len(data)
+	for len(data) > 0 {
+		end := bytes.IndexByte(data, '\n')
+		if end < 0 {
+			w.append(data)
+			break
+		}
+		w.append(data[:end])
+		if !w.overflow {
+			w.line(bytes.TrimRight(w.pending, "\r"))
+		}
+		w.pending, w.overflow = w.pending[:0], false
+		data = data[end+1:]
+	}
+	return written, nil
+}
+
+// append ajoute un morceau à la ligne en cours, dans la limite de max.
+func (w *lineWriter) append(part []byte) {
+	if w.overflow {
+		return
+	}
+	if len(w.pending)+len(part) > w.max {
+		w.pending, w.overflow = w.pending[:0], true
+		return
+	}
+	w.pending = append(w.pending, part...)
+}
+
+// flush transmet la dernière ligne, restée sans saut de ligne.
+func (w *lineWriter) flush() {
+	if len(w.pending) > 0 && !w.overflow {
+		w.line(bytes.TrimRight(w.pending, "\r"))
+	}
+	w.pending, w.overflow = w.pending[:0], false
 }
