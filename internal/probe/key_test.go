@@ -3,6 +3,7 @@ package probe
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -25,7 +26,10 @@ func TestGenerationDeLaCle(t *testing.T) {
 	if err != nil {
 		t.Fatalf("clé absente: %v", err)
 	}
-	if mode := info.Mode().Perm(); mode != 0o600 {
+	// Sous Windows, la clé est réservée à son propriétaire par une liste de
+	// contrôle d'accès, que les bits de permission ne reflètent pas :
+	// internal/fsperm l'éprouve.
+	if mode := info.Mode().Perm(); runtime.GOOS != "windows" && mode != 0o600 {
 		t.Errorf("permissions de la clé = %o, attendues 600", mode)
 	}
 

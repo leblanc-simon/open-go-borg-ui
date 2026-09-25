@@ -2,6 +2,7 @@ package borg
 
 import (
 	"os"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -58,6 +59,9 @@ func TestExclusionsWindows(t *testing.T) {
 // TestExclusionsLinux vérifie la forme native : sans barre oblique initiale,
 // comme Borg stocke les chemins.
 func TestExclusionsLinux(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("convention de chemins Linux ; celle de Cygwin est éprouvée par TestExclusionsWindows")
+	}
 	var servicePath string
 	converted, cleanup, err := withExcludeFile(Command{
 		ExcludePaths: []string{"/home/marc/Nextcloud/../Nextcloud/doc.odt"},

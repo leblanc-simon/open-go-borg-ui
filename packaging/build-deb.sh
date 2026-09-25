@@ -1,7 +1,7 @@
 #!/bin/sh
 # Construit le paquet .deb d'OpenGoBorgUI (LI-03, PA-06).
 #
-#   packaging/build-deb.sh <exécutable> <version> [dossier de sortie]
+#   MAINTAINER="Nom <adresse>" packaging/build-deb.sh <exécutable> <version> [dossier de sortie]
 #
 # L'exécutable est celui de « make build ». Il est lié à la glibc de la
 # machine qui l'a compilé : pour couvrir Ubuntu 22.04 et Debian 12 (ENF-06),
@@ -44,7 +44,13 @@ mkdir -p "$work/debian"
 printf 'Source: %s\n\nPackage: %s\nArchitecture: %s\n' "$package" "$package" "$arch" > "$work/debian/control"
 shlibs=$(cd "$work" && dpkg-shlibdeps -O "$root/usr/bin/borgui" 2>/dev/null | sed -n 's/^shlibs:Depends=//p')
 
-maintainer=${MAINTAINER:-"$(git -C "$top" config user.name) <$(git -C "$top" config user.email)>"}
+# Le mainteneur est fourni par le Makefile : il ne doit pas dépendre de
+# l'identité git de la machine de construction, absente en CI.
+maintainer=${MAINTAINER:-}
+if [ -z "$maintainer" ]; then
+	echo "MAINTAINER non défini (« Nom <adresse> »)" >&2
+	exit 1
+fi
 size=$(du -sk "$root/usr" | cut -f1)
 mkdir -p "$root/DEBIAN"
 cat > "$root/DEBIAN/control" <<CONTROL

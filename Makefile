@@ -80,8 +80,12 @@ winres:
 		--original-filename borgui.exe --copyright "Simon Leblanc, WTFPL" \
 		--product-version $(MSI_VERSION).0 --file-version $(MSI_VERSION).0
 
+# MAINTAINER est le mainteneur déclaré du paquet .deb : le détenteur des
+# droits (NOTICE), plutôt que l'identité git de la machine de construction.
+MAINTAINER ?= Simon Leblanc <contact@leblanc-simon.eu>
+
 deb: build
-	packaging/build-deb.sh $(DIST)/borgui $(DEB_VERSION) $(DIST)
+	MAINTAINER="$(MAINTAINER)" packaging/build-deb.sh $(DIST)/borgui $(DEB_VERSION) $(DIST)
 
 msi:
 	packaging/build-msi.sh $(DIST)/borgui.exe $(MSI_VERSION) $(DIST)
